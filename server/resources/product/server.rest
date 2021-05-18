@@ -1,0 +1,15 @@
+
+
+
+// create new product
+POST http://localhost:6969/api/products/
+Content-Type: application/json
+
+{
+  "title": "test22",
+    "description": "test",
+    "category": "test",
+    "quantity": 2
+}
+###
+
