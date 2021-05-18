@@ -6,10 +6,32 @@ POST http://localhost:6969/api/products/
 Content-Type: application/json
 
 {
-  "title": "test22",
+  "title": "test22s3",
     "description": "test",
     "category": "test",
     "quantity": 2
 }
 ###
 
+
+// GET all products
+GET http://localhost:6969/api/products/
+
+###
+
+
+
+// DELETE product
+DELETE  http://localhost:6969/api/products/60a3b917a8a280045c36428a
+
+###
+
+
+// EDIT product
+PUT http://localhost:6969/api/products/60a3be97372119312c306bca
+Content-Type: application/json
+
+{
+    "quantity": 1337
+}
+###
