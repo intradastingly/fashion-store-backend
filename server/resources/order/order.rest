@@ -1,15 +1,13 @@
-
-
-
 // create new product
-POST http://localhost:6969/api/products/
+POST http://localhost:6969/api/order/
 Content-Type: application/json
 
 {
-  "title": "test22s3",
-    "description": "test",
-    "category": "test",
-    "quantity": 2
+  "date": "test22s3",
+  "isHandled": false,
+  "product": ["60a4ea4a5f28755b848c1eca", 2],
+  "user": "1",
+  "shipping": "postnord"
 }
 
 ###
