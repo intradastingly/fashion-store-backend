@@ -1,7 +1,7 @@
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
 import { CSSProperties, Component, ContextType } from "react";
 import { Link } from "react-router-dom";
-import { CartContext, ISession } from '../../contexts/CartContext';
+import { ApiContext, ISession } from '../../contexts/ApiContext';
 
 const layout = {
   labelCol: {
@@ -20,8 +20,8 @@ const tailLayout = {
 };
 
 class userLogIn extends Component {
-  context!: ContextType<typeof CartContext>
-  static contextType = CartContext;
+  context!: ContextType<typeof ApiContext>
+  static contextType = ApiContext;
 
   onValuesChange = (values: string, allValues: ISession) => {
     const { updateLoginInfo } = this.context;

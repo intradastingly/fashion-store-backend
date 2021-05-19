@@ -3,15 +3,15 @@ import { Card, Col, List, Row, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { Product } from '../ProductItemsList';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../../contexts/CartContext';
+import { ApiContext } from '../../contexts/ApiContext';
 
 const { Meta } = Card;
 const success = () => {
     message.success('The product was added to the cart', 5);
 };
 class ProductCardGrid extends Component {
-    context!: ContextType<typeof CartContext>
-    static contextType = CartContext;
+    context!: ContextType<typeof ApiContext>
+    static contextType = ApiContext;
         
     render() {
         // const { addProductToCart } = this.context;
