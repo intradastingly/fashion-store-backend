@@ -46,10 +46,9 @@ const layoutStyle: CSSProperties = {
   alignItems: "center",
   justifyItems: "center",
   textDecoration: "none",
-  zIndex: 0,
+  zIndex: 100,
   borderBottom: "none",
   position: "fixed",
-  top: 0,
 };
 
 const logoStyle: CSSProperties = {
