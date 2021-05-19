@@ -6,7 +6,7 @@ import { PaymentKlarna } from '../componenets/Cart/PayKlarna';
 import { PaymentSwish } from '../componenets/Cart/PaySwish';
 import { DeliveryMethod, deliveryMethods } from '../componenets/deliveryMethods';
 import { IReceipt } from '../componenets/OrderSuccess/Reciept';
-import { Product } from '../componenets/ProductItemsList';
+// import { Product } from '../componenets/ProductItemsList';
 
 const emptyUser: UserInfo = {
     name: '',
@@ -33,6 +33,16 @@ const emptyReceipt: IReceipt = {
     paymentMethod: defaultPayment,
     userInfo: emptyUser,
 }
+
+export interface ProductInfo {
+    category: [],
+    description: String,
+    quantity: Number,
+    title: String,
+    img: string,
+    price: Number,
+    _id: String
+}
 interface State {
     cart: CartItem[];
     deliveryMethod: DeliveryMethod;
@@ -40,18 +50,19 @@ interface State {
     paymentInfo: PaymentMethod;
     receipt: IReceipt;
     disablePlaceOrderButton: boolean;
+    allProducts: ProductInfo[];
 }
 
 interface ContextValue extends State {
-    addProductToCart: (product: Product, quantity: number | undefined) => void;
-    setDeliveryMethod: (method: DeliveryMethod) => void;
-    deleteProductFromCart: (id: number) => void;
-    getTotalPrice: () => void;
-    getTotalPriceProducts: () => void;
-    getBadgeQuantity: () => number;
-    updateUserInfo: (userInfo: UserInfo) => void;
-    updatePaymentInfo: (paymentInfo: PaymentMethod) => void;
-    handlePlaceOrder: (history: any) => void;
+  //addProductToCart: (productInfo: ProductInfo, quantity: number | undefined) => void;
+  setDeliveryMethod: (method: DeliveryMethod) => void;
+  deleteProductFromCart: (id: number) => void;
+  getTotalPrice: () => void;
+  getTotalPriceProducts: () => void;
+  getBadgeQuantity: () => number;
+  updateUserInfo: (userInfo: UserInfo) => void;
+  updatePaymentInfo: (paymentInfo: PaymentMethod) => void;
+  handlePlaceOrder: (history: any) => void;
 }
 
 export const CartContext = createContext<ContextValue>({
@@ -61,7 +72,8 @@ export const CartContext = createContext<ContextValue>({
     paymentInfo: defaultPayment,
     receipt: emptyReceipt,
     disablePlaceOrderButton: false,
-    addProductToCart: () => {},
+    allProducts: [],
+    // addProductToCart: () => {},
     setDeliveryMethod: () => {},
     deleteProductFromCart: () => {},
     getTotalPrice: () => {},
@@ -80,31 +92,46 @@ class CartProvider extends Component<{}, State> {
         paymentInfo: defaultPayment,
         receipt: emptyReceipt,
         disablePlaceOrderButton: false,
+        allProducts: []
     }
     
-    componentDidMount() {
+    async componentDidMount() {
+        const response = await fetch("/api/products", {
+            method: "GET",
+            headers: {
+                "Content-type": "application-json"
+            }
+        })
+        const products = await response.json()
+        
+        
+        this.setState({
+            allProducts: products
+        })
+
+        
         this.setState({ 
             cart: JSON.parse(localStorage.getItem('cartItems') as string) || [],
         });
     }
 
-    addProductToCart = (product: Product, quantity: number | undefined) => {
-        let cartItems = this.state.cart;
-        const existingCartItem = cartItems.filter((item: CartItem) => item.product.id === product.id);
-        if (existingCartItem.length === 0) {
-            const cartItem = {product: product, quantity: 1};
-            cartItems.push(cartItem);
-        } else if (quantity) {
-            const cartItem = {product: product, quantity: quantity};
-            cartItems = cartItems.map((item: CartItem) => item.product.id === product.id ? cartItem : item);
-        } else {
-            const cartItem = {product: product, quantity: existingCartItem[0].quantity + 1};
-            cartItems = cartItems.map((item: CartItem) => item.product.id === product.id ? cartItem : item);
-        }
-        localStorage.setItem('cartItems', JSON.stringify(cartItems));
-        this.setState({ cart: cartItems });
-        return cartItems;
-    }
+    // addProductToCart = (product: ProductInfo, quantity: number | undefined) => {
+    //     let cartItems = this.state.cart;
+    //     const existingCartItem = cartItems.filter((item: CartItem) => item.product.id === product.id);
+    //     if (existingCartItem.length === 0) {
+    //         const cartItem = {product: product, quantity: 1};
+    //         cartItems.push(cartItem);
+    //     } else if (quantity) {
+    //         const cartItem = {product: product, quantity: quantity};
+    //         cartItems = cartItems.map((item: CartItem) => item.product.id === product.id ? cartItem : item);
+    //     } else {
+    //         const cartItem = {product: product, quantity: existingCartItem[0].quantity + 1};
+    //         cartItems = cartItems.map((item: CartItem) => item.product.id === product.id ? cartItem : item);
+    //     }
+    //     localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    //     this.setState({ cart: cartItems });
+    //     return cartItems;
+    // }
 
     setDeliveryMethod = (method: DeliveryMethod) => {
         this.setState({ deliveryMethod: method });
@@ -187,6 +214,7 @@ class CartProvider extends Component<{}, State> {
     }
 
     render() {
+
         return (
             <CartContext.Provider value={{
                 cart: this.state.cart,
@@ -195,7 +223,7 @@ class CartProvider extends Component<{}, State> {
                 paymentInfo: this.state.paymentInfo,
                 receipt: this.state.receipt,
                 disablePlaceOrderButton: this.state.disablePlaceOrderButton,
-                addProductToCart: this.addProductToCart,
+                // //addProductToCart: this.addProductToCart,
                 setDeliveryMethod: this.setDeliveryMethod,
                 deleteProductFromCart: this.deleteProductFromCart,
                 getTotalPrice: this.getTotalPrice,
@@ -204,6 +232,7 @@ class CartProvider extends Component<{}, State> {
                 updateUserInfo: this.updateUserInfo,
                 updatePaymentInfo: this.updatePaymentInfo,
                 handlePlaceOrder: this.handlePlaceOrder,
+                allProducts: this.state.allProducts,
             }}>
                 {this.props.children}
             </CartContext.Provider>
