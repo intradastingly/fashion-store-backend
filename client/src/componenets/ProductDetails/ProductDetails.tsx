@@ -3,9 +3,8 @@ import { Component, ContextType, CSSProperties } from 'react';
 import { Image } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Product } from "../ProductItemsList";
-import { CartContext } from '../../contexts/CartContext';
+import { ApiContext, ProductInfo } from '../../contexts/ApiContext';
 import ErrorPage from '../ErrorPage';
-import { ProductInfo } from "../../contexts/CartContext"
 interface State {
     product?: ProductInfo;
 }
@@ -16,8 +15,8 @@ const success = () => {
     message.success('The product was added to the cart', 5);
 };
 class ProductDetails extends Component <Props, State> {
-    context!: ContextType<typeof CartContext>
-    static contextType = CartContext;
+    context!: ContextType<typeof ApiContext>
+    static contextType = ApiContext;
    
     state: State = {
         product: undefined,
