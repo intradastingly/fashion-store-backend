@@ -14,13 +14,13 @@ class ProductCardGrid extends Component {
     static contextType = CartContext;
         
     render() {
-        const { addProductToCart } = this.context;
-        const products: Product[] = JSON.parse(localStorage.getItem("products") as string) || [];
+        // const { addProductToCart } = this.context;
+       // const products: Product[] = JSON.parse(localStorage.getItem("products") as string) || [];
         return(    
             <Row style={cardContainer}>
                 <Col span={24} style={columnStyle}>
                     <List
-                        grid={{
+                       grid={{
                             gutter: 25,
                             xs: 1,
                             sm: 2,
@@ -29,21 +29,22 @@ class ProductCardGrid extends Component {
                             xl: 4,
                             xxl: 4,
                         }}
-                        dataSource={products}
+                        dataSource={this.context.allProducts}
                         renderItem={item => (
                             <List.Item>
-                                <Link to={'/product/' + item.id}>
+                                {console.log(item._id)}
+                                <Link to={'/product/' + item._id}>
                                     <Card
                                         hoverable
-                                        cover={<img src={item.imageUrl} alt='product' />}
+                                        // cover={<img src={item.imageUrl} alt='product' />}
                                         actions={[
                                             <ShoppingCartOutlined 
                                                 style={{ fontSize: '2rem' }}
-                                                onClick={(e) => {success(); e.preventDefault(); addProductToCart(item, undefined)}} 
+                                                // onClick={(e) => {success(); e.preventDefault(); addProductToCart(item, undefined)}} 
                                             />
                                         ]}
                                     >
-                                    <Meta title={item.title} description={item.price + ' kr'} />
+                                    <Meta title={item.title} description={"här kommer priset sen"} />
                                     </Card>
                                 </Link>
                             </List.Item>

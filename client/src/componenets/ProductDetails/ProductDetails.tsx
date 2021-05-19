@@ -5,8 +5,9 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Product } from "../ProductItemsList";
 import { CartContext } from '../../contexts/CartContext';
 import ErrorPage from '../ErrorPage';
+import { ProductInfo } from "../../contexts/CartContext"
 interface State {
-    product?: Product;
+    product?: ProductInfo;
 }
 interface Props extends RouteComponentProps {
     id: number
@@ -23,33 +24,34 @@ class ProductDetails extends Component <Props, State> {
     }
 
     componentDidMount() {   
-        const products = JSON.parse(localStorage.getItem('products') as string) || [];
-        const productId = Number((this.props.match.params as any).id)
-        const product = products.find((p: Product) => p.id === productId);
+        // const products = JSON.parse(localStorage.getItem('products') as string) || [];
+        const Allproducts = this.context.allProducts
+        const productId = String((this.props.match.params as any).id)
+        const product = Allproducts.find((p: ProductInfo) => p._id === productId);
         this.setState({product: product})
     }
 
     handleAddClick = () => {
-        const { addProductToCart } = this.context;
+        // const { addProductToCart } = this.context;
         success();
-        addProductToCart(this.state.product!, undefined)
+       // addProductToCart(this.state.product!, undefined)
     }
 
     render () {
-        if (!this.state.product) {
-            return <ErrorPage />
-        }
+        // if (!this.state.product) {
+        //     return <ErrorPage />
+        // }
        
         return (
             <Row style={detailContainer}>
                 <Col lg={{span: 10}} style={columnStyle}>
-                    <Image src={this.state.product.imageUrl} />          
+                    <Image src={"BILD BILD"} />          
                 </Col>
 
                 <Col lg={{span: 10}} style={columnStyle}>
-                    <h2 style={titleStyle}>{this.state.product.title}</h2>
-                    <h4>{this.state.product.description} </h4>
-                    <h2 style={price}>{this.state.product.price + ' kr'} </h2>
+                    <h2 style={titleStyle}>{this.state.product?.title}</h2>
+                    <h4>{this.state.product?.description} </h4>
+                    <h2 style={price}>{"här kommer priset sen"} </h2>
                     <Button 
                         type="primary" 
                         style={{ marginTop: '1rem', width: '8rem', marginBottom: '6rem' }} 
