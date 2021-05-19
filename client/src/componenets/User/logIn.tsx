@@ -1,6 +1,7 @@
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
-import { CSSProperties, Component } from "react";
+import { CSSProperties, Component, ContextType } from "react";
 import { Link } from "react-router-dom";
+import { CartContext, ISession } from '../../contexts/CartContext';
 
 const layout = {
   labelCol: {
@@ -19,7 +20,16 @@ const tailLayout = {
 };
 
 class userLogIn extends Component {
+  context!: ContextType<typeof CartContext>
+  static contextType = CartContext;
+
+  onValuesChange = (values: string, allValues: ISession) => {
+    const { updateLoginInfo } = this.context;
+    updateLoginInfo(allValues)
+  };
+
   onFinish = (values: any) => {
+    console.log('test')
     console.log("Success:", values);
   };
 
@@ -48,6 +58,7 @@ class userLogIn extends Component {
                 remember: true,
               }}
               onFinish={this.onFinish}
+              onValuesChange={this.onValuesChange}
               onFinishFailed={this.onFinishFailed}
             >
               <Form.Item

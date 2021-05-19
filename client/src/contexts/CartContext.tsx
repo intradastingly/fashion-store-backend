@@ -8,6 +8,12 @@ import { DeliveryMethod, deliveryMethods } from '../componenets/deliveryMethods'
 import { IReceipt } from '../componenets/OrderSuccess/Reciept';
 import { Product } from '../componenets/ProductItemsList';
 
+export interface ISession {
+    /* id: string, */
+    userName: string,
+    password: string,
+}
+
 const emptyUser: UserInfo = {
     name: '',
     email: '',
@@ -33,6 +39,12 @@ const emptyReceipt: IReceipt = {
     paymentMethod: defaultPayment,
     userInfo: emptyUser,
 }
+
+const userSession: ISession = {
+    /* id: "", */
+    userName: "",
+    password: "",
+}
 interface State {
     cart: CartItem[];
     deliveryMethod: DeliveryMethod;
@@ -40,6 +52,7 @@ interface State {
     paymentInfo: PaymentMethod;
     receipt: IReceipt;
     disablePlaceOrderButton: boolean;
+    session: ISession;
 }
 
 interface ContextValue extends State {
@@ -52,6 +65,7 @@ interface ContextValue extends State {
     updateUserInfo: (userInfo: UserInfo) => void;
     updatePaymentInfo: (paymentInfo: PaymentMethod) => void;
     handlePlaceOrder: (history: any) => void;
+    updateLoginInfo: (userSession: ISession) => void;
 }
 
 export const CartContext = createContext<ContextValue>({
@@ -61,6 +75,7 @@ export const CartContext = createContext<ContextValue>({
     paymentInfo: defaultPayment,
     receipt: emptyReceipt,
     disablePlaceOrderButton: false,
+    session: userSession,
     addProductToCart: () => {},
     setDeliveryMethod: () => {},
     deleteProductFromCart: () => {},
@@ -70,6 +85,7 @@ export const CartContext = createContext<ContextValue>({
     updateUserInfo: () => {},
     updatePaymentInfo: () => {},
     handlePlaceOrder: () => {},
+    updateLoginInfo: () => {}
 });
 
 class CartProvider extends Component<{}, State> {
@@ -80,6 +96,7 @@ class CartProvider extends Component<{}, State> {
         paymentInfo: defaultPayment,
         receipt: emptyReceipt,
         disablePlaceOrderButton: false,
+        session: userSession,
     }
     
     componentDidMount() {
@@ -186,6 +203,13 @@ class CartProvider extends Component<{}, State> {
         this.setState({ disablePlaceOrderButton: false });
     }
 
+    ///////////////////////////////////////////////////////
+
+    updateLoginInfo = async (loginInfo: ISession) => {
+        this.setState({session: loginInfo})
+        console.log(this.state.session)
+    }
+
     render() {
         return (
             <CartContext.Provider value={{
@@ -195,6 +219,7 @@ class CartProvider extends Component<{}, State> {
                 paymentInfo: this.state.paymentInfo,
                 receipt: this.state.receipt,
                 disablePlaceOrderButton: this.state.disablePlaceOrderButton,
+                session: this.state.session,
                 addProductToCart: this.addProductToCart,
                 setDeliveryMethod: this.setDeliveryMethod,
                 deleteProductFromCart: this.deleteProductFromCart,
@@ -204,6 +229,7 @@ class CartProvider extends Component<{}, State> {
                 updateUserInfo: this.updateUserInfo,
                 updatePaymentInfo: this.updatePaymentInfo,
                 handlePlaceOrder: this.handlePlaceOrder,
+                updateLoginInfo: this.updateLoginInfo,
             }}>
                 {this.props.children}
             </CartContext.Provider>
