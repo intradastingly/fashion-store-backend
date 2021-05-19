@@ -1,0 +1,35 @@
+// GET all products
+GET http://localhost:6969/api/accounts/
+
+###
+
+
+
+// create new product
+POST http://localhost:6969/api/accounts/
+Content-Type: application/json
+
+{
+    "userName": "Admin",
+    "role": "admin",
+    "password": "1234"
+}
+###
+
+
+// DELETE product
+DELETE  http://localhost:6969/api/accounts/60a4b9549a4b2a1748f8ea1d
+
+###
+
+
+// EDIT product
+PUT http://localhost:6969/api/accounts/60a4b9f99a4b2a1748f8ea1e
+Content-Type: application/json
+
+{
+    "userName": "BigBoy",
+    "role": "admin",
+    "password" : "123"
+}
+###
