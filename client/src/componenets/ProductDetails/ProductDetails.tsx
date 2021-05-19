@@ -45,13 +45,13 @@ class ProductDetails extends Component <Props, State> {
         return (
             <Row style={detailContainer}>
                 <Col lg={{span: 10}} style={columnStyle}>
-                    <Image src={"BILD BILD"} />          
+                    <Image src={this.state.product?.img} />          
                 </Col>
 
                 <Col lg={{span: 10}} style={columnStyle}>
                     <h2 style={titleStyle}>{this.state.product?.title}</h2>
                     <h4>{this.state.product?.description} </h4>
-                    <h2 style={price}>{"här kommer priset sen"} </h2>
+                    <h2 style={price}>{this.state.product?.price + "kr"} </h2>
                     <Button 
                         type="primary" 
                         style={{ marginTop: '1rem', width: '8rem', marginBottom: '6rem' }} 

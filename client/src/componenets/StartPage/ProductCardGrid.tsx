@@ -36,7 +36,7 @@ class ProductCardGrid extends Component {
                                 <Link to={'/product/' + item._id}>
                                     <Card
                                         hoverable
-                                        // cover={<img src={item.imageUrl} alt='product' />}
+                                        cover={<img src={item.img} alt='product' />}
                                         actions={[
                                             <ShoppingCartOutlined 
                                                 style={{ fontSize: '2rem' }}
@@ -44,7 +44,7 @@ class ProductCardGrid extends Component {
                                             />
                                         ]}
                                     >
-                                    <Meta title={item.title} description={"här kommer priset sen"} />
+                                    <Meta title={item.title} description={item.price + "kr"} />
                                     </Card>
                                 </Link>
                             </List.Item>

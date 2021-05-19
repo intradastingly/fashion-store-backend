@@ -9,6 +9,8 @@ exports.newProduct = async (req: express.Request, res: express.Response) => {
     description: req.body.description,
     category: req.body.category,
     quantity: req.body.quantity,
+    price: req.body.price,
+    img: req.body.img
   });
 
   await product.save();

@@ -6,10 +6,12 @@ POST http://localhost:6969/api/products/
 Content-Type: application/json
 
 {
-  "title": "test22s3",
-    "description": "test",
-    "category": "test",
-    "quantity": 2
+  "title": "PRINTED CHIFFON SKIRT",
+    "description": "Printed midi chiffon skirt with a gently pleated finish. Concealed zipper at the side. Length of skirt: 83.5cm / 33.3",
+    "category": "skirt",
+    "quantity": 10,
+    "price": 429,
+    "img": "https://github.com/msmalinosterberg/miniprojekt/blob/master/src/assets/prod8.png?raw=true"
 }
 ###
 

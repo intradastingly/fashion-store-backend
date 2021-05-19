@@ -39,6 +39,8 @@ export interface ProductInfo {
     description: String,
     quantity: Number,
     title: String,
+    img: string,
+    price: Number,
     _id: String
 }
 interface State {
@@ -101,7 +103,7 @@ class CartProvider extends Component<{}, State> {
             }
         })
         const products = await response.json()
-        console.log(products)
+        
         
         this.setState({
             allProducts: products
@@ -213,7 +215,6 @@ class CartProvider extends Component<{}, State> {
 
     render() {
 
-        console.log(this.state.allProducts)
         return (
             <CartContext.Provider value={{
                 cart: this.state.cart,
