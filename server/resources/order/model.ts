@@ -5,9 +5,10 @@ const orderSchema = new mongoose.Schema({
   // orderID: {},
   date: { type: Date },
   ishandled: { type: Boolean },
-  product: [{ type: String }, { type: Number }],
+  product: [{ type: Object }],
   user: {type: String},
   shipping: [{ type: String }],
+  priceTotal: {type: Number}
 });
 
 module.exports = mongoose.model("Order", orderSchema);

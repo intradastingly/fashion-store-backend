@@ -40,7 +40,7 @@ class InformationForm extends Component<Props> {
     updateUserInfo(allValues.user);
   };
 
-  onFinish = (values: any) => {
+  onFinish = (values: UserInfo) => {
     console.log('Success:', values);
     this.props.next();
   };
