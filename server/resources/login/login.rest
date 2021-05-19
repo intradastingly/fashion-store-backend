@@ -1,0 +1,11 @@
+// create new product
+POST http://localhost:6969/api/login/
+Content-Type: application/json
+
+{
+  "userName": "TestUser",
+  "password":  "1234"
+}
+
+###
+DELETE http://localhost:6969/api/logout
