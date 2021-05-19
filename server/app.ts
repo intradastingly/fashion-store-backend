@@ -8,7 +8,7 @@ const accountRouter = require("./resources/account/router");
 const orderRouter = require("./resources/order/router");
 const loginRouter = require("./resources/login/router")
 /* const cookieRouter = require("./cookies") */
-
+const shippingRouter = require("./resources/shipping/router");
 
 
 const uri =
@@ -35,7 +35,8 @@ mongoose
     app.use("/api", productRouter);
     app.use("/api", accountRouter);
     app.use("/api", orderRouter);
-    
+    app.use("/api", shippingRouter);
+
   });
 
 app.listen(port, () => {
