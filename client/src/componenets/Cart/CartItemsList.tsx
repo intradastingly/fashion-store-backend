@@ -18,8 +18,8 @@ class CartItemsList extends Component {
     }
 
     onChangeQuantity(quantity: number, product: Product) {
-        const { addProductToCart } = this.context;
-        addProductToCart(product, quantity);
+        /// /const { addProductToCart } = this.context;
+        // addProductToCart(product, quantity);
     }
     
     render() {
