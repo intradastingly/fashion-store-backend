@@ -8,9 +8,19 @@ exports.newOrder = async (req: express.Request, res: express.Response) => {
         isHandled: req.body.isHandled,
         product: req.body.product,
         user: req.body.user,
-        shipping: req.body.shipping
+        shipping: req.body.shipping,
+        priceTotal: req.body.priceTotal
       });
     
       await order.save();
       res.status(201).json(order);
 }
+
+exports.getAllOrders = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  const order = await Order.find();
+
+  res.status(200).json(order);
+};

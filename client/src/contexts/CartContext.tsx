@@ -8,6 +8,12 @@ import { DeliveryMethod, deliveryMethods } from '../componenets/deliveryMethods'
 import { IReceipt } from '../componenets/OrderSuccess/Reciept';
 // import { Product } from '../componenets/ProductItemsList';
 
+export interface ISession {
+    /* id: string, */
+    userName: string,
+    password: string,
+}
+
 const emptyUser: UserInfo = {
     name: '',
     email: '',
@@ -34,6 +40,12 @@ const emptyReceipt: IReceipt = {
     userInfo: emptyUser,
 }
 
+const userSession: ISession = {
+    /* id: "", */
+    userName: "",
+    password: "",
+}
+        
 export interface ProductInfo {
     category: [],
     description: String,
@@ -43,6 +55,7 @@ export interface ProductInfo {
     price: Number,
     _id: String
 }
+
 interface State {
     cart: CartItem[];
     deliveryMethod: DeliveryMethod;
@@ -50,19 +63,21 @@ interface State {
     paymentInfo: PaymentMethod;
     receipt: IReceipt;
     disablePlaceOrderButton: boolean;
+    session: ISession;
     allProducts: ProductInfo[];
 }
 
 interface ContextValue extends State {
-  //addProductToCart: (productInfo: ProductInfo, quantity: number | undefined) => void;
-  setDeliveryMethod: (method: DeliveryMethod) => void;
-  deleteProductFromCart: (id: number) => void;
-  getTotalPrice: () => void;
-  getTotalPriceProducts: () => void;
-  getBadgeQuantity: () => number;
-  updateUserInfo: (userInfo: UserInfo) => void;
-  updatePaymentInfo: (paymentInfo: PaymentMethod) => void;
-  handlePlaceOrder: (history: any) => void;
+    //addProductToCart: (productInfo: ProductInfo, quantity: number | undefined) => void;
+    setDeliveryMethod: (method: DeliveryMethod) => void;
+    deleteProductFromCart: (id: number) => void;
+    getTotalPrice: () => void;
+    getTotalPriceProducts: () => void;
+    getBadgeQuantity: () => number;
+    updateUserInfo: (userInfo: UserInfo) => void;
+    updatePaymentInfo: (paymentInfo: PaymentMethod) => void;
+    handlePlaceOrder: (history: any) => void;
+    updateLoginInfo: (userSession: ISession) => void;
 }
 
 export const CartContext = createContext<ContextValue>({
@@ -72,8 +87,7 @@ export const CartContext = createContext<ContextValue>({
     paymentInfo: defaultPayment,
     receipt: emptyReceipt,
     disablePlaceOrderButton: false,
-    allProducts: [],
-    // addProductToCart: () => {},
+   //addProductToCart: () => {},
     setDeliveryMethod: () => {},
     deleteProductFromCart: () => {},
     getTotalPrice: () => {},
@@ -82,6 +96,10 @@ export const CartContext = createContext<ContextValue>({
     updateUserInfo: () => {},
     updatePaymentInfo: () => {},
     handlePlaceOrder: () => {},
+    updateLoginInfo: () => {},
+  
+    session: userSession,
+    allProducts: [],
 });
 
 class CartProvider extends Component<{}, State> {
@@ -92,7 +110,9 @@ class CartProvider extends Component<{}, State> {
         paymentInfo: defaultPayment,
         receipt: emptyReceipt,
         disablePlaceOrderButton: false,
+        session: userSession,
         allProducts: []
+
     }
     
     async componentDidMount() {
@@ -213,6 +233,13 @@ class CartProvider extends Component<{}, State> {
         this.setState({ disablePlaceOrderButton: false });
     }
 
+    ///////////////////////////////////////////////////////
+
+    updateLoginInfo = async (loginInfo: ISession) => {
+        this.setState({session: loginInfo})
+        console.log(this.state.session)
+    }
+
     render() {
 
         return (
@@ -223,6 +250,7 @@ class CartProvider extends Component<{}, State> {
                 paymentInfo: this.state.paymentInfo,
                 receipt: this.state.receipt,
                 disablePlaceOrderButton: this.state.disablePlaceOrderButton,
+                session: this.state.session,
                 // //addProductToCart: this.addProductToCart,
                 setDeliveryMethod: this.setDeliveryMethod,
                 deleteProductFromCart: this.deleteProductFromCart,
@@ -232,7 +260,10 @@ class CartProvider extends Component<{}, State> {
                 updateUserInfo: this.updateUserInfo,
                 updatePaymentInfo: this.updatePaymentInfo,
                 handlePlaceOrder: this.handlePlaceOrder,
+                    
+                updateLoginInfo: this.updateLoginInfo,
                 allProducts: this.state.allProducts,
+
             }}>
                 {this.props.children}
             </CartContext.Provider>

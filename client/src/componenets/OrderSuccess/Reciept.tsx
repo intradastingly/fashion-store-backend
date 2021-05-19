@@ -21,7 +21,7 @@ class Receipt extends Component {
                 {({ receipt }) => {
                     return (
                         <Card title="Receipt" style={receiptStyle}>
-                            <p>Products: {receipt.cart.map((item) => item.quantity + ' ' + item.product.title.concat(', '))}</p>
+                            <p>Products: {receipt.cart.map((item) => item.quantity + ' ' + item.product.title)}</p>
                             <p>Delivery: {receipt.deliveryMethod}</p>
                             <p>Total price: {receipt.totalPrice + ' kr, incl delivery (VAT: ' + receipt.totalPrice * 0.25 + ' kr.)'}</p>
                         </Card>

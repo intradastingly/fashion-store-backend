@@ -9,6 +9,7 @@ class CompleteOrder extends Component {
     static contextType = CartContext;
 
     onPlaceOrderClick = (history: any) => {
+        console.log(history)
         const { handlePlaceOrder } = this.context;
         handlePlaceOrder(history);
     }
@@ -21,7 +22,7 @@ class CompleteOrder extends Component {
                         <>
                         <Col span={24} style={buttonContainerStyle}>
                             <Card title="Order summary" style={{ width: '80%', marginTop: '7rem' }}>
-                                <p>Products: {cart.map((item) => item.quantity + ' ' + item.product.title.concat(', '))}</p>
+                                <p>Products: {cart.map((item) => item.quantity + ' ' + item.product.title)}, </p>
                                 <p>Delivery: {deliveryMethod.company}</p>
                                 <p>Total price: {getTotalPrice() + ' kr, incl delivery and VAT'}</p>
                             </Card>
