@@ -7,7 +7,10 @@ const productRouter = require("./resources/product/router");
 const accountRouter = require("./resources/account/router");
 const orderRouter = require("./resources/order/router");
 const loginRouter = require("./resources/login/router");
+
+/* const cookieRouter = require("./cookies") */
 const guestRouter = require("./resources/guest/router");
+
 const shippingRouter = require("./resources/shipping/router");
 
 const uri =
@@ -22,6 +25,7 @@ mongoose
   .then(() => {
     console.log("You're now connected to the database.");
     app.use(express.json());
+
     app.use(cookieSession({
       name: "session",
       secret: "SuperSecretKey",
@@ -36,7 +40,6 @@ mongoose
     app.use("/api", accountRouter);
     app.use("/api", orderRouter);
     app.use("/api", shippingRouter);
-
   });
 
 app.listen(port, () => {

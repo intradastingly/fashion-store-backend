@@ -1,7 +1,13 @@
 import { Form, Input, Button, Checkbox, Row, Col } from "antd";
-import { CSSProperties, Component, ContextType } from "react";
-import { Link } from "react-router-dom";
-import { ApiContext, ISession } from '../../contexts/ApiContext';
+import {
+  CSSProperties,
+  Component,
+  ContextType,
+  useState,
+  useContext,
+} from "react";
+import { Link, Route } from "react-router-dom";
+import { ApiContext, ISession } from "../../contexts/ApiContext";
 
 const layout = {
   labelCol: {
@@ -19,95 +25,117 @@ const tailLayout = {
   },
 };
 
-class userLogIn extends Component {
-  context!: ContextType<typeof ApiContext>
-  static contextType = ApiContext;
+interface Credentials {
+  userName: string;
+  password: string;
+}
 
-  onValuesChange = (values: string, allValues: ISession) => {
-    const { updateLoginInfo } = this.context;
-    updateLoginInfo(allValues)
+function UserLogIn() {
+  const { loginHandler } = useContext(ApiContext);
+
+  const [loginCredentials, setloginCredentials] = useState<Credentials>({
+    userName: "",
+    password: "",
+  });
+
+  const onFinish = (values: any) => {
+    console.log("test");
+    console.log("Success:", values.password);
+    setloginCredentials({
+      userName: values.username,
+      password: values.password,
+    });
+    loginHandler(loginCredentials);
+
+    console.log(loginCredentials, "credentials");
   };
 
-  onFinish = (values: any) => {
-    console.log('test')
-    console.log("Success:", values);
-  };
-
-  onFinishFailed = (errorInfo: any) => {
+  const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
 
-  render() {
-    return (
-      <div>
-        <Row style={ContainerStyle}>
-          <Col span={24} style={columnStyle}>
-            <h1
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                fontWeight: "bold",
-              }}
+  const reloadPage = () => {
+    setTimeout(reload, 300);
+    function reload() {
+      window.location.reload();
+    }
+  };
+
+  return (
+    <div>
+      <Row style={ContainerStyle}>
+        <Col span={24} style={columnStyle}>
+          <h1
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              fontWeight: "bold",
+            }}
+          >
+            LOG IN{" "}
+          </h1>
+          <Form
+            {...layout}
+            name="basic"
+            initialValues={{
+              remember: true,
+            }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+          >
+            <Form.Item
+              label="Username"
+              name="username"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your username!",
+                },
+              ]}
             >
-              LOG IN{" "}
-            </h1>
-            <Form
-              {...layout}
-              name="basic"
-              initialValues={{
-                remember: true,
-              }}
-              onFinish={this.onFinish}
-              onValuesChange={this.onValuesChange}
-              onFinishFailed={this.onFinishFailed}
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Password"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+              ]}
             >
-              <Form.Item
-                label="Username"
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your username!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+              <Input.Password />
+            </Form.Item>
 
-              <Form.Item
-                label="Password"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!",
-                  },
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
+            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
 
-              <Form.Item
-                {...tailLayout}
-                name="remember"
-                valuePropName="checked"
-              >
-                <Checkbox>Remember me</Checkbox>
-              </Form.Item>
-
-              <Form.Item {...tailLayout}>
-                <Link to={"/profile"}>
-                  <Button type="primary" htmlType="submit" style={buttonStyle}>
+            <Form.Item {...tailLayout}>
+              {/* <Link to={"/profile"}> */}
+              <Route
+                render={({ history }) => (
+                  <Button
+                    onClick={() => {
+                      loginHandler(loginCredentials, history);
+                    }}
+                    type="primary"
+                    htmlType="submit"
+                    style={buttonStyle}
+                  >
                     Log in
                   </Button>
-                </Link>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
+                )}
+              />
+              {/* </Link> */}
+            </Form.Item>
+          </Form>
+        </Col>
+      </Row>
+    </div>
+  );
 }
 
 const ContainerStyle: CSSProperties = {
@@ -127,4 +155,4 @@ const buttonStyle: CSSProperties = {
   marginBottom: "10rem",
 };
 
-export default userLogIn;
+export default UserLogIn;
