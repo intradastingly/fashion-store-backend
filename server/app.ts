@@ -7,10 +7,7 @@ const productRouter = require("./resources/product/router");
 const accountRouter = require("./resources/account/router");
 const orderRouter = require("./resources/order/router");
 const loginRouter = require("./resources/login/router");
-
 /* const cookieRouter = require("./cookies") */
-const guestRouter = require("./resources/guest/router");
-
 const shippingRouter = require("./resources/shipping/router");
 
 const uri =
@@ -34,7 +31,6 @@ mongoose
       httpOnly: false,
       path: "/",
     }));
-    app.use("/api", guestRouter)
     app.use("/api", loginRouter);
     app.use("/api", productRouter);
     app.use("/api", accountRouter);

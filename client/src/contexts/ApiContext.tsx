@@ -62,7 +62,6 @@ export const ApiContext = createContext<ContextValue>({
     const [session, setSession] = useState<any>();
     const [order, setOrder] = useState<any>();
     const [userNameValidation, setUserNameValidation] = useState<boolean>();
-    const [sessionID, setSessionID] = useState<any>();
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -90,19 +89,6 @@ export const ApiContext = createContext<ContextValue>({
         }
         loadShippingMethods()
     }, []);
-      
-    useEffect(() => {
-      
-    const loadGuestSession = async () => {
-      const response = await fetch("/api/guest", {
-        method: "POST",
-      });
-      const session = await response.json();
-      setSession(session);
-      console.log(session)
-    };
-    loadGuestSession();
-  }, []);
 
   async function loginHandler(loginCredentials: ISession, history: any) {
     const response = await fetch("api/login", {
