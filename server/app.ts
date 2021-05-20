@@ -6,10 +6,9 @@ const cookieSession = require("cookie-session");
 const productRouter = require("./resources/product/router");
 const accountRouter = require("./resources/account/router");
 const orderRouter = require("./resources/order/router");
-const loginRouter = require("./resources/login/router")
-/* const cookieRouter = require("./cookies") */
+const loginRouter = require("./resources/login/router");
+const guestRouter = require("./resources/guest/router");
 const shippingRouter = require("./resources/shipping/router");
-
 
 const uri =
   "mongodb+srv://admin:admin@cluster0.4v0hr.mongodb.net/yousef?retryWrites=true&w=majority";
@@ -31,6 +30,7 @@ mongoose
       httpOnly: false,
       path: "/",
     }));
+    app.use("/api", guestRouter)
     app.use("/api", loginRouter);
     app.use("/api", productRouter);
     app.use("/api", accountRouter);
