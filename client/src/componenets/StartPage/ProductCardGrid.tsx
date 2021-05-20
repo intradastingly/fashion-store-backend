@@ -1,21 +1,22 @@
-import { Component, ContextType, CSSProperties } from 'react';
+import { Component, useContext, CSSProperties } from 'react';
 import { Card, Col, List, Row, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { Product } from '../ProductItemsList';
 import { Link } from 'react-router-dom';
-import { ApiContext } from '../../contexts/ApiContext';
+import { CartContext } from '../../contexts/CartContext';
+import { ProductInfo, ApiContext } from '../../contexts/ApiContext';
 
 const { Meta } = Card;
 const success = () => {
     message.success('The product was added to the cart', 5);
 };
-class ProductCardGrid extends Component {
-    context!: ContextType<typeof ApiContext>
-    static contextType = ApiContext;
-        
-    render() {
-        // const { addProductToCart } = this.context;
-       // const products: Product[] = JSON.parse(localStorage.getItem("products") as string) || [];
+
+function ProductCardGrid(){
+    const {addProductToCart} = useContext(CartContext);
+    const {allProducts} = useContext(ApiContext);
+    
+    const products: Product[] = JSON.parse(localStorage.getItem("products") as string) || [];
+
         return(    
             <Row style={cardContainer}>
                 <Col span={24} style={columnStyle}>
@@ -29,7 +30,7 @@ class ProductCardGrid extends Component {
                             xl: 4,
                             xxl: 4,
                         }}
-                        dataSource={this.context.allProducts}
+                        dataSource={allProducts}
                         renderItem={item => (
                             <List.Item>
                                 {console.log(item._id)}
@@ -40,7 +41,7 @@ class ProductCardGrid extends Component {
                                         actions={[
                                             <ShoppingCartOutlined 
                                                 style={{ fontSize: '2rem' }}
-                                                // onClick={(e) => {success(); e.preventDefault(); addProductToCart(item, undefined)}} 
+                                                onClick={(e) => {success(); e.preventDefault(); addProductToCart(item, undefined)}} 
                                             />
                                         ]}
                                     >
@@ -53,7 +54,7 @@ class ProductCardGrid extends Component {
                 </Col>
             </Row>
         )
-    }
+   
 }
 
 export default ProductCardGrid;
