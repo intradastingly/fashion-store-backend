@@ -1,57 +1,58 @@
 import { Button, Radio, Row } from 'antd';
-import { Component, ContextType, CSSProperties } from 'react';
+import { Component, ContextType, CSSProperties, useState, useContext } from 'react';
 import { CartContext } from '../../contexts/CartContext';
-import { calculateDeliveryDay, DeliveryMethod, deliveryMethods } from '../deliveryMethods';
+import { ApiContext, ShippingInfo } from '../../contexts/ApiContext';
+import { calculateDeliveryDay } from '../deliveryMethods';
 interface Props {
   next(): void;
 }
-class DeliverySection extends Component<Props> {
-  context!: ContextType<typeof CartContext>
-  static contextType = CartContext;
 
-  state = {
-    value: 1,
-  };
+
+function DeliverySection(props: Props) {
+  const { shippingMethods } = useContext(ApiContext)
+  const { setDeliveryMethod } = useContext(CartContext)
+
+  const [value, setValue] = useState(1)
+
   
-  onChange = (e: any) => {
-    const { setDeliveryMethod } = this.context;
-    this.setState({
-      value: e.target.value,
-    });
-    const method = deliveryMethods.filter((item: DeliveryMethod) => item.id === e.target.value)[0];
-    setDeliveryMethod(method);
+  const onChange = (e: any) => {
+    setValue(e.target.value)
+
+    const method = shippingMethods.filter((item: ShippingInfo) => item._id === e.target.value)[0];
+    console.log("METHOD FILTER", method)
+    //setShippingMethod(method);
+    setDeliveryMethod(method)
   };
 
-  mapMethodToRadio() {
-    return deliveryMethods.map(item =>
-      <Radio value={item.id} style={{ marginTop: '2rem' }}>
-        <span style={deliveryCompanyStyle}>{item.company}</span>
+  const mapMethodToRadio = () => {
+    return shippingMethods.map(item =>
+      <Radio value={item._id} style={{ marginTop: '2rem' }}>
+        <span style={deliveryCompanyStyle}>{item.shipmentCompany}</span>
         <br/>
-        <span style={deliveryTextStyle}>{'Delivery on ' + calculateDeliveryDay(item.time)}</span>
+        <span style={deliveryTextStyle}>{'Delivery on ' + calculateDeliveryDay(item.deliveryTime)}</span>
         <br/>
-        <span style={deliveryTextStyle}>{item.price + ' kr '}</span>
+        <span style={deliveryTextStyle}>{item.shippingPrice + ' kr '}</span>
       </Radio>
     );
   }
 
-  render() {
-    const { value } = this.state;
+
 
     return (
       <Row style={deliveryContainer}>
           <h2>
               Delivery
           </h2>
-          <Radio.Group onChange={this.onChange} value={value}>
-            {this.mapMethodToRadio()}
+          <Radio.Group onChange={onChange} value={value}>
+            {mapMethodToRadio()}
           </Radio.Group>
           <br/>
-          <Button type="primary" style={buttonStyle} onClick={this.props.next}>
+          <Button type="primary" style={buttonStyle} onClick={props.next}>
             Next
           </Button>
       </Row>
     );
-  }
+  
 }
 
 export default DeliverySection;

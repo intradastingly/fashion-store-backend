@@ -16,6 +16,13 @@ export interface ProductInfo {
     _id: String
 }
 
+export interface ShippingInfo {
+  shipmentCompany: string,
+  deliveryTime: number,
+  shippingPrice: Number,
+  _id: String
+}
+
 const userSession: ISession = {
     /* id: "", */
     userName: "",
@@ -25,6 +32,10 @@ const userSession: ISession = {
   interface State {
     session: ISession;
     allProducts: ProductInfo[];
+    shippingMethods: ShippingInfo[];
+    //method: string;
+    // setShippingMethod: ShippingInfo[];
+
   }
 
   interface ContextValue extends State {
@@ -34,9 +45,15 @@ const userSession: ISession = {
   export const ApiContext = createContext<ContextValue>({
     session: userSession,
     allProducts: [],
+    shippingMethods: [],
+    // method: "",
     updateLoginInfo: () => {},
   });
   
+  export interface shippingMethods extends ShippingInfo {
+    shippingMethods: shippingMethods
+  }
+
   interface Props {
     children: Object;
   }
@@ -44,6 +61,8 @@ const userSession: ISession = {
   function ApiProvider(props: Props) {
     const [session, setSession] = useState<any>();
     const [allProducts, setAllProducts] = useState<any>();
+    const [shippingMethods, setShippingMethods] = useState<any>();
+    // const [method, setShippingMethod] = useState<any>("");
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -57,19 +76,35 @@ const userSession: ISession = {
             setAllProducts(products)
         }
         loadProducts()
+
+        const loadShippingMethods = async () => {
+          const response = await fetch("/api/shipping", {
+            method: "GET",
+            headers: {
+              "Content-type": "application-json"
+            }
+          })
+
+          const shipping = await response.json();
+          setShippingMethods(shipping)
+        }
+        loadShippingMethods()
     }, []);
   
     async function updateLoginInfo(loginInfo: ISession){
         setSession(loginInfo)
-        console.log(loginInfo)
     }
   
     return (
       <ApiContext.Provider
         value={{
-            updateLoginInfo: updateLoginInfo,
-            allProducts: allProducts,
-            session: session,
+          allProducts: allProducts,
+          session: session,
+          shippingMethods: shippingMethods,
+          // method: method,
+          // setShippingMethod: setShippingMethod,
+          updateLoginInfo: updateLoginInfo,
+
         }}
       >
         {props.children}

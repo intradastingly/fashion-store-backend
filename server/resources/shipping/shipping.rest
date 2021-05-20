@@ -7,9 +7,9 @@ POST http://localhost:6969/api/shipping
 Content-Type: application/json
 
 {
-    "shipmentCompany": "Bring",
-    "deliveryTime": "2-4 days",
-    "shippingPrice": 129
+    "shipmentCompany": "Schenker",
+    "deliveryTime": 72,
+    "shippingPrice": 89
 }
 
 
@@ -24,6 +24,6 @@ Content-Type: application/json
 
 {
     "shipmentCompany": "Schenker",
-    "deliveryTime": "3-5 days",
+    "deliveryTime": ,
     "shippingPrice": 89
 }
