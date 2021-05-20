@@ -28,16 +28,10 @@ const userSession: ISession = {
   userName: "",
   password: "",
 };
-
-
-
-        
   interface State {
     session: ISession;
     allProducts: ProductInfo[];
     shippingMethods: ShippingInfo[];
-
-
   }
 
 
@@ -50,72 +44,24 @@ interface ContextValue extends State {
 export const ApiContext = createContext<ContextValue>({
   session: userSession,
   allProducts: [],
+  shippingMethods: [],
   updateLoginInfo: () => {},
   getOrder: () => {},
   loginHandler: () => {},
 });
-
-interface Props {
-  children: Object;
-}
-
-function ApiProvider(props: Props) {
-  const [session, setSession] = useState<any>();
-  const [allProducts, setAllProducts] = useState<any>();
-  const [order, setOrder] = useState<any>();
-  const [userNameValidation, setUserNameValidation] = useState<boolean>();
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      const response = await fetch("/api/products", {
-        method: "GET",
-        headers: {
-          "Content-type": "application-json",
-        },
-      });
-      const products = await response.json();
-      setAllProducts(products);
-    };
-    loadProducts();
-  }, []);
-
-  async function loginHandler(loginCredentials: ISession, history: any) {
-    const response = await fetch("api/login", {
-      method: "POST",
-      body: JSON.stringify(loginCredentials),
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
-    if (result.message === "Incorrect user name or password") {
-      setUserNameValidation(true);
-    } else {
-      setUserNameValidation(false);
-    }
-    history.push("/profile");
-    return response;
-  }
-
-  
-  export const ApiContext = createContext<ContextValue>({
-    session: userSession,
-    allProducts: [],
-    shippingMethods: [],
-    updateLoginInfo: () => {},
-  });
-  
   export interface shippingMethods extends ShippingInfo {
     shippingMethods: shippingMethods
   }
-
   interface Props {
     children: Object;
   }
   
   function ApiProvider(props: Props) {
-    const [session, setSession] = useState<any>();
     const [allProducts, setAllProducts] = useState<any>();
     const [shippingMethods, setShippingMethods] = useState<any>();
+    const [session, setSession] = useState<any>();
+    const [order, setOrder] = useState<any>();
+    const [userNameValidation, setUserNameValidation] = useState<boolean>();
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -144,7 +90,7 @@ function ApiProvider(props: Props) {
         loadShippingMethods()
     }, []);
       
-       useEffect(() => {
+    useEffect(() => {
     const loadGuestSession = async () => {
       console.log("test");
       const response = await fetch("/api/guest", {
@@ -156,6 +102,23 @@ function ApiProvider(props: Props) {
     loadGuestSession();
   }, []);
 
+  async function loginHandler(loginCredentials: ISession, history: any) {
+    const response = await fetch("api/login", {
+      method: "POST",
+      body: JSON.stringify(loginCredentials),
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    });
+    const result = await response.json();
+    if (result.message === "Incorrect user name or password") {
+      setUserNameValidation(true);
+    } else {
+      setUserNameValidation(false);
+    }
+    history.push("/profile");
+    return response;
+  }
+
   async function updateLoginInfo(loginInfo: ISession) {
     /* setSession(loginInfo)
         console.log(loginInfo) */
@@ -164,18 +127,17 @@ function ApiProvider(props: Props) {
   async function getOrder(order: any) {
     console.log(order);
     setOrder(order);
+  }
   
     return (
       <ApiContext.Provider
         value={{
           allProducts: allProducts,
           session: session,
-          shippingMethods: shippingMethods,,
+          shippingMethods: shippingMethods,
           updateLoginInfo: updateLoginInfo,
-          session: session,
           getOrder: getOrder,
           loginHandler: loginHandler,
-
         }}
       >
         {props.children}
