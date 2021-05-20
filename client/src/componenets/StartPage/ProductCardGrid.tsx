@@ -13,7 +13,7 @@ const success = () => {
 
 function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
-    const {allProducts} = useContext(ApiContext);
+    const {allProducts, getOrder} = useContext(ApiContext);
     
     const products: Product[] = JSON.parse(localStorage.getItem("products") as string) || [];
 
@@ -33,7 +33,6 @@ function ProductCardGrid(){
                         dataSource={allProducts}
                         renderItem={item => (
                             <List.Item>
-                                {console.log(item._id)}
                                 <Link to={'/product/' + item._id}>
                                     <Card
                                         hoverable
