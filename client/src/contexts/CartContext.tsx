@@ -8,11 +8,7 @@ import { DeliveryMethod, deliveryMethods } from '../componenets/deliveryMethods'
 import { IReceipt } from '../componenets/OrderSuccess/Reciept';
 // import { Product } from '../componenets/ProductItemsList';
 
-export interface ISession {
-    /* id: string, */
-    userName: string,
-    password: string,
-}
+
 
 const emptyUser: UserInfo = {
     name: '',
@@ -40,21 +36,7 @@ const emptyReceipt: IReceipt = {
     userInfo: emptyUser,
 }
 
-const userSession: ISession = {
-    /* id: "", */
-    userName: "",
-    password: "",
-}
-        
-export interface ProductInfo {
-    category: [],
-    description: String,
-    quantity: Number,
-    title: String,
-    img: string,
-    price: Number,
-    _id: String
-}
+
 
 interface State {
     cart: CartItem[];
@@ -63,8 +45,7 @@ interface State {
     paymentInfo: PaymentMethod;
     receipt: IReceipt;
     disablePlaceOrderButton: boolean;
-    session: ISession;
-    allProducts: ProductInfo[];
+    
 }
 
 interface ContextValue extends State {
@@ -77,7 +58,7 @@ interface ContextValue extends State {
     updateUserInfo: (userInfo: UserInfo) => void;
     updatePaymentInfo: (paymentInfo: PaymentMethod) => void;
     handlePlaceOrder: (history: any) => void;
-    updateLoginInfo: (userSession: ISession) => void;
+   
 }
 
 export const CartContext = createContext<ContextValue>({
@@ -96,10 +77,6 @@ export const CartContext = createContext<ContextValue>({
     updateUserInfo: () => {},
     updatePaymentInfo: () => {},
     handlePlaceOrder: () => {},
-    updateLoginInfo: () => {},
-  
-    session: userSession,
-    allProducts: [],
 });
 
 class CartProvider extends Component<{}, State> {
@@ -110,26 +87,9 @@ class CartProvider extends Component<{}, State> {
         paymentInfo: defaultPayment,
         receipt: emptyReceipt,
         disablePlaceOrderButton: false,
-        session: userSession,
-        allProducts: []
-
     }
     
     async componentDidMount() {
-        const response = await fetch("/api/products", {
-            method: "GET",
-            headers: {
-                "Content-type": "application-json"
-            }
-        })
-        const products = await response.json()
-        
-        
-        this.setState({
-            allProducts: products
-        })
-
-        
         this.setState({ 
             cart: JSON.parse(localStorage.getItem('cartItems') as string) || [],
         });
@@ -232,14 +192,7 @@ class CartProvider extends Component<{}, State> {
         history.push('/ordersuccess');
         this.setState({ disablePlaceOrderButton: false });
     }
-
-    ///////////////////////////////////////////////////////
-
-    updateLoginInfo = async (loginInfo: ISession) => {
-        this.setState({session: loginInfo})
-        console.log(this.state.session)
-    }
-
+    
     render() {
 
         return (
@@ -250,7 +203,7 @@ class CartProvider extends Component<{}, State> {
                 paymentInfo: this.state.paymentInfo,
                 receipt: this.state.receipt,
                 disablePlaceOrderButton: this.state.disablePlaceOrderButton,
-                session: this.state.session,
+                
                 // //addProductToCart: this.addProductToCart,
                 setDeliveryMethod: this.setDeliveryMethod,
                 deleteProductFromCart: this.deleteProductFromCart,
@@ -260,10 +213,6 @@ class CartProvider extends Component<{}, State> {
                 updateUserInfo: this.updateUserInfo,
                 updatePaymentInfo: this.updatePaymentInfo,
                 handlePlaceOrder: this.handlePlaceOrder,
-                    
-                updateLoginInfo: this.updateLoginInfo,
-                allProducts: this.state.allProducts,
-
             }}>
                 {this.props.children}
             </CartContext.Provider>
