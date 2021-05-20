@@ -1,6 +1,6 @@
 import { Button, Checkbox, Row, Col, Typography, Space } from "antd";
 import { HighlightOutlined } from "@ant-design/icons";
-import { CSSProperties, Component, useState } from "react";
+import { CSSProperties, Component, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const { Paragraph } = Typography;
@@ -11,7 +11,34 @@ function UserProfile() {
   const [customerName, setCustomerName] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [cityName, setCityName] = useState("");
-  const [currentOrders, setCurrentOrders] = useState(0);
+  const [currentOrders, setCurrentOrders] = useState<Number>();
+
+  useEffect(() => {
+    const loadOrders = async () => {
+      const allOrders = await makeRequest(`/api/order/`, "GET");
+      //   for (let i = 0; i < allOrders.length; i++) {
+      //     if (loggedInUser === allOrders[i].user) {
+      //         currentOrders++
+      //     }
+      //   }
+
+      setCurrentOrders(allOrders.length);
+    };
+
+    loadOrders();
+  }, []);
+
+  async function makeRequest(url: RequestInfo, method: string, body?: object) {
+    const response = await fetch(url, {
+      method: method,
+      body: JSON.stringify(body),
+      headers: {
+        "Content-type": "application/json",
+      },
+    });
+    const result = await response.json();
+    return result;
+  }
   return (
     <div style={profileContainer}>
       <div style={infoContainer}>
@@ -46,8 +73,9 @@ function UserProfile() {
           </div>
           <div style={containerDivider}>
             <div>
-              <div>
-                <Title level={4}>Current Orders: {currentOrders}</Title>
+              <div style={flexCenterColumn}>
+                <Title level={4}>Orders Made: {currentOrders}</Title>
+                <Button>See Orders</Button>
               </div>
             </div>
           </div>
@@ -103,6 +131,13 @@ const containerDivider: CSSProperties = {
 const flexRow: CSSProperties = {
   display: "flex",
   height: "100%",
+};
+
+const flexCenterColumn: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
 export default UserProfile;
