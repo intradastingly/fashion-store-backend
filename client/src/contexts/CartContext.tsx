@@ -109,7 +109,6 @@ class CartProvider extends Component<{}, State> {
         }
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
         this.setState({ cart: cartItems });
-        console.log(cartItems)
         return cartItems;
     }
 
