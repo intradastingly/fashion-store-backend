@@ -1,59 +1,58 @@
 import { Avatar, Col, List, Row, InputNumber } from 'antd';
-import { Component, ContextType, CSSProperties } from 'react';
+import { useContext, CSSProperties } from 'react';
 import { Product } from '../ProductItemsList';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
+import { ApiContext } from '../../contexts/ApiContext';
 
 export interface CartItem {
     product: Product;
     quantity: number;
 }
-class CartItemsList extends Component {
-    context!: ContextType<typeof CartContext>
-    static contextType = CartContext;
+function CartItemsList() {
+    const { deleteProductFromCart, addProductToCart } = useContext(CartContext);
+    const { allProducts } = useContext(ApiContext);
       
-    handleDelete = (id: number) => {
-        const { deleteProductFromCart } = this.context;
+    function handleDelete(id: number){
         deleteProductFromCart(id as number);
     }
 
-    onChangeQuantity(quantity: number, product: Product) {
-        /// /const { addProductToCart } = this.context;
-        // addProductToCart(product, quantity);
+    function onChangeQuantity(quantity: number, product: any) {
+        addProductToCart(product, quantity);
     }
     
-    render() {
-        return (
-            <CartContext.Consumer>
-                {({ cart }) => {
-                    return (
-                        <Row style={listContainerStyle}>
-                            <Col span={24} style={columnStyle}>
-                                <List
-                                    itemLayout="horizontal"
-                                    dataSource={cart}
-                                    renderItem={item => (
-                                    <List.Item
-                                        actions={[<button key="delete-item" 
-                                        style={deleteStyle}
-                                        onClick={() => this.handleDelete(item.product.id)}>delete</button>]}>
-                                        <List.Item.Meta                    
-                                            avatar={<Avatar src={item.product.imageUrl} />}
-                                            title={<Link to={'/product/' + item.product.id}>{item.product.title}</Link>}
-                                            description={[<span style={descriptionStyle}>{item.product.description.substring(0, 35) + '...'}</span>,
-                                            <InputNumber min={1} max={10} defaultValue={item.quantity} onChange={(value) => this.onChangeQuantity(value, item.product)} style={numberInputStyle} />,
-                                            item.product.price * item.quantity + ' kr']}
-                                        />
-                                    </List.Item>
-                                    )}
-                                />
-                            </Col>
-                        </Row>
-                    )
-                }}
-            </CartContext.Consumer>
-        )
-    }
+    
+    return (
+        <CartContext.Consumer>
+            {({ cart }) => {
+                return (
+                    <Row style={listContainerStyle}>
+                        <Col span={24} style={columnStyle}>
+                            <List
+                                itemLayout="horizontal"
+                                dataSource={cart}
+                                renderItem={item => (
+                                <List.Item
+                                    actions={[<button key="delete-item" 
+                                    style={deleteStyle}
+                                    onClick={() => handleDelete(item.product.id)}>delete</button>]}>
+                                    <List.Item.Meta                    
+                                        avatar={<Avatar src={item.product.imageUrl} />}
+                                        title={<Link to={'/product/' + item.product.id}>{item.product.title}</Link>}
+                                        description={[<span style={descriptionStyle}>{item.product.description.substring(0, 35) + '...'}</span>,
+                                        <InputNumber min={1} max={10} defaultValue={item.quantity} onChange={(value) => onChangeQuantity(value, item.product)} style={numberInputStyle} />,
+                                        item.product.price * item.quantity + ' kr']}
+                                    />
+                                </List.Item>
+                                )}
+                            />
+                        </Col>
+                    </Row>
+                )
+            }}
+        </CartContext.Consumer>
+    )
+
 }
 
 const listContainerStyle: CSSProperties = {
