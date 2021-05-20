@@ -13,7 +13,7 @@ const success = () => {
 
 function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
-    const {allProducts} = useContext(ApiContext);
+    const {allProducts, getOrder} = useContext(ApiContext);
     
     const products: Product[] = JSON.parse(localStorage.getItem("products") as string) || [];
 

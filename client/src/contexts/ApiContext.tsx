@@ -29,12 +29,14 @@ const userSession: ISession = {
 
   interface ContextValue extends State {
     updateLoginInfo: (userSession: ISession) => void;
+    getOrder: (order: any) => void
   }
   
   export const ApiContext = createContext<ContextValue>({
     session: userSession,
     allProducts: [],
     updateLoginInfo: () => {},
+    getOrder: () => {},
   });
   
   interface Props {
@@ -44,6 +46,7 @@ const userSession: ISession = {
   function ApiProvider(props: Props) {
     const [session, setSession] = useState<any>();
     const [allProducts, setAllProducts] = useState<any>();
+    const [order, setOrder] = useState<any>();
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -63,11 +66,17 @@ const userSession: ISession = {
         setSession(loginInfo)
         console.log(loginInfo)
     }
+
+    async function getOrder(order: any) {
+      console.log(order)
+      setOrder(order)
+    }
   
     return (
       <ApiContext.Provider
         value={{
             updateLoginInfo: updateLoginInfo,
+            getOrder: getOrder,
             allProducts: allProducts,
             session: session,
         }}

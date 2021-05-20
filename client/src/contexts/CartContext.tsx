@@ -185,9 +185,12 @@ class CartProvider extends Component<{}, State> {
         this.setState({
             receipt: this.createReceipt()
         });
-        console.log('receipt', this.state.receipt);
-        this.clearCart();
 
+        const {getOrder} = this.context;
+        getOrder(this.state.receipt)
+
+        this.clearCart();
+        
         history.push('/ordersuccess');
         this.setState({ disablePlaceOrderButton: false });
     }
