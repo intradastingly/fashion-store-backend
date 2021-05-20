@@ -62,7 +62,6 @@ export const ApiContext = createContext<ContextValue>({
     const [session, setSession] = useState<any>();
     const [order, setOrder] = useState<any>();
     const [userNameValidation, setUserNameValidation] = useState<boolean>();
-    const [sessionID, setSessionID] = useState<any>();
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -92,14 +91,13 @@ export const ApiContext = createContext<ContextValue>({
     }, []);
       
     useEffect(() => {
-      
     const loadGuestSession = async () => {
+      console.log("test");
       const response = await fetch("/api/guest", {
-        method: "POST",
+        method: "GET",
       });
       const session = await response.json();
       setSession(session);
-      console.log(session)
     };
     loadGuestSession();
   }, []);
