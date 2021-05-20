@@ -16,16 +16,30 @@ export interface ProductInfo {
   _id: String;
 }
 
+export interface ShippingInfo {
+  shipmentCompany: string,
+  deliveryTime: number,
+  shippingPrice: Number,
+  _id: String
+}
+
 const userSession: ISession = {
   /* id: "", */
   userName: "",
   password: "",
 };
 
-interface State {
-  session: ISession;
-  allProducts: ProductInfo[];
-}
+
+
+        
+  interface State {
+    session: ISession;
+    allProducts: ProductInfo[];
+    shippingMethods: ShippingInfo[];
+
+
+  }
+
 
 interface ContextValue extends State {
   updateLoginInfo: (userSession: ISession) => void;
@@ -54,7 +68,7 @@ function ApiProvider(props: Props) {
   useEffect(() => {
     const loadProducts = async () => {
       const response = await fetch("/api/products", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-type": "application-json",
         },
@@ -82,7 +96,55 @@ function ApiProvider(props: Props) {
     return response;
   }
 
-  useEffect(() => {
+  
+  export const ApiContext = createContext<ContextValue>({
+    session: userSession,
+    allProducts: [],
+    shippingMethods: [],
+    updateLoginInfo: () => {},
+  });
+  
+  export interface shippingMethods extends ShippingInfo {
+    shippingMethods: shippingMethods
+  }
+
+  interface Props {
+    children: Object;
+  }
+  
+  function ApiProvider(props: Props) {
+    const [session, setSession] = useState<any>();
+    const [allProducts, setAllProducts] = useState<any>();
+    const [shippingMethods, setShippingMethods] = useState<any>();
+
+    useEffect(() => {
+        const loadProducts = async () => {
+            const response = await fetch("/api/products", {
+                method: "GET",
+                headers: {
+                    "Content-type": "application-json"
+                }
+            })
+            const products = await response.json()
+            setAllProducts(products)
+        }
+        loadProducts()
+
+        const loadShippingMethods = async () => {
+          const response = await fetch("/api/shipping", {
+            method: "GET",
+            headers: {
+              "Content-type": "application-json"
+            }
+          })
+
+          const shipping = await response.json();
+          setShippingMethods(shipping)
+        }
+        loadShippingMethods()
+    }, []);
+      
+       useEffect(() => {
     const loadGuestSession = async () => {
       console.log("test");
       const response = await fetch("/api/guest", {
@@ -102,22 +164,26 @@ function ApiProvider(props: Props) {
   async function getOrder(order: any) {
     console.log(order);
     setOrder(order);
+  
+    return (
+      <ApiContext.Provider
+        value={{
+          allProducts: allProducts,
+          session: session,
+          shippingMethods: shippingMethods,,
+          updateLoginInfo: updateLoginInfo,
+          session: session,
+          getOrder: getOrder,
+          loginHandler: loginHandler,
+
+        }}
+      >
+        {props.children}
+      </ApiContext.Provider>
+    );
+
   }
 
-  return (
-    <ApiContext.Provider
-      value={{
-        loginHandler: loginHandler,
-        updateLoginInfo: updateLoginInfo,
-        getOrder: getOrder,
-        allProducts: allProducts,
-        session: session,
-      }}
-    >
-      {props.children}
-    </ApiContext.Provider>
-  );
-}
 
 export const ApiConsumer = ApiContext.Consumer;
 export default ApiProvider;

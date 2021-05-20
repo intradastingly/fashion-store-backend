@@ -12,7 +12,7 @@ exports.newShipping = async (req: express.Request, res: express.Response) => {
     const shipping = new Shipping({
         shipmentCompany: req.body.shipmentCompany,
         deliveryTime: req.body.deliveryTime,
-        shippingPrice: req.body.shoppingPrice
+        shippingPrice: req.body.shippingPrice
     })
 
     await shipping.save()
