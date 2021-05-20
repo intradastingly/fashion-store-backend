@@ -96,16 +96,16 @@ class CartProvider extends Component<{}, State> {
 
      addProductToCart = (product: any, quantity: number | undefined) => {
          let cartItems = this.state.cart;
-         const existingCartItem = cartItems.filter((item: CartItem) => item.product.id === product.id);
+         const existingCartItem = cartItems.filter((item: any) => item.product._id === product._id);
          if (existingCartItem.length === 0) {
             const cartItem = {product: product, quantity: 1};
             cartItems.push(cartItem);
         } else if (quantity) {
             const cartItem = {product: product, quantity: quantity};
-            cartItems = cartItems.map((item: CartItem) => item.product.id === product.id ? cartItem : item);
+            cartItems = cartItems.map((item: any) => item.product._id === product._id ? cartItem : item);
         } else {
             const cartItem = {product: product, quantity: existingCartItem[0].quantity + 1};
-            cartItems = cartItems.map((item: CartItem) => item.product.id === product.id ? cartItem : item);
+            cartItems = cartItems.map((item: any) => item.product._id === product._id ? cartItem : item);
         }
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
         this.setState({ cart: cartItems });
@@ -175,6 +175,7 @@ class CartProvider extends Component<{}, State> {
     }
 
     handlePlaceOrder = async (history: any) => {
+        
         this.setState({ disablePlaceOrderButton: true });
         try {
             await createOrderMockApi();
@@ -185,7 +186,10 @@ class CartProvider extends Component<{}, State> {
         this.setState({
             receipt: this.createReceipt()
         });
-        console.log('receipt', this.state.receipt);
+
+        const {getOrder} = this.context;
+        getOrder(this.state.receipt)
+
         this.clearCart();
 
         history.push('/ordersuccess');

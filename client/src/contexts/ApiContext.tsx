@@ -29,12 +29,14 @@ const userSession: ISession = {
 
   interface ContextValue extends State {
     updateLoginInfo: (userSession: ISession) => void;
+    getOrder: (order: any) => void
   }
   
   export const ApiContext = createContext<ContextValue>({
     session: userSession,
     allProducts: [],
     updateLoginInfo: () => {},
+    getOrder: () => {},
   });
   
   interface Props {
@@ -44,11 +46,12 @@ const userSession: ISession = {
   function ApiProvider(props: Props) {
     const [session, setSession] = useState<any>();
     const [allProducts, setAllProducts] = useState<any>();
+    const [order, setOrder] = useState<any>();
 
     useEffect(() => {
         const loadProducts = async () => {
             const response = await fetch("/api/products", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-type": "application-json"
                 }
@@ -58,16 +61,34 @@ const userSession: ISession = {
         }
         loadProducts()
     }, []);
+
+    useEffect(() => {
+      const loadGuestSession = async () => {
+        console.log('test')
+        const response = await fetch("/api/guest", {
+          method: "GET"
+        })
+        const session = await response.json()
+        setSession(session)
+      } 
+      loadGuestSession()
+    }, [])
   
     async function updateLoginInfo(loginInfo: ISession){
-        setSession(loginInfo)
-        console.log(loginInfo)
+        /* setSession(loginInfo)
+        console.log(loginInfo) */
+    }
+
+    async function getOrder(order: any) {
+      console.log(order)
+      setOrder(order)
     }
   
     return (
       <ApiContext.Provider
         value={{
             updateLoginInfo: updateLoginInfo,
+            getOrder: getOrder,
             allProducts: allProducts,
             session: session,
         }}
