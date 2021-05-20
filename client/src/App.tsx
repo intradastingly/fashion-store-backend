@@ -19,33 +19,33 @@ import ApiProvider from "./contexts/ApiContext";
 
 function App() {
   return (
-    <CartProvider>
-      <ApiProvider>
-        <Router>
-          <ScrollToTop />
-          <div style={appContainer}>
-            <div>
-              <Navbar />
+    <ApiProvider>
+      <CartProvider>
+          <Router>
+            <ScrollToTop />
+            <div style={appContainer}>
+              <div>
+                <Navbar />
+              </div>
+              <div>
+                <Switch>
+                  <Route path="/product/:id" component={ProductDetails} />
+                  <Route path="/ordersuccess" component={OrderSuccessMessage} />
+                  <Route exact path="/" component={StartPageView} />
+                  <Route path="/cart" component={CartView} />
+                  <Route path="/login" component={userLogIn} />
+                  <Route path="/profile" component={UserProfile} />
+                  <Route path="/admin" component={AdminLogIn} />
+                  <Route path="/admin-list" component={AdminList} />
+                  <Route path="/add-product" component={AddNewProduct} />
+                  <Route path="/edit-product/:id" component={AdminEditDetails} />
+                </Switch>
+              </div>
+              <Footer2 />
             </div>
-            <div>
-              <Switch>
-                <Route path="/product/:id" component={ProductDetails} />
-                <Route path="/ordersuccess" component={OrderSuccessMessage} />
-                <Route exact path="/" component={StartPageView} />
-                <Route path="/cart" component={CartView} />
-                <Route path="/login" component={userLogIn} />
-                <Route path="/profile" component={UserProfile} />
-                <Route path="/admin" component={AdminLogIn} />
-                <Route path="/admin-list" component={AdminList} />
-                <Route path="/add-product" component={AddNewProduct} />
-                <Route path="/edit-product/:id" component={AdminEditDetails} />
-              </Switch>
-            </div>
-            <Footer2 />
-          </div>
-        </Router>
-      </ApiProvider>
-    </CartProvider>
+          </Router>
+      </CartProvider>
+    </ApiProvider>
   );
 }
 
