@@ -1,0 +1,7 @@
+POST http://localhost:6969/api/guest/
+Content-Type: application/json
+
+{
+    "userName": "guest",
+    "role": "guest" 
+}

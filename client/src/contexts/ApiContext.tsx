@@ -51,7 +51,7 @@ const userSession: ISession = {
     useEffect(() => {
         const loadProducts = async () => {
             const response = await fetch("/api/products", {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-type": "application-json"
                 }
@@ -61,10 +61,22 @@ const userSession: ISession = {
         }
         loadProducts()
     }, []);
+
+    useEffect(() => {
+      const loadGuestSession = async () => {
+        console.log('test')
+        const response = await fetch("/api/guest", {
+          method: "GET"
+        })
+        const session = await response.json()
+        setSession(session)
+      } 
+      loadGuestSession()
+    }, [])
   
     async function updateLoginInfo(loginInfo: ISession){
-        setSession(loginInfo)
-        console.log(loginInfo)
+        /* setSession(loginInfo)
+        console.log(loginInfo) */
     }
 
     async function getOrder(order: any) {

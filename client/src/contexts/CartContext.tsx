@@ -175,6 +175,7 @@ class CartProvider extends Component<{}, State> {
     }
 
     handlePlaceOrder = async (history: any) => {
+        
         this.setState({ disablePlaceOrderButton: true });
         try {
             await createOrderMockApi();
@@ -190,7 +191,7 @@ class CartProvider extends Component<{}, State> {
         getOrder(this.state.receipt)
 
         this.clearCart();
-        
+
         history.push('/ordersuccess');
         this.setState({ disablePlaceOrderButton: false });
     }
