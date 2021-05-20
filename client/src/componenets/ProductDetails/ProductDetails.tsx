@@ -1,9 +1,10 @@
 import { Row, Col, message, Button } from 'antd';
-import { Component, ContextType, CSSProperties } from 'react'; 
+import {  CSSProperties, useState, useContext, useEffect } from 'react'; 
 import { Image } from 'antd';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Product } from "../ProductItemsList";
 import { ApiContext, ProductInfo } from '../../contexts/ApiContext';
+import { CartContext } from '../../contexts/CartContext';
 import ErrorPage from '../ErrorPage';
 interface State {
     product?: ProductInfo;
@@ -14,54 +15,48 @@ interface Props extends RouteComponentProps {
 const success = () => {
     message.success('The product was added to the cart', 5);
 };
-class ProductDetails extends Component <Props, State> {
-    context!: ContextType<typeof ApiContext>
-    static contextType = ApiContext;
-   
-    state: State = {
-        product: undefined,
-    }
+function ProductDetails(props: Props){
+    const {allProducts} = useContext(ApiContext);
+    const {addProductToCart} = useContext(CartContext);
+    const [product, setProduct] = useState<any>(undefined)
+    
 
-    componentDidMount() {   
-        // const products = JSON.parse(localStorage.getItem('products') as string) || [];
-        const Allproducts = this.context.allProducts
-        const productId = String((this.props.match.params as any).id)
-        const product = Allproducts.find((p: ProductInfo) => p._id === productId);
-        this.setState({product: product})
-    }
+    useEffect(() => {
+        const productId = String((props.match.params as any).id)
+        const product = allProducts.find((p: ProductInfo) => p._id === productId);
+        setProduct(product)
+    }) 
 
-    handleAddClick = () => {
-        // const { addProductToCart } = this.context;
+    function handleAddClick(){
         success();
-       // addProductToCart(this.state.product!, undefined)
+        addProductToCart(product!, undefined)
     }
 
-    render () {
-        // if (!this.state.product) {
-        //     return <ErrorPage />
-        // }
-       
-        return (
-            <Row style={detailContainer}>
-                <Col lg={{span: 10}} style={columnStyle}>
-                    <Image src={this.state.product?.img} />          
-                </Col>
+    
+    if (!product) {
+            return <ErrorPage />
+    }
+    
+    return (
+        <Row style={detailContainer}>
+            <Col lg={{span: 10}} style={columnStyle}>
+                <Image src={product?.img} />          
+            </Col>
 
-                <Col lg={{span: 10}} style={columnStyle}>
-                    <h2 style={titleStyle}>{this.state.product?.title}</h2>
-                    <h4>{this.state.product?.description} </h4>
-                    <h2 style={price}>{this.state.product?.price + "kr"} </h2>
-                    <Button 
-                        type="primary" 
-                        style={{ marginTop: '1rem', width: '8rem', marginBottom: '6rem' }} 
-                        onClick={this.handleAddClick}
-                    >
-                        Add to cart 
-                    </Button>
-                </Col>
-            </Row>
-        ); 
-    }    
+            <Col lg={{span: 10}} style={columnStyle}>
+                <h2 style={titleStyle}>{product?.title}</h2>
+                <h4>{product?.description} </h4>
+                <h2 style={price}>{product?.price + "kr"} </h2>
+                <Button 
+                    type="primary" 
+                    style={{ marginTop: '1rem', width: '8rem', marginBottom: '6rem' }} 
+                    onClick={handleAddClick}
+                >
+                    Add to cart 
+                </Button>
+            </Col>
+        </Row>
+    );  
 }
 
 export default withRouter(ProductDetails as any); 
