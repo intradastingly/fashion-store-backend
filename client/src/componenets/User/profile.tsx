@@ -1,6 +1,6 @@
-import { Button, Checkbox, Row, Col, Typography, Space } from "antd";
+import { Button, Checkbox, Row, Col, Typography, Space, Avatar } from "antd";
 import { HighlightOutlined } from "@ant-design/icons";
-import { CSSProperties, Component, useState, useEffect } from "react";
+import { CSSProperties, Component, useState, Context, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const { Paragraph } = Typography;
@@ -13,73 +13,10 @@ function UserProfile() {
   const [cityName, setCityName] = useState("");
   const [currentOrders, setCurrentOrders] = useState<Number>();
 
-  useEffect(() => {
-    const loadOrders = async () => {
-      const allOrders = await makeRequest(`/api/order/`, "GET");
-      //   for (let i = 0; i < allOrders.length; i++) {
-      //     if (loggedInUser === allOrders[i].user) {
-      //         currentOrders++
-      //     }
-      //   }
-
-      setCurrentOrders(allOrders.length);
-    };
-
-    loadOrders();
-  }, []);
-
-  async function makeRequest(url: RequestInfo, method: string, body?: object) {
-    const response = await fetch(url, {
-      method: method,
-      body: JSON.stringify(body),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const result = await response.json();
-    return result;
-  }
   return (
     <div style={profileContainer}>
-      <div style={infoContainer}>
-        <div style={profileNavigation}>
-          <Paragraph>My Information</Paragraph>
-          <Paragraph>My Orders</Paragraph>
-        </div>
-        <div style={flexRow}>
-          <div style={containerDivider}>
-            <div style={customerInfo}>
-              <div>
-                <Paragraph editable={{ onChange: setCustomerName }}>
-                  Name: {customerName}
-                </Paragraph>
-              </div>
-              <div>
-                <Paragraph editable={{ onChange: setStreetName }}>
-                  Street: {streetName}
-                </Paragraph>
-              </div>
-              <div>
-                <Paragraph editable={{ onChange: setZipCode }}>
-                  Zip-Code: {zipCode}
-                </Paragraph>
-              </div>
-              <div>
-                <Paragraph editable={{ onChange: setCityName }}>
-                  City: {cityName}
-                </Paragraph>
-              </div>
-            </div>
-          </div>
-          <div style={containerDivider}>
-            <div>
-              <div style={flexCenterColumn}>
-                <Title level={4}>Orders Made: {currentOrders}</Title>
-                <Button>See Orders</Button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div style={avatarContainer}>
+        <Avatar>T</Avatar>
       </div>
     </div>
   );
@@ -93,7 +30,7 @@ const profileContainer: CSSProperties = {
   justifyContent: "flex-start",
 };
 
-const profileNavigation: CSSProperties = {
+const avatarContainer: CSSProperties = {
   height: "3rem",
   width: "100%",
   background: "#d6d6ce",
@@ -101,15 +38,16 @@ const profileNavigation: CSSProperties = {
   justifyContent: "space-around",
   alignItems: "center",
   borderBottom: "1px solid black",
+  marginTop: "6rem",
 };
 
 const infoContainer: CSSProperties = {
-  background: "#edede4",
-  height: "30rem",
-  width: "50rem",
+  background: "#f5f5f5",
+  height: "100vh",
+  width: "100vw",
   display: "flex",
   flexDirection: "column",
-  marginTop: "10rem",
+  marginTop: "6rem",
 };
 
 const customerInfo: CSSProperties = {
