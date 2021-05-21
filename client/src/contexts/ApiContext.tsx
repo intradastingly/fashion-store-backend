@@ -36,7 +36,7 @@ const userSession: Credentials = {
 
 interface ContextValue extends State {
   getOrder: (order: any) => void;
-  loginHandler: (loginCredentials: ISession, history?: any) => void;
+  loginHandler: (loginCredentials: Credentials, history?: any) => void;
   loadProducts: () => void
 }
 
