@@ -161,7 +161,6 @@ class CartProvider extends Component<{}, State> {
 
     createReceipt = (): IReceipt => {  
         const {session} = this.context
-        console.log(session)
         return {
                 session: session,
                 cart: this.state.cart,
