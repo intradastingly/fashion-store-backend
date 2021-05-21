@@ -54,7 +54,7 @@ function ApiProvider(props: Props) {
   useEffect(() => {
     const loadProducts = async () => {
       const response = await fetch("/api/products", {
-        method: "POST",
+        method: "GET",
         headers: {
           "Content-type": "application-json",
         },
