@@ -35,10 +35,8 @@ interface State {
 interface ContextValue extends State {
   getOrder: (order: any) => void;
   loginHandler: (loginCredentials: Credentials, history?: any) => void;
-
   logOutHandler: () => void;
-  loadProducts: () => void
-
+  loadProducts: () => void;
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -48,8 +46,8 @@ export const ApiContext = createContext<ContextValue>({
   shippingMethods: [],
   getOrder: () => {},
   loginHandler: () => {},
-
   logOutHandler: () => {},
+  loadProducts: () => {},
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -66,18 +64,6 @@ function ApiProvider(props: Props) {
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    const loadProducts = async () => {
-      const response = await fetch("/api/products", {
-        method: "GET",
-        headers: {
-          "Content-type": "application-json",
-        },
-      });
-      const products = await response.json();
-      setAllProducts(products);
-    };
-    loadProducts();
-
     const loadShippingMethods = async () => {
       const response = await fetch("/api/shipping", {
         method: "GET",
@@ -88,6 +74,7 @@ function ApiProvider(props: Props) {
       const shipping = await response.json();
       setShippingMethods(shipping);
     };
+    loadProducts();
     loadShippingMethods();
   }, []);
 
@@ -102,6 +89,17 @@ function ApiProvider(props: Props) {
     };
     authorizeSession();
   }, []);
+
+  const loadProducts = async () => {
+    const response = await fetch("/api/products", {
+      method: "GET",
+      headers: {
+        "Content-type": "application-json",
+      },
+    });
+    const products = await response.json();
+    setAllProducts(products);
+  };
 
   async function loginHandler(loginCredentials: Credentials) {
     const response = await fetch("api/login", {
