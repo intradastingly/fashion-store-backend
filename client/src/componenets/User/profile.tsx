@@ -20,7 +20,7 @@ import {
 import { Link } from "react-router-dom";
 import AvatarPic from "../../assets/Avatar2.png";
 // import { useRequest, useSize } from "ahooks";
-import { useSize } from "ahooks";
+/* import { useSize } from "ahooks"; */
 
 const { Paragraph } = Typography;
 const { Title } = Typography;
