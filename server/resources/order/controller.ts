@@ -4,17 +4,19 @@ const Order = require("./model");
 
 exports.newOrder = async (req: express.Request, res: express.Response) => {
     console.log(req.body)
-    /* const order = new Order({
-        date: req.body.date,
-        isHandled: req.body.isHandled,
-        product: req.body.product,
-        user: req.body.user,
-        shipping: req.body.shipping,
-        priceTotal: req.body.priceTotal
-      }); */
+    const order = new Order({
+        session: req.body.session,
+        date:  new Date(),
+        isHandled: false,
+        cart: req.body.cart,
+        userInfo: req.body.userInfo,
+        deliveryMethod: req.body.deliveryMethod,
+        totalPrice: req.body.totalPrice,
+        paymentMethod: req.body.paymentMethod
+      });
     
-      /* await order.save(); */
-      /* res.status(201).json(order); */
+      await order.save();
+      res.status(201).json(order);
 }
 
 exports.getAllOrders = async (

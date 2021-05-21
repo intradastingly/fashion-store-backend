@@ -61,7 +61,7 @@ export const ApiContext = createContext<ContextValue>({
     const [shippingMethods, setShippingMethods] = useState<any>();
     const [session, setSession] = useState<any>();
     const [order, setOrder] = useState<any>();
-    const [userNameValidation, setUserNameValidation] = useState<boolean>();
+    const [userNameValidation, setUserNameValidation] = useState<boolean>(true);
 
     useEffect(() => {
         loadProducts()
@@ -86,7 +86,6 @@ export const ApiContext = createContext<ContextValue>({
       })
       const session = await response.json()
       setSession(session)
-      console.log(session)
       }
       authorizeSession();
     }, []);
