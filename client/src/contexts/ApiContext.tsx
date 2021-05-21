@@ -36,7 +36,8 @@ const userSession: Credentials = {
 
 interface ContextValue extends State {
   getOrder: (order: any) => void;
-  loginHandler: (loginCredentials: Credentials, history?: any) => void;
+  loginHandler: (loginCredentials: ISession, history?: any) => void;
+  loadProducts: () => void
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -46,6 +47,7 @@ export const ApiContext = createContext<ContextValue>({
   shippingMethods: [],
   getOrder: () => {},
   loginHandler: () => {},
+  loadProducts: () => {}
 });
   export interface shippingMethods extends ShippingInfo {
     shippingMethods: shippingMethods
@@ -62,16 +64,6 @@ export const ApiContext = createContext<ContextValue>({
     const [userNameValidation, setUserNameValidation] = useState<boolean>();
 
     useEffect(() => {
-        const loadProducts = async () => {
-            const response = await fetch("/api/products", {
-                method: "GET",
-                headers: {
-                    "Content-type": "application-json"
-                }
-            })
-            const products = await response.json()
-            setAllProducts(products)
-        }
         loadProducts()
 
         const loadShippingMethods = async () => {
@@ -98,6 +90,18 @@ export const ApiContext = createContext<ContextValue>({
       }
       authorizeSession();
     }, []);
+
+
+  const loadProducts = async () => {
+      const response = await fetch("/api/products", {
+          method: "GET",
+          headers: {
+              "Content-type": "application-json"
+          }
+      })
+      const products = await response.json()
+      setAllProducts(products)
+  }
 
   async function loginHandler(loginCredentials: Credentials, history: any) {
     const response = await fetch("api/login", {
@@ -139,6 +143,7 @@ export const ApiContext = createContext<ContextValue>({
           shippingMethods: shippingMethods,
           getOrder: getOrder,
           loginHandler: loginHandler,
+          loadProducts: loadProducts
         }}
       >
         {props.children}

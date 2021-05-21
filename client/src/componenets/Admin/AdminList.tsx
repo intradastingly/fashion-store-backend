@@ -1,23 +1,18 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Avatar, Button, Col, List, Row, } from "antd";
-import { Component, CSSProperties } from "react";
+import { CSSProperties, useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { ApiContext } from "../../contexts/ApiContext";
 import { Product } from "../ProductItemsList";
 
-interface State {
-    products?: Product[]; 
+interface Props {
+
 }
-class GetAdminList extends Component < {}, State>{
 
-    state: State = {
-        products: []
-    }
 
-    componentDidMount() {
-        this.setState({ products: JSON.parse(localStorage.getItem('products') as string) || []});
-    }
+function GetAdminList(props: Props){
+    const { allProducts } = useContext(ApiContext);
 
-    render() {
         return (
             <Row style={containerStyle}>
                 <Col style={columnStyle}>
@@ -40,13 +35,13 @@ class GetAdminList extends Component < {}, State>{
                         xl: 1,
                         xxl: 1,
                         }}
-                        dataSource={this.state.products}
+                        dataSource={allProducts}
                         renderItem={item => (
                             <List.Item>
-                                <Link to={'/edit-product/' + item.id}>     
+                                <Link to={'/edit-product/' + item._id}>     
                                 <List.Item.Meta                    
-                                    avatar={<Avatar size={64} src={item.imageUrl} />} 
-                                    title={<Link to={'/edit-product/' + item.id}>{item.title}</Link>}
+                                    avatar={<Avatar size={64} src={item.img} />} 
+                                    title={<Link to={'/edit-product/' + item._id}>{item.title}</Link>}
                                     description={[item.description.split('.')[0],  
                                     ]}
                                 />  
@@ -58,7 +53,7 @@ class GetAdminList extends Component < {}, State>{
                 </Col>
             </Row> 
         )
-    }
+    
 }
 
 const containerStyle: CSSProperties ={

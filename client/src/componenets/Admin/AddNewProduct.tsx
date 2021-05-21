@@ -1,7 +1,7 @@
-import { Component, CSSProperties } from "react";
+import React, { Component, CSSProperties, useState } from "react";
 import { Form, Input, InputNumber, Button, Col, Row, message } from "antd";
 import { Product } from "../ProductItemsList";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { Link, RouteComponentProps, withRouter } from "react-router-dom";
 
 const layout = {
   labelCol: {
@@ -33,103 +33,120 @@ interface State {
 const success = () => {
   message.success('The product has been published', 3);
 };
-class AddNewProduct extends Component<Props, State> {
-  
-  state: State = {
-    product: undefined,
-    buttonSaveLoading: false,
-  };
-  
-  onFinish = async (values: any) => {
-    this.setState({ buttonSaveLoading: true });
-    try {
-      await saveNewProductMockApi();
-    } catch (error) {
-        console.log(error);
-        return;
-    }
-    const existingProducts = JSON.parse(localStorage.getItem("products") as string) || [];
-    const newProduct: Product = {...values.product};
-    newProduct.id = Math.max(...existingProducts.map((item: Product) => item.id)) + 1;
-    existingProducts.push(newProduct)
-    localStorage.setItem('products', JSON.stringify(existingProducts));
-    this.props.history.push('/admin-list');
-    this.setState({ buttonSaveLoading: false });
-  };
 
-  render() {
+function AddNewProduct (props: Props, state: State) {
+  
+  const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
+  const [titleField, setTitleField] = useState("")
+  const [descriptionField, setDescriptionField ] = useState("")
+  const [priceField, setPriceField ] = useState("")
+  const [imageField, setImageField ] = useState("")
+  const [quantityField, setQuantityField ] = useState("")
+
+  const saveNewProduct = async () => {
+      setButtonSaveLoading(true)
+      
+      let body = {
+        title: titleField,
+        description: descriptionField,
+        quantity: quantityField,
+        price: priceField,
+        img: imageField
+      }
+      
+      const response = await fetch("/api/products", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      })
+      
+      const result = response.json()
+      setTitleField("")
+      setDescriptionField("")
+      setQuantityField("")
+      setPriceField("")
+      setImageField("")
+      setButtonSaveLoading(false)
+      success()
+      return result
+  }
+
     return (
-      <div>
-        <Row style={ContainerStyle}>
-          <Col span={24} style={columnStyle}>
-            <Form
-              {...layout}
-              name="nest-messages"
-              onFinish={this.onFinish}
-              validateMessages={validateMessages}
-            >
-              <h1
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  fontWeight: "bold",
-                }}
+      <div style={rootStyle}>
+        <form style={layoutStyle}>
+          <h2>Add New Product</h2>
+          <label>Title: </label>
+          <input
+            name="title"
+            onChange={(e: any) => setTitleField(e.target.value)}
+  
+            />
+          <label>Description: </label>
+          <input
+            name="description"
+            onChange={(e: any) => setDescriptionField(e.target.value)}
+    
+            />         
+          <label>Price: </label>
+          <input
+            name="price"
+            onChange={(e: any) => setPriceField(e.target.value)}
+
+            
+            />
+          <label>Image: </label>
+          <input
+            name="img"
+            onChange={(e: any) => setImageField(e.target.value)}
+
+            />
+          <label>Quantity: </label>
+          <input
+            name="quantity"
+            onChange={(e: any) => setQuantityField(e.target.value)}
+    
+            />
+          <label>Category: </label>
+          {/* { editProduct.category.map((c: any) => (
+
+            <input defaultValue={c}/>
+
+ 
+          ))
+            
+          } */}
+
+
+            <Button 
+              type="primary"
+              onClick={saveNewProduct}
+              htmlType="submit" 
+              loading={buttonSaveLoading}
               >
-                ADD NEW PRODUCT {" "}
-              </h1>
-              <Form.Item name={["product", "title"]} label="Title" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-
-              <Form.Item name={["product", "description"]} label="Description" rules={[{ required: true }]}>
-                <Input.TextArea />
-              </Form.Item>
-
-              <Form.Item name={["product", "price"]} label="Price" rules={[{ required: true }]}>
-                <InputNumber />
-              </Form.Item>
-              
-              <Form.Item name={["product", "imageUrl"]} label="ImageUrl" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Button 
-                    type="primary"
-                    onClick={() => {success();}}
-                    htmlType="submit"
-                    loading={this.state.buttonSaveLoading}
-                  >
-                    Save
-                  </Button>
-                </div>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
+              Save
+            </Button>
+            <Link to="/admin-list">Back</Link>
+          </form>
       </div>
     )
-  }
 }
 
-const ContainerStyle: CSSProperties = {
+const rootStyle: CSSProperties = {
   display: "flex",
-  justifyContent: "space-around",
-  alignItems: "space-around",
-  width: "70%",
-  margin: "auto",
+  width: "100%",
+  height: "100%",
+  marginTop: "10rem",
+  justifyContent: "center",
+  alignItems: "center"
 };
   
-const columnStyle: CSSProperties = {
-  marginTop: "10rem",
-  paddingBottom: "8rem",
+const layoutStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  width: "16rem",
 };
 
 export default withRouter(AddNewProduct); 
 
-async function saveNewProductMockApi() {
-  return new Promise((res) => setTimeout(() => res("success"), 2000));
-}
