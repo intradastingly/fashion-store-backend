@@ -1,11 +1,9 @@
 import { createContext, useEffect, useState } from "react";
-
 export interface Credentials {
   /* id: string, */
   userName: string;
   password: string;
 }
-
 export interface ProductInfo {
   category: [];
   description: String;
@@ -15,7 +13,6 @@ export interface ProductInfo {
   price: Number;
   _id: String;
 }
-
 export interface ShippingInfo {
   shipmentCompany: string,
   deliveryTime: number,
@@ -25,7 +22,7 @@ export interface ShippingInfo {
 }
 
 const userSession: Credentials = {
- /*  id: "", */
+  /* id: "", */
   userName: "",
   password: "",
 };
@@ -101,8 +98,6 @@ export const ApiContext = createContext<ContextValue>({
       }
       authorizeSession();
     }, []);
-    
-
 
   async function loginHandler(loginCredentials: Credentials, history: any) {
     const response = await fetch("api/login", {
@@ -121,11 +116,18 @@ export const ApiContext = createContext<ContextValue>({
     return response;
   }
 
-
-
   async function getOrder(order: any) {
     console.log(order);
     setOrder(order);
+    createNewOrder(order)
+  }
+
+  async function createNewOrder(order: any){
+    const response = await fetch("api/order", {
+      method: "POST",
+      body: JSON.stringify(order),
+      headers: { "Content-Type": "application/json" },
+    });
   }
   
     return (
