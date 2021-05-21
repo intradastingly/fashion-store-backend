@@ -102,6 +102,7 @@ function AdminEditDetails(props: Props, state: State){
     const result = await response.json();
     // api context get all products
     loadProducts();
+    setButtonDeleteLoading(false)
     return result;
   }
 
@@ -120,8 +121,9 @@ function AdminEditDetails(props: Props, state: State){
 
     return (
       
-      <div style={ContainerStyle}>
-        <form>
+      <div style={rootStyle}>
+        <form style={layoutStyle}>
+          <h2>Edit Product</h2>
           <label>Title: </label>
           <input
             name="title"
@@ -187,19 +189,19 @@ function AdminEditDetails(props: Props, state: State){
     );
 }
 
-const ContainerStyle: CSSProperties = {
-  height: "100%",
+const rootStyle: CSSProperties = {
   display: "flex",
-  justifyContent: "space-around",
-  alignItems: "space-around",
-  width: "70%",
+  width: "100%",
+  height: "100%",
   marginTop: "10rem",
-
+  justifyContent: "center",
+  alignItems: "center"
 };
-
-const columnStyle: CSSProperties = {
-  marginTop: "10rem",
-  paddingBottom: "8rem",
+  
+const layoutStyle: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  width: "16rem",
 };
 
 export default withRouter(AdminEditDetails);
