@@ -1,8 +1,9 @@
 import { Form, Input, Button, Col, Row, message } from "antd";
-import { Component, CSSProperties } from "react";
+import { Component, CSSProperties, useContext, useEffect, useState } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
+import {ApiContext} from "../../contexts/ApiContext";
 import ErrorPage from "../ErrorPage";
-import { Product } from "../ProductItemsList";
+import { Product, productList } from "../ProductItemsList";
 
 const layout = {
   labelCol: {
@@ -42,59 +43,85 @@ const successDelete = () => {
   message.success('The product has been deleted', 3);
 };
 
-class AdminEditDetails extends Component<Props, State> {
-  state: State = {
-    products: JSON.parse(localStorage.getItem('products') as string) || [],
-    product: undefined,
-    buttonSaveLoading: false,
-    buttonDeleteLoading: false,
-  };
+function AdminEditDetails(props: Props, state: State){
+  const { allProducts } = useContext(ApiContext);
+  const [buttonSaveLoading, setButtonSaveLoading] = useState(false)
+  const [buttonDeleteLoading, setButtonDeleteLoading] = useState(false)
+  const [editProduct, setEditProduct] = useState<any>({})
+  
 
-  onFinish = async (values: any) => {
-    this.setState({ buttonSaveLoading: true });
+
+
+  const onFinish = async (values: any) => {
+
+    setButtonSaveLoading(true)
+   
     try {
       await saveDeleteProductMockApi();
     } catch (error) {
         console.log(error);
         return;
     }
-    const products = JSON.parse(localStorage.getItem("products") as string) || [];
-    const editedProduct: Product = {...this.state.product, ...values.product};
-    const updatedProducts = products.map((item: Product) => item.id === editedProduct.id ? editedProduct : item);
-    localStorage.setItem('products', JSON.stringify(updatedProducts));
-    this.props.history.push('/admin-list');
-    this.setState({ buttonSaveLoading: false });
+    // const products = allProducts
+    // const editedProduct: Product = {...products, ...values.product};
+    // const updatedProducts = products.map((item: any) => item._id === editedProduct.id ? editedProduct : item);
+    // localStorage.setItem('products', JSON.stringify(updatedProducts));
+    // props.history.push('/admin-list');
+  
+    
+    // const body = {
+    //   title: req.body.title,
+    //   description: req.body.description,
+    //   category: req.body.category,
+    //   quantity: req.body.quantity,
+    //   price: req.body.price,
+    //   img: req.body.img
+    // }
+
+    // const response = await fetch("/api/products/" + props.match.params.id, {
+    //   method: "PUT",
+    //   body: JSON.stringify(body),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+
+    
+    setButtonSaveLoading(false)
+    
   }
 
-  componentDidMount() {
-    const products = JSON.parse(localStorage.getItem('products') as string) || [];
-    const product = products.find((p: Product) => p.id === Number(this.props.match.params.id));
-    this.setState({ product: product });
-  }
+  useEffect( () => {
 
-  handleDelete = async () => {
-    this.setState({ buttonDeleteLoading: true });
+    const loadProducts = async () => {
+      const product = await allProducts.find((p: any) => p._id === props.match.params.id);
+      setEditProduct({product})
+    }
+
+    loadProducts();
+
+    },[])
+    
+
+  const handleDelete = async () => {
+    setButtonDeleteLoading(true)
     try {
       await saveDeleteProductMockApi();
     } catch (error) {
         console.log(error);
         return;
     }
-    const products = JSON.parse(localStorage.getItem('products') as string) || [];
-    const productId = this.state.product?.id;
-    const newProducts = products.filter((item: Product) => item.id !== productId);
-    localStorage.setItem('products', JSON.stringify(newProducts));
-    this.props.history.push('/admin-list');
-    this.setState({ buttonDeleteLoading: false });
+    // const products = JSON.parse(localStorage.getItem('products') as string) || [];
+    // const productId = this.state.product?.id;
+    // const newProducts = products.filter((item: Product) => item.id !== productId);
+    // localStorage.setItem('products', JSON.stringify(newProducts));
+    // this.props.history.push('/admin-list');
+    // this.setState({ buttonDeleteLoading: false });
   }
-
-  render() {
-    const { product } = this.state;
-
-    if (!product) {
-      return <ErrorPage />
-    }
-
+  
+  
+  console.log(editProduct.product.title)
+  console.log(allProducts)
     return (
       <div>
         <Row style={ContainerStyle}>
@@ -102,16 +129,18 @@ class AdminEditDetails extends Component<Props, State> {
             <Form
               {...layout}
               name="nest-messages"
-              onFinish={this.onFinish}
+              onFinish={onFinish}
               validateMessages={validateMessages}
-              initialValues={{
-                product: {
-                  title: this.state.product?.title,
-                  description: this.state.product?.description,
-                  price: this.state.product?.price,
-                  imageUrl: this.state.product?.imageUrl,
-                }
-              }}
+              // initialValues={{
+              //   product: {
+              //     //title: editProduct.title,
+              //     //description: editProduct.description,
+              //     // price: editProduct.price,
+              //     // imageUrl: editProduct.img,
+              //     // category: editProduct.category,
+              //     // quiantity: editProduct.quiantity,
+              //   }
+              // }}
             >
               <h1
                 style={{
@@ -123,11 +152,11 @@ class AdminEditDetails extends Component<Props, State> {
                 EDIT
               </h1>
               <Form.Item name={["product", "title"]} label="Title" rules={[{ required: true }]}>
-                <Input />
+                <Input  />
               </Form.Item>
 
               <Form.Item name={["product", "description"]} label="Description" rules={[{ required: true }]}>
-                <Input.TextArea defaultValue={product.description}/>
+                <Input.TextArea defaultValue="{editProduct?.}"/>
               </Form.Item>
 
               <Form.Item name={["product", "price"]} label="Price" rules={[{ required: true }]}>
@@ -146,7 +175,7 @@ class AdminEditDetails extends Component<Props, State> {
                     type="primary"
                     onClick={() => {successSave();}} 
                     htmlType="submit" 
-                    loading={this.state.buttonSaveLoading}
+                    loading={buttonSaveLoading}
                   >
                     Save
                   </Button>
@@ -154,8 +183,8 @@ class AdminEditDetails extends Component<Props, State> {
                   <Button 
                     type="primary" 
                     danger 
-                    onClick={() => {this.handleDelete(); successDelete();}} 
-                    loading={this.state.buttonDeleteLoading}
+                    onClick={() => {handleDelete(); successDelete();}} 
+                    loading={buttonDeleteLoading}
                   >
                     Delete
                   </Button>
@@ -166,7 +195,6 @@ class AdminEditDetails extends Component<Props, State> {
         </Row>
       </div>
     );
-  }
 }
 
 const ContainerStyle: CSSProperties = {

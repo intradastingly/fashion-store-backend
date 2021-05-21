@@ -40,9 +40,11 @@ exports.editProduct = async (req: express.Request, res: express.Response) => {
     {
       $set: {
         title: req.body.title,
-        quantity: req.body.quantity,
-        category: req.body.category,
         description: req.body.description,
+        category: req.body.category,
+        quantity: req.body.quantity,
+        price: req.body.price,
+        img: req.body.img
       },
     },
     { new: true }
