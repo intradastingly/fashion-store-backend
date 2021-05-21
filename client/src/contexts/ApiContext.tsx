@@ -98,7 +98,9 @@ export const ApiContext = createContext<ContextValue>({
           method: "GET",
       })
       const session = await response.json()
+      
       setSession(session)
+      console.log(session)
       }
       authorizeSession();
     }, []);
