@@ -1,5 +1,10 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { CSSProperties } from "react";
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from "react-router-dom";
+import { CSSProperties, useContext } from "react";
 import "./App.css";
 import AdminEditDetails from "./componenets/Admin/AdminEditDetails";
 import AdminList from "./componenets/Admin/AdminList";
@@ -16,34 +21,45 @@ import CartProvider from "./contexts/CartContext";
 import ScrollToTop from "./componenets/ScrollToTop";
 import AddNewProduct from "./componenets/Admin/AddNewProduct";
 import ApiProvider from "./contexts/ApiContext";
+import { ApiContext } from "./contexts/ApiContext";
 
 function App() {
+  const { loggedIn } = useContext(ApiContext);
+  console.log(loggedIn, "logged in bool");
+
+  // if (loggedIn) {
+  //   return <Redirect to="/profile" />;
+  // }
   return (
     <ApiProvider>
       <CartProvider>
-          <Router>
-            <ScrollToTop />
-            <div style={appContainer}>
-              <div>
-                <Navbar />
-              </div>
-              <div>
-                <Switch>
-                  <Route path="/product/:id" component={ProductDetails} />
-                  <Route path="/ordersuccess" component={OrderSuccessMessage} />
-                  <Route exact path="/" component={StartPageView} />
-                  <Route path="/cart" component={CartView} />
-                  <Route path="/login" component={userLogIn} />
-                  <Route path="/profile" component={UserProfile} />
-                  <Route path="/admin" component={AdminLogIn} />
-                  <Route path="/admin-list" component={AdminList} />
-                  <Route path="/add-product" component={AddNewProduct} />
-                  <Route path="/edit-product/:id" component={AdminEditDetails} />
-                </Switch>
-              </div>
-              <Footer2 />
+        <Router>
+          <ScrollToTop />
+          <div style={appContainer}>
+            <div>
+              <Navbar />
             </div>
-          </Router>
+            <div>
+              <Switch>
+                <Route path="/product/:id" component={ProductDetails} />
+                <Route path="/ordersuccess" component={OrderSuccessMessage} />
+                <Route exact path="/" component={StartPageView} />
+                <Route path="/cart" component={CartView} />
+                <Route exact path="/login" component={userLogIn}>
+                  {/* {loggedIn ? <Redirect to="/profile" /> : null} */}
+                </Route>
+                <Route exact path="/profile" component={UserProfile}>
+                  {/* {!loggedIn ? <Redirect to="/" /> : <Redirect to="/profile" />} */}
+                </Route>
+                <Route path="/admin" component={AdminLogIn} />
+                <Route path="/admin-list" component={AdminList} />
+                <Route path="/add-product" component={AddNewProduct} />
+                <Route path="/edit-product/:id" component={AdminEditDetails} />
+              </Switch>
+            </div>
+            <Footer2 />
+          </div>
+        </Router>
       </CartProvider>
     </ApiProvider>
   );
