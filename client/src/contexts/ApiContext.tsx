@@ -35,7 +35,10 @@ interface State {
 interface ContextValue extends State {
   getOrder: (order: any) => void;
   loginHandler: (loginCredentials: Credentials, history?: any) => void;
+
   logOutHandler: () => void;
+  loadProducts: () => void
+
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -45,6 +48,7 @@ export const ApiContext = createContext<ContextValue>({
   shippingMethods: [],
   getOrder: () => {},
   loginHandler: () => {},
+
   logOutHandler: () => {},
 });
 export interface shippingMethods extends ShippingInfo {
@@ -145,7 +149,6 @@ function ApiProvider(props: Props) {
       headers: { "Content-Type": "application/json" },
     });
   }
-
   return (
     <ApiContext.Provider
       value={{
@@ -156,6 +159,7 @@ function ApiProvider(props: Props) {
         getOrder: getOrder,
         loginHandler: loginHandler,
         logOutHandler: logOutHandler,
+        loadProducts: loadProducts,
       }}
     >
       {props.children}

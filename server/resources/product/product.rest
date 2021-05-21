@@ -6,7 +6,7 @@ POST http://localhost:6969/api/products/
 Content-Type: application/json
 
 {
-  "title": "PRINTED CHIFFON SKIRT",
+  "title": "Test",
     "description": "Printed midi chiffon skirt with a gently pleated finish. Concealed zipper at the side. Length of skirt: 83.5cm / 33.3",
     "category": "skirt",
     "quantity": 10,
