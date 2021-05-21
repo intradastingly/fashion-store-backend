@@ -13,10 +13,10 @@ const success = () => {
 
 function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
-    const {allProducts, getOrder} = useContext(ApiContext);
+    const {allProducts, getOrder, loggedIn} = useContext(ApiContext);
     
     const products: Product[] = JSON.parse(localStorage.getItem("products") as string) || [];
-
+    console.log(loggedIn, "product grid")
         return(    
             <Row style={cardContainer}>
                 <Col span={24} style={columnStyle}>
