@@ -63,6 +63,9 @@ export const ApiContext = createContext<ContextValue>({
     const [order, setOrder] = useState<any>();
     const [userNameValidation, setUserNameValidation] = useState<boolean>();
 
+    console.log(session)
+    console.log(userNameValidation)
+
     useEffect(() => {
         const loadProducts = async () => {
             const response = await fetch("/api/products", {
@@ -90,22 +93,38 @@ export const ApiContext = createContext<ContextValue>({
         loadShippingMethods()
     }, []);
 
+    
+    useEffect(() => {
+      const authorizeSession = async () => {
+        const response = await fetch(`api/authenticated`, {
+          method: "GET",
+      })
+      const session = await response.json()
+      setSession(session)
+      }
+      authorizeSession();
+    }, []);
+    
+
   async function loginHandler(loginCredentials: ISession, history: any) {
     const response = await fetch("api/login", {
       method: "POST",
       body: JSON.stringify(loginCredentials),
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
     const result = await response.json();
+    console.log(result)
     if (result.message === "Incorrect user name or password") {
       setUserNameValidation(true);
     } else {
       setUserNameValidation(false);
     }
-    history.push("/profile");
+    /* history.push("/profile"); */
     return response;
   }
+
+  
+ 
 
   async function updateLoginInfo(loginInfo: ISession) {
     /* setSession(loginInfo)

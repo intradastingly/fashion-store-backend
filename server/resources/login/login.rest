@@ -3,18 +3,16 @@ POST http://localhost:6969/api/login/
 Content-Type: application/json
 
 {
-  "username": "TestUser",
+  "userName": "TestUser",
   "password":  "1234"
 }
 
-###
-
-POST http://localhost:6969/api/guest/
-Content-Type: application/json
-
-{
-  "username": "guest"
-}
 
 ###
 DELETE http://localhost:6969/api/logout
+
+
+###
+
+GET http://localhost:6969/api/authenticated/
+
