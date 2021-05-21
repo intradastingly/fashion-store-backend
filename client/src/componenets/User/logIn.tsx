@@ -7,7 +7,7 @@ import {
   useContext,
 } from "react";
 import { Link, Route } from "react-router-dom";
-import { ApiContext, ISession } from "../../contexts/ApiContext";
+import { ApiContext } from "../../contexts/ApiContext";
 
 const layout = {
   labelCol: {

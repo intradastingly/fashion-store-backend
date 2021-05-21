@@ -1,11 +1,9 @@
 import { createContext, useEffect, useState } from "react";
-
-export interface ISession {
+export interface Credentials {
   /* id: string, */
   userName: string;
   password: string;
 }
-
 export interface ProductInfo {
   category: [];
   description: String;
@@ -15,38 +13,38 @@ export interface ProductInfo {
   price: Number;
   _id: String;
 }
-
 export interface ShippingInfo {
   shipmentCompany: string,
   deliveryTime: number,
   shippingPrice: Number,
-  _id: String
+  _id: String,
+  
 }
 
-const userSession: ISession = {
+const userSession: Credentials = {
   /* id: "", */
   userName: "",
   password: "",
 };
   interface State {
-    session: ISession;
+    session: Credentials;
     allProducts: ProductInfo[];
     shippingMethods: ShippingInfo[];
+    loggedIn: boolean,
   }
 
 
 interface ContextValue extends State {
-  updateLoginInfo: (userSession: ISession) => void;
   getOrder: (order: any) => void;
   loginHandler: (loginCredentials: ISession, history?: any) => void;
   loadProducts: () => void
 }
 
 export const ApiContext = createContext<ContextValue>({
+  loggedIn: true,
   session: userSession,
   allProducts: [],
   shippingMethods: [],
-  updateLoginInfo: () => {},
   getOrder: () => {},
   loginHandler: () => {},
   loadProducts: () => {}
@@ -75,24 +73,24 @@ export const ApiContext = createContext<ContextValue>({
               "Content-type": "application-json"
             }
           })
-
           const shipping = await response.json();
           setShippingMethods(shipping)
         }
         loadShippingMethods()
     }, []);
-      
+    
     useEffect(() => {
-    const loadGuestSession = async () => {
-      console.log("test");
-      const response = await fetch("/api/guest", {
-        method: "GET",
-      });
-      const session = await response.json();
-      setSession(session);
-    };
-    loadGuestSession();
-  }, []);
+      const authorizeSession = async () => {
+        const response = await fetch(`api/authenticated`, {
+          method: "GET",
+      })
+      const session = await response.json()
+      setSession(session)
+      console.log(session)
+      }
+      authorizeSession();
+    }, []);
+
 
   const loadProducts = async () => {
       const response = await fetch("/api/products", {
@@ -104,40 +102,45 @@ export const ApiContext = createContext<ContextValue>({
       const products = await response.json()
       setAllProducts(products)
   }
-  async function loginHandler(loginCredentials: ISession, history: any) {
+
+  async function loginHandler(loginCredentials: Credentials, history: any) {
     const response = await fetch("api/login", {
       method: "POST",
       body: JSON.stringify(loginCredentials),
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
     const result = await response.json();
-    if (result.message === "Incorrect user name or password") {
+    console.log(result)
+    if (result === "Incorrect password or username") {
       setUserNameValidation(true);
     } else {
       setUserNameValidation(false);
+      history.push("/profile");
     }
-    history.push("/profile");
     return response;
-  }
-
-  async function updateLoginInfo(loginInfo: ISession) {
-    /* setSession(loginInfo)
-        console.log(loginInfo) */
   }
 
   async function getOrder(order: any) {
     console.log(order);
     setOrder(order);
+    createNewOrder(order)
+  }
+
+  async function createNewOrder(order: any){
+    const response = await fetch("api/order", {
+      method: "POST",
+      body: JSON.stringify(order),
+      headers: { "Content-Type": "application/json" },
+    });
   }
   
     return (
       <ApiContext.Provider
         value={{
+          loggedIn: userNameValidation!,
           allProducts: allProducts,
           session: session,
           shippingMethods: shippingMethods,
-          updateLoginInfo: updateLoginInfo,
           getOrder: getOrder,
           loginHandler: loginHandler,
           loadProducts: loadProducts
