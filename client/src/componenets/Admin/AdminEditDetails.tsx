@@ -1,30 +1,30 @@
 import { Form, Input, Button, Col, Row, message } from "antd";
-import { Component, CSSProperties, useContext, useEffect, useState } from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import {ApiContext} from "../../contexts/ApiContext";
+import React, { Component, CSSProperties, useContext, useEffect, useState } from "react";
+import { Link, Redirect, RouteComponentProps, withRouter } from "react-router-dom";
+import {ApiContext, ProductInfo} from "../../contexts/ApiContext";
 import ErrorPage from "../ErrorPage";
 import { Product, productList } from "../ProductItemsList";
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
+// const layout = {
+//   labelCol: {
+//     span: 8,
+//   },
+//   wrapperCol: {
+//     span: 16,
+//   },
+// };
 
 /* eslint-disable no-template-curly-in-string */
-const validateMessages = {
-  required: "${label} is required!",
-  types: {
-    email: "${label} is not a valid email!",
-    number: "${label} is not a valid number!",
-  },
-  number: {
-    range: "${label} must be between ${min} and ${max}",
-  },
-};
+// const validateMessages = {
+//   required: "${label} is required!",
+//   types: {
+//     email: "${label} is not a valid email!",
+//     number: "${label} is not a valid number!",
+//   },
+//   number: {
+//     range: "${label} must be between ${min} and ${max}",
+//   },
+// };
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
@@ -47,21 +47,27 @@ function AdminEditDetails(props: Props, state: State){
   const { allProducts } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false)
   const [buttonDeleteLoading, setButtonDeleteLoading] = useState(false)
+  const [redirect, setRedirect ] = useState(false)
   const [editProduct, setEditProduct] = useState<any>({})
+  const [titleField, setTitleField] = useState(editProduct.title)
+  const [descriptionField, setDescriptionField ] = useState(editProduct.description)
+  const [priceField, setPriceField ] = useState(editProduct.price)
+  const [imageField, setImageField ] = useState(editProduct.image)
+  const [quantityField, setQuantityField ] = useState(editProduct.quantity)
   
 
 
 
-  const onFinish = async (values: any) => {
+  const saveProduct = async (values: any) => {
 
     setButtonSaveLoading(true)
    
-    try {
-      await saveDeleteProductMockApi();
-    } catch (error) {
-        console.log(error);
-        return;
-    }
+    // try {
+    //   await saveDeleteProductMockApi();
+    // } catch (error) {
+    //     console.log(error);
+    //     return;
+    // }
     // const products = allProducts
     // const editedProduct: Product = {...products, ...values.product};
     // const updatedProducts = products.map((item: any) => item._id === editedProduct.id ? editedProduct : item);
@@ -69,48 +75,60 @@ function AdminEditDetails(props: Props, state: State){
     // props.history.push('/admin-list');
   
     
-    // const body = {
-    //   title: req.body.title,
-    //   description: req.body.description,
-    //   category: req.body.category,
-    //   quantity: req.body.quantity,
-    //   price: req.body.price,
-    //   img: req.body.img
-    // }
+    const body = {
+      title: titleField,
+      description: descriptionField,
+      quantity: quantityField,
+      price: priceField,
+      img: imageField
+    }
 
-    // const response = await fetch("/api/products/" + props.match.params.id, {
-    //   method: "PUT",
-    //   body: JSON.stringify(body),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-
+    const response = await fetch("/api/products/" + props.match.params.id, {
+      method: "PUT",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
     
+    const result = await response.json()
+    
+    setTitleField("")
+    setDescriptionField("")
+    setQuantityField("")
+    setPriceField("")
+    setImageField("")
+    setRedirect(true)
     setButtonSaveLoading(false)
-    
+    successSave()
+
+    return result
   }
 
   useEffect( () => {
 
     const loadProducts = async () => {
-      const product = await allProducts.find((p: any) => p._id === props.match.params.id);
-      setEditProduct({product})
+      if(!allProducts){
+        return
+      }
+      console.log(allProducts)
+      const product = await allProducts.find((p: ProductInfo) => p._id === props.match.params.id);
+      console.log(product)
+      setEditProduct(product)
     }
 
     loadProducts();
-
     },[])
     
 
   const handleDelete = async () => {
     setButtonDeleteLoading(true)
-    try {
-      await saveDeleteProductMockApi();
-    } catch (error) {
-        console.log(error);
-        return;
-    }
+    // try {
+    //   await saveDeleteProductMockApi();
+    // } catch (error) {
+    //     console.log(error);
+    //     return;
+    // }
     // const products = JSON.parse(localStorage.getItem('products') as string) || [];
     // const productId = this.state.product?.id;
     // const newProducts = products.filter((item: Product) => item.id !== productId);
@@ -118,91 +136,99 @@ function AdminEditDetails(props: Props, state: State){
     // this.props.history.push('/admin-list');
     // this.setState({ buttonDeleteLoading: false });
   }
+
+
+  if(redirect === true) {
+    return <Redirect to="/admin-list" />
+  }
+
+  console.log(redirect)
   
+  if(allProducts === undefined || editProduct === undefined) {
+    return <ErrorPage />
+  }
   
-  console.log(editProduct.product.title)
-  console.log(allProducts)
+
+  //console.log(editProduct.category)
+  //console.log(editProduct.category.map((p: any) => console.log(p)))
+  //editProduct.category.map((p: any) => console.log(p))
     return (
-      <div>
-        <Row style={ContainerStyle}>
-          <Col span={24} style={columnStyle}>
-            <Form
-              {...layout}
-              name="nest-messages"
-              onFinish={onFinish}
-              validateMessages={validateMessages}
-              // initialValues={{
-              //   product: {
-              //     //title: editProduct.title,
-              //     //description: editProduct.description,
-              //     // price: editProduct.price,
-              //     // imageUrl: editProduct.img,
-              //     // category: editProduct.category,
-              //     // quiantity: editProduct.quiantity,
-              //   }
-              // }}
-            >
-              <h1
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  fontWeight: "bold",
-                }}
+      
+      <div style={ContainerStyle}>
+        <form>
+          <label>Title: </label>
+          <input
+            name="title"
+            onChange={(e: any) => setTitleField(e.target.value)}
+            defaultValue={editProduct.title}
+            />
+          <label>Description: </label>
+          <input
+            name="description"
+            onChange={(e: any) => setDescriptionField(e.target.value)}
+            defaultValue={editProduct.description}
+            />         
+          <label>Price: </label>
+          <input
+            name="price"
+            onChange={(e: any) => setPriceField(e.target.value)}
+            defaultValue={editProduct.price}
+            
+            />
+          <label>Image: </label>
+          <input
+            name="img"
+            onChange={(e: any) => setImageField(e.target.value)}
+            defaultValue={editProduct.img}
+            />
+          <label>Quantity: </label>
+          <input
+            name="quantity"
+            onChange={(e: any) => setQuantityField(e.target.value)}
+            defaultValue={editProduct.quantity}
+            />
+          <label>Category: </label>
+          {/* { editProduct.category.map((c: any) => (
+
+            <input defaultValue={c}/>
+
+ 
+          ))
+            
+          } */}
+
+
+            <Button 
+              type="primary"
+              onClick={saveProduct}
+              htmlType="submit" 
+              loading={buttonSaveLoading}
               >
-                EDIT
-              </h1>
-              <Form.Item name={["product", "title"]} label="Title" rules={[{ required: true }]}>
-                <Input  />
-              </Form.Item>
+              Save
+            </Button>
 
-              <Form.Item name={["product", "description"]} label="Description" rules={[{ required: true }]}>
-                <Input.TextArea defaultValue="{editProduct?.}"/>
-              </Form.Item>
-
-              <Form.Item name={["product", "price"]} label="Price" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-              
-              <Form.Item name={["product", "imageUrl"]} label="ImageUrl" rules={[{ required: true }]}>
-                <Input />
-              </Form.Item>
-
-              <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                >
-                  <Button 
-                    type="primary"
-                    onClick={() => {successSave();}} 
-                    htmlType="submit" 
-                    loading={buttonSaveLoading}
-                  >
-                    Save
-                  </Button>
-
-                  <Button 
-                    type="primary" 
-                    danger 
-                    onClick={() => {handleDelete(); successDelete();}} 
-                    loading={buttonDeleteLoading}
-                  >
-                    Delete
-                  </Button>
-                </div>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
+            <Button 
+              type="primary" 
+              danger 
+              onClick={() => {handleDelete(); successDelete();}} 
+              loading={buttonDeleteLoading}
+              >
+              Delete
+            </Button>
+            <Link to="/admin-list">Back</Link>
+          </form>
       </div>
     );
 }
 
 const ContainerStyle: CSSProperties = {
+  height: "100%",
   display: "flex",
   justifyContent: "space-around",
   alignItems: "space-around",
   width: "70%",
-  margin: "auto",
+  marginTop: "10rem",
+
 };
 
 const columnStyle: CSSProperties = {
@@ -212,6 +238,6 @@ const columnStyle: CSSProperties = {
 
 export default withRouter(AdminEditDetails);
 
-async function saveDeleteProductMockApi() {
-  return new Promise((res) => setTimeout(() => res("success"), 2000));
-}
+// async function saveDeleteProductMockApi() {
+//   return new Promise((res) => setTimeout(() => res("success"), 2000));
+// }
