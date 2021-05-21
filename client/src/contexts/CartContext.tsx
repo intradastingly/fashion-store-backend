@@ -38,7 +38,6 @@ const emptyReceipt: IReceipt = {
 }
 
 interface State {
-    
     cart: CartItem[];
     deliveryMethod: any;
     userInfo: UserInfo;
@@ -162,11 +161,12 @@ class CartProvider extends Component<{}, State> {
 
     createReceipt = (): IReceipt => {  
         const {session} = this.context
+        console.log(session)
         return {
                 session: session,
                 cart: this.state.cart,
                 userInfo: this.state.userInfo,
-                deliveryMethod: this.state.deliveryMethod.shipmentCompany,
+                deliveryMethod: this.state.deliveryMethod,
                 totalPrice: this.getTotalPrice(),
                 paymentMethod: {...this.state.paymentInfo},
             }
@@ -195,10 +195,11 @@ class CartProvider extends Component<{}, State> {
 
         const {getOrder} = this.context;
         getOrder(this.state.receipt)
+        /* history.push('/ordersuccess'); */
 
         this.clearCart();
+        
 
-        history.push('/ordersuccess');
         this.setState({ disablePlaceOrderButton: false });
     }
     
