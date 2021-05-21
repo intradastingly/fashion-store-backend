@@ -20,7 +20,8 @@ export interface ShippingInfo {
   shipmentCompany: string,
   deliveryTime: number,
   shippingPrice: Number,
-  _id: String
+  _id: String,
+  
 }
 
 const userSession: ISession = {
@@ -32,6 +33,7 @@ const userSession: ISession = {
     session: ISession;
     allProducts: ProductInfo[];
     shippingMethods: ShippingInfo[];
+    loggedIn: boolean,
   }
 
 
@@ -42,6 +44,7 @@ interface ContextValue extends State {
 }
 
 export const ApiContext = createContext<ContextValue>({
+  loggedIn: true,
   session: userSession,
   allProducts: [],
   shippingMethods: [],
@@ -115,14 +118,10 @@ export const ApiContext = createContext<ContextValue>({
       setUserNameValidation(true);
     } else {
       setUserNameValidation(false);
+      history.push("/profile");
     }
-    console.log(userNameValidation)
-    /* history.push("/profile"); */
     return response;
   }
-
-  
- 
 
   async function updateLoginInfo(loginInfo: ISession) {
     /* setSession(loginInfo)
@@ -137,6 +136,7 @@ export const ApiContext = createContext<ContextValue>({
     return (
       <ApiContext.Provider
         value={{
+          loggedIn: userNameValidation!,
           allProducts: allProducts,
           session: session,
           shippingMethods: shippingMethods,
