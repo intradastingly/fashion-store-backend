@@ -9,45 +9,27 @@ import {
 import { Link, Route } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-
-const tailLayout = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
-
 interface Credentials {
   userName: string;
   password: string;
 }
 
 function UserLogIn() {
-  const { loginHandler } = useContext(ApiContext);
+  const { loginHandler, loggedIn } = useContext(ApiContext);
 
-  const [loginCredentials, setloginCredentials] = useState<Credentials>({
-    userName: "",
-    password: "",
-  });
+  const [password, setPassword] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
 
-  const onFinish = (values: any) => {
-    console.log("test");
-    console.log("Success:", values.password);
-    setloginCredentials({
-      userName: values.username,
-      password: values.password,
-    });
+  // const [loginCredentials, setloginCredentials] = useState<Credentials>({
+  //   userName: "",
+  //   password: "",
+  // });
+
+  const loginCredentials = { userName: username, password: password };
+  const onFinish = (e: any) => {
+    e.preventDefault();
     loginHandler(loginCredentials);
-
-    console.log(loginCredentials, "credentials");
+    console.log(loggedIn, "logged in bool");
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -60,6 +42,10 @@ function UserLogIn() {
       window.location.reload();
     }
   };
+
+  console.log(username, "username");
+  console.log(password, "password");
+  console.log(loginCredentials);
 
   return (
     <div>
@@ -74,64 +60,23 @@ function UserLogIn() {
           >
             LOG IN{" "}
           </h1>
-          <Form
-            {...layout}
-            name="basic"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Form.Item
-              label="Username"
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item {...tailLayout}>
-              {/* <Link to={"/profile"}> */}
-              <Route
-                render={({ history }) => (
-                  <Button
-                    onClick={() => {
-                      loginHandler(loginCredentials, history);
-                    }}
-                    type="primary"
-                    htmlType="submit"
-                    style={buttonStyle}
-                  >
-                    Log in
-                  </Button>
-                )}
+          <div>
+            <form name="basic" style={formContainer}>
+              <input
+                name="username"
+                placeholder="username"
+                onChange={(e: any) => setUsername(e.target.value)}
+                type="text"
               />
-              {/* </Link> */}
-            </Form.Item>
-          </Form>
+              <input
+                name="username"
+                placeholder="password"
+                onChange={(e: any) => setPassword(e.target.value)}
+                type="text"
+              />
+              <button onClick={(e: any) => onFinish(e)}>Log In</button>
+            </form>
+          </div>
         </Col>
       </Row>
     </div>
@@ -153,6 +98,14 @@ const columnStyle: CSSProperties = {
 
 const buttonStyle: CSSProperties = {
   marginBottom: "10rem",
+};
+
+const formContainer: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
 };
 
 export default UserLogIn;

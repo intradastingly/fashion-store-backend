@@ -1,12 +1,16 @@
 import { Row, Col, Menu, Button, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
-import { CSSProperties } from "react";
+import { CSSProperties, useContext } from "react";
 import logo from "../assets/logga-fs.png";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import AddToBadge from "./Badge";
+import ApiProvider from "../contexts/ApiContext";
+import { ApiContext } from "../contexts/ApiContext";
 
 function Navbar() {
+  const { loggedIn, logOutHandler } = useContext(ApiContext);
+
   return (
     <Header style={layoutStyle}>
       <Row style={{ width: "100%" }}>
@@ -17,9 +21,20 @@ function Navbar() {
         </Col>
         <Col span={10} offset={6}>
           <Menu mode="horizontal" style={menuStyle}>
-            <Button href="/login" type="link">
-              Log in
-            </Button>
+            {!loggedIn ? (
+              <Button href="/login" type="link">
+                Log in
+              </Button>
+            ) : (
+              <Button
+                onClick={() => {
+                  logOutHandler();
+                }}
+                type="link"
+              >
+                Log out
+              </Button>
+            )}
             <Menu.Item key="1">
               <Link to="/cart" style={{ color: "white" }}>
                 <ShoppingCartOutlined style={iconStyle} />{" "}
