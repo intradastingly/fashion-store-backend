@@ -86,23 +86,11 @@ export const ApiContext = createContext<ContextValue>({
               "Content-type": "application-json"
             }
           })
-
-
-  useEffect(() => {
-    const loadProducts = async () => {
-      const response = await fetch("/api/products", {
-        method: "GET",
-        headers: {
-          "Content-type": "application-json",
-        },
-
           const shipping = await response.json();
           setShippingMethods(shipping)
         }
         loadShippingMethods()
     }, []);
-
-
     
     useEffect(() => {
       const authorizeSession = async () => {
