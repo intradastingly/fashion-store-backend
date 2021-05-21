@@ -1,11 +1,9 @@
 import { createContext, useEffect, useState } from "react";
-
-export interface ISession {
+export interface Credentials {
   /* id: string, */
   userName: string;
   password: string;
 }
-
 export interface ProductInfo {
   category: [];
   description: String;
@@ -15,7 +13,6 @@ export interface ProductInfo {
   price: Number;
   _id: String;
 }
-
 export interface ShippingInfo {
   shipmentCompany: string,
   deliveryTime: number,
@@ -24,13 +21,13 @@ export interface ShippingInfo {
   
 }
 
-const userSession: ISession = {
+const userSession: Credentials = {
   /* id: "", */
   userName: "",
   password: "",
 };
   interface State {
-    session: ISession;
+    session: Credentials;
     allProducts: ProductInfo[];
     shippingMethods: ShippingInfo[];
     loggedIn: boolean,
@@ -38,9 +35,8 @@ const userSession: ISession = {
 
 
 interface ContextValue extends State {
-  updateLoginInfo: (userSession: ISession) => void;
   getOrder: (order: any) => void;
-  loginHandler: (loginCredentials: ISession, history?: any) => void;
+  loginHandler: (loginCredentials: Credentials, history?: any) => void;
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -48,7 +44,6 @@ export const ApiContext = createContext<ContextValue>({
   session: userSession,
   allProducts: [],
   shippingMethods: [],
-  updateLoginInfo: () => {},
   getOrder: () => {},
   loginHandler: () => {},
 });
@@ -99,13 +94,12 @@ export const ApiContext = createContext<ContextValue>({
       })
       const session = await response.json()
       setSession(session)
+      console.log(session)
       }
       authorizeSession();
     }, []);
-    
 
-
-  async function loginHandler(loginCredentials: ISession, history: any) {
+  async function loginHandler(loginCredentials: Credentials, history: any) {
     const response = await fetch("api/login", {
       method: "POST",
       body: JSON.stringify(loginCredentials),
@@ -122,14 +116,18 @@ export const ApiContext = createContext<ContextValue>({
     return response;
   }
 
-  async function updateLoginInfo(loginInfo: ISession) {
-    /* setSession(loginInfo)
-        console.log(loginInfo) */
-  }
-
   async function getOrder(order: any) {
     console.log(order);
     setOrder(order);
+    createNewOrder(order)
+  }
+
+  async function createNewOrder(order: any){
+    const response = await fetch("api/order", {
+      method: "POST",
+      body: JSON.stringify(order),
+      headers: { "Content-Type": "application/json" },
+    });
   }
   
     return (
@@ -139,7 +137,6 @@ export const ApiContext = createContext<ContextValue>({
           allProducts: allProducts,
           session: session,
           shippingMethods: shippingMethods,
-          updateLoginInfo: updateLoginInfo,
           getOrder: getOrder,
           loginHandler: loginHandler,
         }}

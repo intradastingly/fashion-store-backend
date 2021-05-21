@@ -29,6 +29,7 @@ const defaultPayment: PaymentMethod = {
 }
 
 const emptyReceipt: IReceipt = {
+    session: {},
     cart: [],
     deliveryMethod: '',
     totalPrice: 0,
@@ -37,6 +38,7 @@ const emptyReceipt: IReceipt = {
 }
 
 interface State {
+    
     cart: CartItem[];
     deliveryMethod: any;
     userInfo: UserInfo;
@@ -81,6 +83,7 @@ class CartProvider extends Component<{}, State> {
     static contextType = ApiContext;
 
     state: State = {
+        
         cart: [],
         deliveryMethod: {},
         userInfo: emptyUser,
@@ -158,13 +161,15 @@ class CartProvider extends Component<{}, State> {
     }
 
     createReceipt = (): IReceipt => {  
-       return {
-            cart: this.state.cart,
-            userInfo: this.state.userInfo,
-            deliveryMethod: this.state.deliveryMethod.shipmentCompany,
-            totalPrice: this.getTotalPrice(),
-            paymentMethod: {...this.state.paymentInfo},
-        }
+        const {session} = this.context
+        return {
+                session: session,
+                cart: this.state.cart,
+                userInfo: this.state.userInfo,
+                deliveryMethod: this.state.deliveryMethod.shipmentCompany,
+                totalPrice: this.getTotalPrice(),
+                paymentMethod: {...this.state.paymentInfo},
+            }
     }
 
     clearCart = () => {

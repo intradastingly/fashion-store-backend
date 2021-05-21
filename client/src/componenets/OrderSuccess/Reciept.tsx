@@ -5,6 +5,7 @@ import { UserInfo } from '../Cart/InformationForm';
 import { CartItem } from '../Cart/CartItemsList';
 
 export interface IReceipt {
+    session: {};
     cart: CartItem[];
     deliveryMethod: string;
     totalPrice: number;
