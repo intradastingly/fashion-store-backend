@@ -1,7 +1,26 @@
-import { Button, Checkbox, Row, Col, Typography, Space } from "antd";
+import {
+  Button,
+  Checkbox,
+  Row,
+  Col,
+  Typography,
+  Space,
+  Avatar,
+  Layout,
+} from "antd";
 import { HighlightOutlined } from "@ant-design/icons";
-import { CSSProperties, Component, useState, useEffect } from "react";
+import {
+  CSSProperties,
+  Component,
+  useState,
+  Context,
+  useEffect,
+  useRef,
+} from "react";
 import { Link } from "react-router-dom";
+import AvatarPic from "../../assets/Avatar2.png";
+// import { useRequest, useSize } from "ahooks";
+import { useSize } from "ahooks";
 
 const { Paragraph } = Typography;
 const { Title } = Typography;
@@ -13,69 +32,72 @@ function UserProfile() {
   const [cityName, setCityName] = useState("");
   const [currentOrders, setCurrentOrders] = useState<Number>();
 
-  useEffect(() => {
-    const loadOrders = async () => {
-      const allOrders = await makeRequest(`/api/order/`, "GET");
-      //   for (let i = 0; i < allOrders.length; i++) {
-      //     if (loggedInUser === allOrders[i].user) {
-      //         currentOrders++
-      //     }
-      //   }
-
-      setCurrentOrders(allOrders.length);
-    };
-
-    loadOrders();
-  }, []);
-
-  async function makeRequest(url: RequestInfo, method: string, body?: object) {
-    const response = await fetch(url, {
-      method: method,
-      body: JSON.stringify(body),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const result = await response.json();
-    return result;
-  }
   return (
     <div style={profileContainer}>
-      <div style={infoContainer}>
-        <div style={profileNavigation}>
-          <Paragraph>My Information</Paragraph>
-          <Paragraph>My Orders</Paragraph>
+      <div style={avatarContainer}>
+        <div>
+          <Avatar src={AvatarPic} size={100} />
         </div>
-        <div style={flexRow}>
-          <div style={containerDivider}>
-            <div style={customerInfo}>
-              <div>
-                <Paragraph editable={{ onChange: setCustomerName }}>
-                  Name: {customerName}
-                </Paragraph>
-              </div>
-              <div>
-                <Paragraph editable={{ onChange: setStreetName }}>
-                  Street: {streetName}
-                </Paragraph>
-              </div>
-              <div>
-                <Paragraph editable={{ onChange: setZipCode }}>
-                  Zip-Code: {zipCode}
-                </Paragraph>
-              </div>
-              <div>
-                <Paragraph editable={{ onChange: setCityName }}>
-                  City: {cityName}
-                </Paragraph>
-              </div>
+        <div>
+          <Title>Alexander</Title>
+        </div>
+      </div>
+      <div style={infoContainer}>
+        <div style={customerContainer}>
+          <div style={customerInfo}>
+            <div>
+              <Title level={3}>My information</Title>
+            </div>
+            <div>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setCustomerName,
+                }}
+              >
+                Full name: {customerName}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setStreetName,
+                }}
+              >
+                Street: {streetName}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setZipCode,
+                }}
+              >
+                Zip Code: {zipCode}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setCityName,
+                }}
+              >
+                City: {cityName}
+              </Paragraph>
             </div>
           </div>
-          <div style={containerDivider}>
-            <div>
-              <div style={flexCenterColumn}>
-                <Title level={4}>Orders Made: {currentOrders}</Title>
-                <Button>See Orders</Button>
+          <div style={customerInfo}>
+            {/* Here we can map out orders that match the session.username with links to that order */}
+            <div style={orderContainer}>
+              <div>
+                <Title level={3}>My Orders</Title>
+              </div>
+              <div>
+                <h4>You have no orders at this moment.</h4>
+              </div>
+              <div>
+                <Button>Details</Button>
               </div>
             </div>
           </div>
@@ -93,23 +115,26 @@ const profileContainer: CSSProperties = {
   justifyContent: "flex-start",
 };
 
-const profileNavigation: CSSProperties = {
-  height: "3rem",
+const avatarContainer: CSSProperties = {
   width: "100%",
-  background: "#d6d6ce",
+  height: "15vh",
   display: "flex",
   justifyContent: "space-around",
+  flexDirection: "column",
   alignItems: "center",
   borderBottom: "1px solid black",
+  paddingBottom: "2rem",
+  marginTop: "10rem",
 };
 
 const infoContainer: CSSProperties = {
-  background: "#edede4",
-  height: "30rem",
-  width: "50rem",
+  background: "#f5f5f5",
+  height: "100vh",
+  width: "100%",
   display: "flex",
   flexDirection: "column",
-  marginTop: "10rem",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
 const customerInfo: CSSProperties = {
@@ -118,19 +143,24 @@ const customerInfo: CSSProperties = {
   justifyContent: "center",
 };
 
-const containerDivider: CSSProperties = {
+const customerContainer: CSSProperties = {
   display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  height: "100%",
   width: "100%",
-  border: "1px solid black",
-  borderTop: "none",
+  flexDirection: window.innerWidth < 700 ? "column" : "row",
+  justifyContent: "space-evenly",
 };
 
-const flexRow: CSSProperties = {
+const headerContainer: CSSProperties = {
   display: "flex",
-  height: "100%",
+  width: "100%",
+  justifyContent: "space-evenly",
+  alignItems: "center",
+};
+
+const orderContainer: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 };
 
 const flexCenterColumn: CSSProperties = {

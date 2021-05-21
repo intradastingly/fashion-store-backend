@@ -87,11 +87,21 @@ export const ApiContext = createContext<ContextValue>({
             }
           })
 
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      const response = await fetch("/api/products", {
+        method: "GET",
+        headers: {
+          "Content-type": "application-json",
+        },
+
           const shipping = await response.json();
           setShippingMethods(shipping)
         }
         loadShippingMethods()
     }, []);
+
 
     
     useEffect(() => {
@@ -105,6 +115,7 @@ export const ApiContext = createContext<ContextValue>({
       authorizeSession();
     }, []);
     
+
 
   async function loginHandler(loginCredentials: ISession, history: any) {
     const response = await fetch("api/login", {
