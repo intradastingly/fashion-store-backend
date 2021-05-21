@@ -63,9 +63,6 @@ export const ApiContext = createContext<ContextValue>({
     const [order, setOrder] = useState<any>();
     const [userNameValidation, setUserNameValidation] = useState<boolean>();
 
-    console.log(session)
-    console.log(userNameValidation)
-
     useEffect(() => {
         const loadProducts = async () => {
             const response = await fetch("/api/products", {
@@ -114,11 +111,12 @@ export const ApiContext = createContext<ContextValue>({
     });
     const result = await response.json();
     console.log(result)
-    if (result.message === "Incorrect user name or password") {
+    if (result === "Incorrect password or username") {
       setUserNameValidation(true);
     } else {
       setUserNameValidation(false);
     }
+    console.log(userNameValidation)
     /* history.push("/profile"); */
     return response;
   }
