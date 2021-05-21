@@ -20,7 +20,8 @@ export interface ShippingInfo {
   shipmentCompany: string,
   deliveryTime: number,
   shippingPrice: Number,
-  _id: String
+  _id: String,
+  
 }
 
 const userSession: ISession = {
@@ -32,6 +33,7 @@ const userSession: ISession = {
     session: ISession;
     allProducts: ProductInfo[];
     shippingMethods: ShippingInfo[];
+    loggedIn: boolean,
   }
 
 
@@ -42,6 +44,7 @@ interface ContextValue extends State {
 }
 
 export const ApiContext = createContext<ContextValue>({
+  loggedIn: true,
   session: userSession,
   allProducts: [],
   shippingMethods: [],
@@ -62,7 +65,6 @@ export const ApiContext = createContext<ContextValue>({
     const [session, setSession] = useState<any>();
     const [order, setOrder] = useState<any>();
     const [userNameValidation, setUserNameValidation] = useState<boolean>();
-    const [sessionID, setSessionID] = useState<any>();
 
     useEffect(() => {
         const loadProducts = async () => {
@@ -99,33 +101,36 @@ export const ApiContext = createContext<ContextValue>({
         }
         loadShippingMethods()
     }, []);
-      
-    useEffect(() => {      
-    const loadGuestSession = async () => {
-      const response = await fetch("/api/guest", {
-        method: "POST",
-      });
-      const session = await response.json();
-      setSession(session);
-      console.log(session)
-    };
-    loadGuestSession();
-  }, []);
+
+
+    
+    useEffect(() => {
+      const authorizeSession = async () => {
+        const response = await fetch(`api/authenticated`, {
+          method: "GET",
+      })
+      const session = await response.json()
+      setSession(session)
+      }
+      authorizeSession();
+    }, []);
+    
+
 
   async function loginHandler(loginCredentials: ISession, history: any) {
     const response = await fetch("api/login", {
       method: "POST",
       body: JSON.stringify(loginCredentials),
-      credentials: "include",
       headers: { "Content-Type": "application/json" },
     });
     const result = await response.json();
-    if (result.message === "Incorrect user name or password") {
+    console.log(result)
+    if (result === "Incorrect password or username") {
       setUserNameValidation(true);
     } else {
       setUserNameValidation(false);
+      history.push("/profile");
     }
-    history.push("/profile");
     return response;
   }
 
@@ -142,6 +147,7 @@ export const ApiContext = createContext<ContextValue>({
     return (
       <ApiContext.Provider
         value={{
+          loggedIn: userNameValidation!,
           allProducts: allProducts,
           session: session,
           shippingMethods: shippingMethods,
