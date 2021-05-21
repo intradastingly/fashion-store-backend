@@ -32,7 +32,7 @@ function ProductCardGrid(){
                         }}
                         dataSource={allProducts}
                         renderItem={item => (
-                            <List.Item>
+                            <List.Item >
                                 <Link to={'/product/' + item._id}>
                                     <Card
                                         hoverable
