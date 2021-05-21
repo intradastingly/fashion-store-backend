@@ -1,30 +1,10 @@
-import { Form, Input, Button, Col, Row, message } from "antd";
-import React, { Component, CSSProperties, useContext, useEffect, useState } from "react";
+import { Button, message } from "antd";
+import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { Link, Redirect, RouteComponentProps, withRouter } from "react-router-dom";
-import {ApiContext, ProductInfo} from "../../contexts/ApiContext";
+import {ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import ErrorPage from "../ErrorPage";
-import { Product, productList } from "../ProductItemsList";
+import { Product } from "../ProductItemsList";
 
-// const layout = {
-//   labelCol: {
-//     span: 8,
-//   },
-//   wrapperCol: {
-//     span: 16,
-//   },
-// };
-
-/* eslint-disable no-template-curly-in-string */
-// const validateMessages = {
-//   required: "${label} is required!",
-//   types: {
-//     email: "${label} is not a valid email!",
-//     number: "${label} is not a valid number!",
-//   },
-//   number: {
-//     range: "${label} must be between ${min} and ${max}",
-//   },
-// };
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
@@ -44,7 +24,7 @@ const successDelete = () => {
 };
 
 function AdminEditDetails(props: Props, state: State){
-  const { allProducts } = useContext(ApiContext);
+  const { allProducts, loadProducts } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false)
   const [buttonDeleteLoading, setButtonDeleteLoading] = useState(false)
   const [redirect, setRedirect ] = useState(false)
@@ -61,19 +41,6 @@ function AdminEditDetails(props: Props, state: State){
   const saveProduct = async (values: any) => {
 
     setButtonSaveLoading(true)
-   
-    // try {
-    //   await saveDeleteProductMockApi();
-    // } catch (error) {
-    //     console.log(error);
-    //     return;
-    // }
-    // const products = allProducts
-    // const editedProduct: Product = {...products, ...values.product};
-    // const updatedProducts = products.map((item: any) => item._id === editedProduct.id ? editedProduct : item);
-    // localStorage.setItem('products', JSON.stringify(updatedProducts));
-    // props.history.push('/admin-list');
-  
     
     const body = {
       title: titleField,
@@ -101,57 +68,56 @@ function AdminEditDetails(props: Props, state: State){
     setRedirect(true)
     setButtonSaveLoading(false)
     successSave()
+     // api context get all products
+    loadProducts();
 
     return result
   }
 
   useEffect( () => {
-
     const loadProducts = async () => {
       if(!allProducts){
         return
       }
-      console.log(allProducts)
       const product = await allProducts.find((p: ProductInfo) => p._id === props.match.params.id);
-      console.log(product)
       setEditProduct(product)
     }
 
     loadProducts();
     },[])
+
+
     
 
   const handleDelete = async () => {
     setButtonDeleteLoading(true)
-    // try {
-    //   await saveDeleteProductMockApi();
-    // } catch (error) {
-    //     console.log(error);
-    //     return;
-    // }
-    // const products = JSON.parse(localStorage.getItem('products') as string) || [];
-    // const productId = this.state.product?.id;
-    // const newProducts = products.filter((item: Product) => item.id !== productId);
-    // localStorage.setItem('products', JSON.stringify(newProducts));
-    // this.props.history.push('/admin-list');
-    // this.setState({ buttonDeleteLoading: false });
+
+    const response = await fetch("/api/products/" + props.match.params.id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await response.json();
+    // api context get all products
+    loadProducts();
+    return result;
   }
+
+
 
 
   if(redirect === true) {
     return <Redirect to="/admin-list" />
   }
 
-  console.log(redirect)
   
   if(allProducts === undefined || editProduct === undefined) {
     return <ErrorPage />
   }
   
 
-  //console.log(editProduct.category)
-  //console.log(editProduct.category.map((p: any) => console.log(p)))
-  //editProduct.category.map((p: any) => console.log(p))
     return (
       
       <div style={ContainerStyle}>

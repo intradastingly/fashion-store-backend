@@ -39,6 +39,7 @@ interface ContextValue extends State {
   updateLoginInfo: (userSession: ISession) => void;
   getOrder: (order: any) => void;
   loginHandler: (loginCredentials: ISession, history?: any) => void;
+  loadProducts: () => void
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -48,6 +49,7 @@ export const ApiContext = createContext<ContextValue>({
   updateLoginInfo: () => {},
   getOrder: () => {},
   loginHandler: () => {},
+  loadProducts: () => {}
 });
   export interface shippingMethods extends ShippingInfo {
     shippingMethods: shippingMethods
@@ -64,16 +66,6 @@ export const ApiContext = createContext<ContextValue>({
     const [userNameValidation, setUserNameValidation] = useState<boolean>();
 
     useEffect(() => {
-        const loadProducts = async () => {
-            const response = await fetch("/api/products", {
-                method: "GET",
-                headers: {
-                    "Content-type": "application-json"
-                }
-            })
-            const products = await response.json()
-            setAllProducts(products)
-        }
         loadProducts()
 
         const loadShippingMethods = async () => {
@@ -102,6 +94,16 @@ export const ApiContext = createContext<ContextValue>({
     loadGuestSession();
   }, []);
 
+  const loadProducts = async () => {
+      const response = await fetch("/api/products", {
+          method: "GET",
+          headers: {
+              "Content-type": "application-json"
+          }
+      })
+      const products = await response.json()
+      setAllProducts(products)
+  }
   async function loginHandler(loginCredentials: ISession, history: any) {
     const response = await fetch("api/login", {
       method: "POST",
@@ -138,6 +140,7 @@ export const ApiContext = createContext<ContextValue>({
           updateLoginInfo: updateLoginInfo,
           getOrder: getOrder,
           loginHandler: loginHandler,
+          loadProducts: loadProducts
         }}
       >
         {props.children}
