@@ -7,13 +7,10 @@ const saltRounds = 10;
 
 // Create new
 exports.newAccount = async (req: express.Request, res: express.Response) => {
-  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
   const account = new Account({
     userName: req.body.userName,
     role: "plebian",
-
-    // NEEDS TO BE HASHED
-    password: hashedPassword,
+    password: req.body.password,
   });
 
   await account.save();
@@ -44,8 +41,6 @@ exports.editAccount = async (req: express.Request, res: express.Response) => {
       $set: {
         userName: req.body.userName,
         role: req.body.role,
-
-        // NEEDS TO BE HASHED
         password: req.body.password,
       },
     },

@@ -1,4 +1,3 @@
-export { };
 import express from "express";
 const Account = require("../account/model");
 const bcrypt = require('bcrypt');
@@ -8,8 +7,9 @@ exports.login = async (req: any, res: express.Response) => {
 
   const { userName, password } = req.body;
 
-  const account = await Account.findOne({ userName: userName });
-
+  const account = await Account.findOne({ userName: userName }).select("+password");
+  console.log(account);
+  
   if (!account || !(await bcrypt.compare(password, account.password))) {
     res.status(401).json("Incorrect password or username");
     return;

@@ -10,7 +10,7 @@ POST http://localhost:6969/api/accounts/
 Content-Type: application/json
 
 {
-    "userName": "123",
+    "userName": "1s23",
     "role": "123",
     "password": "123"
 }

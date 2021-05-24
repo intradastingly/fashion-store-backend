@@ -3,8 +3,8 @@ POST http://localhost:6969/api/login/
 Content-Type: application/json
 
 {
-  "userName": "123",
-  "password":  "1223"
+  "userName": "1s23",
+  "password":  "123"
 }
 
 
