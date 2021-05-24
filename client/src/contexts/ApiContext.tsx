@@ -63,6 +63,8 @@ function ApiProvider(props: Props) {
   const [order, setOrder] = useState<any>();
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
 
+  console.log(session)
+
   useEffect(() => {
     const loadShippingMethods = async () => {
       const response = await fetch("/api/shipping", {
@@ -108,7 +110,6 @@ function ApiProvider(props: Props) {
       headers: { "Content-Type": "application/json" },
     });
     const result = await response.json();
-    console.log(result);
     if (result === "Incorrect password or username") {
       setuserIsLoggedIn(false);
     } else if (result.message === "Login Succesful") {

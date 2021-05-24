@@ -13,13 +13,13 @@ exports.login = async (req: any, res: express.Response) => {
     res.status(401).json("Incorrect password or username");
     return;
   }
+
   req.session.id = account.id;
   req.session.username = account.userName;
   req.session.role = account.role;
 
   res.status(200).json({ message: "Login successful", session: req.session });
 };
-
 
 
 exports.logout = async (req: any, res: express.Response) => {
