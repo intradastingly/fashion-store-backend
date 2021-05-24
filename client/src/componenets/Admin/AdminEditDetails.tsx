@@ -15,11 +15,7 @@ interface State {
   buttonDeleteLoading: boolean;
 }
 
-export interface Category {
-  title: string;
-  routeName: string;
-  items: ProductInfo[];
-}
+
 
 const successSave = () => {
   message.success('The product has been updated', 3);
@@ -30,10 +26,9 @@ const successDelete = () => {
 };
 
 function AdminEditDetails(props: Props, state: State){
-  const { allProducts, loadProducts } = useContext(ApiContext);
+  const { allProducts, loadProducts, mapCategories, categories } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [buttonDeleteLoading, setButtonDeleteLoading] = useState(false);
-  const [redirect, setRedirect] = useState(false);
   const [editProduct, setEditProduct] = useState<any>({});
   const [titleField, setTitleField] = useState(editProduct.title);
   const [descriptionField, setDescriptionField] = useState(editProduct.description);
@@ -42,7 +37,7 @@ function AdminEditDetails(props: Props, state: State){
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
 
-  const [categories, setCategories] = useState<Category[]>([]);
+  // tries as defaultValue on Select/option to show current category
   const [productCategory, setProductCategory] = useState()
 
   const saveProduct = async (values: any) => {
@@ -72,11 +67,12 @@ function AdminEditDetails(props: Props, state: State){
     setQuantityField("");
     setPriceField("");
     setImageField("");
-    setRedirect(true);
     setButtonSaveLoading(false);
     successSave();
     // api context get all products
     loadProducts();
+
+    
 
     return result;
   };
@@ -115,43 +111,16 @@ function AdminEditDetails(props: Props, state: State){
     return result;
   };
   
-  const mapCategories = () => {
-    
-    let allProductsCategories: Category[] = [];
-    for (const product of allProducts) {
-      for(const productCategory of product.category) {
-        let selectedCategory = allProductsCategories.find(
-          (c) => c.title === productCategory
-        );
 
-        if(!selectedCategory) {
-          selectedCategory = {
-            title: productCategory,
-            routeName: productCategory,
-            items: []
-          };
-          allProductsCategories.push(selectedCategory)
-        }
-
-        selectedCategory.items.push(product)
-      }
-    }
-    setCategories(allProductsCategories)
-    return 
-
-  }
-   
-
-  if (redirect === true) {
-    return <Redirect to="/admin-list" />;
+  if(buttonDeleteLoading || buttonSaveLoading) {
+    return <Redirect to="/admin-list" />
   }
 
   if (allProducts === undefined || editProduct === undefined) {
     return <ErrorPage />;
   }
 
-  console.log(productCategory, "productCategory state")
-  console.log(categoryField, "categoryField state")
+
   return (
     <div style={rootStyle}>
       <form style={layoutStyle}>
