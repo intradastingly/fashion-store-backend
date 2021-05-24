@@ -3,20 +3,18 @@ import express from "express";
 const Account = require("../account/model");
 
 exports.login = async (req: any, res: express.Response) => {
-
   const { userName, password } = req.body;
   const account = await Account.findOne({ userName: userName });
-  
-   if (!account /* || !(await bcrypt.compare(password, profile.password)) */) {
+
+  if (!account /* || !(await bcrypt.compare(password, profile.password)) */) {
     res.status(401).json("Incorrect password or username");
     return;
   }
-    req.session.id = account.id;
-    req.session.username = account.userName;
-    req.session.role =  account.role;
-    res.status(200).json("Login Succesful");
-}
-
+  req.session.id = account.id;
+  req.session.username = account.userName;
+  req.session.role = account.role;
+  res.status(200).json({ message: "Login successful", session: req.session });
+};
 
 exports.logout = async (req: any, res: express.Response) => {
   if (!req.session.id) {

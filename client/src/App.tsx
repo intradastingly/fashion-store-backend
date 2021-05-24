@@ -24,12 +24,22 @@ import ApiProvider from "./contexts/ApiContext";
 import { ApiContext } from "./contexts/ApiContext";
 
 function App() {
-  const { loggedIn } = useContext(ApiContext);
+  const { loggedIn, session } = useContext(ApiContext);
   console.log(loggedIn, "logged in bool");
 
   // if (loggedIn) {
   //   return <Redirect to="/profile" />;
   // }
+
+  // <Route exact path="/login" component={userLogIn}>
+  //                 {session.userName ? <Redirect to="/profile" /> : null}
+
+  //                 <Route exact path="/profile" component={UserProfile}>
+  //                   {!session.userName ? <Redirect to="/" /> : null}
+  //                 </Route>
+  //               </Route>
+  console.log(session, "session");
+
   return (
     <ApiProvider>
       <CartProvider>
@@ -45,12 +55,11 @@ function App() {
                 <Route path="/ordersuccess" component={OrderSuccessMessage} />
                 <Route exact path="/" component={StartPageView} />
                 <Route path="/cart" component={CartView} />
-                <Route exact path="/login" component={userLogIn}>
-                  {/* {loggedIn ? <Redirect to="/profile" /> : null} */}
-                </Route>
-                <Route exact path="/profile" component={UserProfile}>
-                  {/* {!loggedIn ? <Redirect to="/" /> : <Redirect to="/profile" />} */}
-                </Route>
+                <Route path="/login" component={userLogIn} />
+                {!session ? (
+                  <Redirect from="/profile" to="/login"></Redirect>
+                ) : null}
+                <Route path="/profile" component={UserProfile} />
                 <Route path="/admin" component={AdminLogIn} />
                 <Route path="/admin-list" component={AdminList} />
                 <Route path="/add-product" component={AddNewProduct} />

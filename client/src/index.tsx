@@ -1,24 +1,27 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { productList } from './componenets/ProductItemsList';
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { productList } from "./componenets/ProductItemsList";
+import ApiProvider from "./contexts/ApiContext";
 
-if (!localStorage.getItem('products')) {
+if (!localStorage.getItem("products")) {
   window.onload = function () {
-    localStorage.setItem('products', JSON.stringify(productList))
-  }
-  setTimeout(function(){
+    localStorage.setItem("products", JSON.stringify(productList));
+  };
+  setTimeout(function () {
     window.location.reload();
   }, 500);
 }
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ApiProvider>
+      <App />
+    </ApiProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

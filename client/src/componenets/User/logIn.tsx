@@ -13,7 +13,6 @@ interface Credentials {
   userName: string;
   password: string;
 }
-
 function UserLogIn() {
   const { loginHandler, loggedIn } = useContext(ApiContext);
 
@@ -42,10 +41,6 @@ function UserLogIn() {
       window.location.reload();
     }
   };
-
-  console.log(username, "username");
-  console.log(password, "password");
-  console.log(loginCredentials);
 
   return (
     <div>

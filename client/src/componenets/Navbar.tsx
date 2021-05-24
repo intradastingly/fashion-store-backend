@@ -9,7 +9,7 @@ import ApiProvider from "../contexts/ApiContext";
 import { ApiContext } from "../contexts/ApiContext";
 
 function Navbar() {
-  const { loggedIn, logOutHandler } = useContext(ApiContext);
+  const { loggedIn, logOutHandler, session } = useContext(ApiContext);
 
   return (
     <Header style={layoutStyle}>
@@ -21,7 +21,7 @@ function Navbar() {
         </Col>
         <Col span={10} offset={6}>
           <Menu mode="horizontal" style={menuStyle}>
-            {!loggedIn ? (
+            {!session ? (
               <Button href="/login" type="link">
                 Log in
               </Button>

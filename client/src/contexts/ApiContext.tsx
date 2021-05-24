@@ -26,7 +26,7 @@ const userSession: Credentials = {
   password: "",
 };
 interface State {
-  session: Credentials;
+  session: any;
   allProducts: ProductInfo[];
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
@@ -41,7 +41,7 @@ interface ContextValue extends State {
 
 export const ApiContext = createContext<ContextValue>({
   loggedIn: false,
-  session: userSession,
+  session: {},
   allProducts: [],
   shippingMethods: [],
   getOrder: () => {},
@@ -111,8 +111,9 @@ function ApiProvider(props: Props) {
     console.log(result);
     if (result === "Incorrect password or username") {
       setuserIsLoggedIn(false);
-    } else if (result === "Login Succesful") {
-      setuserIsLoggedIn(true);
+    } else if (result.message === "Login Succesful") {
+      await setSession(result.session);
+      await setuserIsLoggedIn(true);
       console.log("User is now logged in");
       console.log(userIsLoggedIn);
     }
