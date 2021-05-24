@@ -19,11 +19,6 @@ function UserLogIn() {
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
 
-  // const [loginCredentials, setloginCredentials] = useState<Credentials>({
-  //   userName: "",
-  //   password: "",
-  // });
-
   const loginCredentials = { userName: username, password: password };
   const onFinish = (e: any) => {
     e.preventDefault();

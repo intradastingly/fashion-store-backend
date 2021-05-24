@@ -38,7 +38,6 @@ function App() {
   //                   {!session.userName ? <Redirect to="/" /> : null}
   //                 </Route>
   //               </Route>
-  console.log(session, "session");
 
   return (
     <ApiProvider>
@@ -56,9 +55,7 @@ function App() {
                 <Route exact path="/" component={StartPageView} />
                 <Route path="/cart" component={CartView} />
                 <Route path="/login" component={userLogIn} />
-                {!session ? (
-                  <Redirect from="/profile" to="/login"></Redirect>
-                ) : null}
+
                 <Route path="/profile" component={UserProfile} />
                 <Route path="/admin" component={AdminLogIn} />
                 <Route path="/admin-list" component={AdminList} />

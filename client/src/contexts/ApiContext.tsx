@@ -59,11 +59,9 @@ interface Props {
 function ApiProvider(props: Props) {
   const [allProducts, setAllProducts] = useState<any>();
   const [shippingMethods, setShippingMethods] = useState<any>();
-  const [session, setSession] = useState<any>();
+  const [session, setSession] = useState<any>(null);
   const [order, setOrder] = useState<any>();
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
-
-  console.log(session)
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -81,13 +79,23 @@ function ApiProvider(props: Props) {
   }, []);
 
   useEffect(() => {
+    console.log(session);
+    if (session) {
+      setuserIsLoggedIn(true);
+    } else {
+      setuserIsLoggedIn(false);
+    }
+  });
+
+  useEffect(() => {
     const authorizeSession = async () => {
       const response = await fetch(`api/authenticated`, {
         method: "GET",
       });
-      const session = await response.json();
-      setSession(session);
-      console.log(session);
+
+      const sessionX = await response.json();
+      setSession(sessionX);
+      console.log(sessionX, "session X");
     };
     authorizeSession();
   }, []);
@@ -112,11 +120,9 @@ function ApiProvider(props: Props) {
     const result = await response.json();
     if (result === "Incorrect password or username") {
       setuserIsLoggedIn(false);
-    } else if (result.message === "Login Succesful") {
+    } else if (result.message === "Login successful") {
       await setSession(result.session);
       await setuserIsLoggedIn(true);
-      console.log("User is now logged in");
-      console.log(userIsLoggedIn);
     }
     return response;
   }
@@ -130,6 +136,7 @@ function ApiProvider(props: Props) {
     console.log(result);
     if (result === "logout succ") {
       setuserIsLoggedIn(false);
+      setSession(null);
     } else if (result === "already logged out") {
       setuserIsLoggedIn(false);
     }

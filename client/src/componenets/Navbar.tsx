@@ -1,6 +1,6 @@
 import { Row, Col, Menu, Button, Space } from "antd";
 import { Header } from "antd/lib/layout/layout";
-import { CSSProperties, useContext } from "react";
+import { CSSProperties, useContext, useState, useEffect } from "react";
 import logo from "../assets/logga-fs.png";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -10,6 +10,10 @@ import { ApiContext } from "../contexts/ApiContext";
 
 function Navbar() {
   const { loggedIn, logOutHandler, session } = useContext(ApiContext);
+
+  // useEffect(() => {
+  //   // setSessionCookie(session);
+  // }, [loggedIn]);
 
   return (
     <Header style={layoutStyle}>
@@ -21,7 +25,7 @@ function Navbar() {
         </Col>
         <Col span={10} offset={6}>
           <Menu mode="horizontal" style={menuStyle}>
-            {!session ? (
+            {!loggedIn ? (
               <Button href="/login" type="link">
                 Log in
               </Button>
