@@ -1,11 +1,16 @@
 export {};
-const mongoose = require("mongoose");
+import { model, Schema } from "mongoose";
 
-const shippingSchema = new mongoose.Schema({
-  // productID: {},
+interface ShippingDocument {
+  shipmentCompany: string,
+  deliveryTime: string, 
+  shippingPrice: string
+}
+
+const shippingSchema = new Schema<ShippingDocument>({
   shipmentCompany: { type: String, required: true },
   deliveryTime: { type: Number, required: true },
   shippingPrice: { type: Number, required: true },
 });
 
-module.exports = mongoose.model("shipping", shippingSchema);
+module.exports = model("shipping", shippingSchema);
