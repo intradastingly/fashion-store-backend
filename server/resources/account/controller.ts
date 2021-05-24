@@ -1,15 +1,19 @@
-export {};
+export { };
 import express from "express";
 const Account = require("./model");
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 
 // Create new
 exports.newAccount = async (req: express.Request, res: express.Response) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, saltRounds)
   const account = new Account({
     userName: req.body.userName,
     role: "plebian",
 
     // NEEDS TO BE HASHED
-    password: req.body.password,
+    password: hashedPassword,
   });
 
   await account.save();
