@@ -18,7 +18,7 @@ function ProductCardGrid(){
     const {allProducts, getOrder, loggedIn} = useContext(ApiContext);
     const [selectedTags, setSelectedTags] = useState<any>("All")
     console.log(allProducts)
-
+    console.log(selectedTags)
    
    /*  allProducts.category.map((c:any) => {
         console.log(c)
@@ -95,14 +95,14 @@ const categoriesContainer: CSSProperties = {
     display: 'flex',
     justifyContent: 'space-around',
     alignItems: 'space-around',
-    width: '80%',
+    width: '100%',
     margin: 'auto',
     marginTop: '1rem',
     marginBottom: '0.5rem',
 }
 
 const tagStyle: CSSProperties = {
-    fontSize: "1rem"
+    fontSize: "1rem",
 }
 
 const columnStyle: CSSProperties = {
