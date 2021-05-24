@@ -33,18 +33,18 @@ exports.getAllOrders = async (
 
 async function orderProductSubtractor(orderedProducts: any){
   const existingProducts = await Product.find();
-  
   for(const p of orderedProducts){
     const updatedVolume = p.product.quantity - p.quantity;
-    for(const e of existingProducts){
-      if(e._id == p.product._id){
-        /* console.log(e) */
-        /* console.log(existingProducts) */
-        /* existingProducts.quantity = updatedVolume;
-        console.log(existingProducts) */
-      }
-    }
-    
+    const product = await Product.findOneAndUpdate(
+        { _id: p.product._id },
+        {
+          $set: {
+            quantity: updatedVolume,
+          },
+        },
+        { new: true }
+      );
+      console.log(product)
   }
 }
 
