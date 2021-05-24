@@ -14,7 +14,7 @@ export interface ProductDocument{
 const productSchema = new Schema<ProductDocument>({
   title: { type: String },
   description: { type: String },
-  category: [{ type: String }],
+  category: { type: Array, trim: true },
   quantity: { type: Number },
   price: { type: Number},
   img: { type: String }
