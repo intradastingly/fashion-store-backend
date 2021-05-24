@@ -17,15 +17,19 @@ function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
     const {allProducts, getOrder, loggedIn} = useContext(ApiContext);
     const [selectedTags, setSelectedTags] = useState<any>("All")
+    console.log(allProducts)
+
+   
+   /*  allProducts.category.map((c:any) => {
+        console.log(c)
+    }) */
 
     function handleChange(tag: any,checked: any){
         const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter((t: any) => t !== tag);
-        console.log('You are interested in: ', nextSelectedTags);
         setSelectedTags(nextSelectedTags)
     }
 
         return(
-             
             <Row style={cardContainer}>
                 <Row style={categoriesContainer}>
                     {tagsData.map(tag => (
@@ -68,7 +72,7 @@ function ProductCardGrid(){
                                     </Card>
                                 </Link>
                             </List.Item>
-                        )}    
+                        )} 
                     />
                 </Col>
             </Row>
@@ -98,7 +102,7 @@ const categoriesContainer: CSSProperties = {
 }
 
 const tagStyle: CSSProperties = {
-    fontSize: "1.2rem"
+    fontSize: "1rem"
 }
 
 const columnStyle: CSSProperties = {
