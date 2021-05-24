@@ -54,9 +54,12 @@ function App() {
                 <Route path="/ordersuccess" component={OrderSuccessMessage} />
                 <Route exact path="/" component={StartPageView} />
                 <Route path="/cart" component={CartView} />
-                <Route path="/login" component={userLogIn} />
-
-                <Route path="/profile" component={UserProfile} />
+                <Route path="/login" component={userLogIn}>
+                  {loggedIn ? <Redirect to="/profile" /> : null}
+                </Route>
+                <Route path="/profile" component={UserProfile}>
+                  {!loggedIn ? <Redirect to="/login" /> : null}
+                </Route>
                 <Route path="/admin" component={AdminLogIn} />
                 <Route path="/admin-list" component={AdminList} />
                 <Route path="/add-product" component={AddNewProduct} />

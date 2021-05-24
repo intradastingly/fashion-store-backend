@@ -11,9 +11,12 @@ import { ApiContext } from "../contexts/ApiContext";
 function Navbar() {
   const { loggedIn, logOutHandler, session } = useContext(ApiContext);
 
-  // useEffect(() => {
-  //   // setSessionCookie(session);
-  // }, [loggedIn]);
+  const reloadPage = () => {
+    setTimeout(reload, 300);
+    function reload() {
+      window.location.reload();
+    }
+  };
 
   return (
     <Header style={layoutStyle}>
@@ -33,6 +36,7 @@ function Navbar() {
               <Button
                 onClick={() => {
                   logOutHandler();
+                  reloadPage();
                 }}
                 type="link"
               >
