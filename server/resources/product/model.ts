@@ -1,13 +1,13 @@
 export {};
-import { model, Schema } from "mongoose";
+import { model, Schema} from "mongoose";
 
-interface ProductDocument {
-  title: string, 
+export interface ProductDocument{
+  title: string,
   description: string,
-  catagory: string, 
+  category: [string],
   quantity: number,
   price: number,
-  img: string
+  img: string,
 }
 
 const productSchema = new Schema<ProductDocument>({
@@ -17,7 +17,6 @@ const productSchema = new Schema<ProductDocument>({
   quantity: { type: Number },
   price: { type: Number},
   img: { type: String }
-
 });
 
 module.exports = model("Product", productSchema);

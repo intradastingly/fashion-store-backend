@@ -1,16 +1,30 @@
 export {};
-import { model, Schema } from "mongoose";
+import {model, Schema} from "mongoose";
+import {AccountDocument} from "../account/model"
+import {ProductDocument} from "../product/model"
+import {ShippingDocument} from "../shipping/model"
 
+interface Cart extends OrderDocument{
+  product: ProductDocument,
+  quantity: Number,
+}
 
-interface OrderDocument {
-  session: Object,
+interface UserInfo extends OrderDocument{
+  name: string,
+  email: string,
+  phone: number,
+  street: string,
+  zipcode: number,
+  city: string,
+}
+
+export interface OrderDocument{
+  session: AccountDocument,
   date: Date,
-  isHandled: Boolean,
-  cart: Object,
-  userInfo: Object,
-  deliveryMethod: string,
-  totalPrice: number,
-  paymentMethod: Object
+  isHanddled: Boolean,
+  cart: Cart,
+  userInfo: UserInfo,
+  deliveryMethod: ShippingDocument,
 }
 
 const orderSchema = new Schema<OrderDocument>({
@@ -25,3 +39,4 @@ const orderSchema = new Schema<OrderDocument>({
 });
 
 module.exports = model("Order", orderSchema);
+

@@ -1,9 +1,9 @@
 export { };
-  import {MongooseDocument, model, Schema} from "mongoose";
+import {MongooseDocument, model, Schema} from "mongoose";
 import bcrypt from 'bcrypt';
 const saltRounds = 10;
 
-interface AccountDocument extends MongooseDocument {
+export interface AccountDocument extends MongooseDocument {
   userName: string,
   role: string,
   password: string,

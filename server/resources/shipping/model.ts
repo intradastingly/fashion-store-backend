@@ -1,10 +1,10 @@
 export {};
-import { model, Schema } from "mongoose";
+import { model, Schema} from "mongoose";
 
-interface ShippingDocument {
+export interface ShippingDocument{
   shipmentCompany: string,
-  deliveryTime: string, 
-  shippingPrice: string
+  deliveryTime: number,
+  shippingPrice: number,
 }
 
 const shippingSchema = new Schema<ShippingDocument>({
