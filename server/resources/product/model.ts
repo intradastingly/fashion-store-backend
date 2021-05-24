@@ -2,6 +2,7 @@ export {};
 import { model, Schema} from "mongoose";
 
 export interface ProductDocument{
+  _id: string,
   title: string,
   description: string,
   category: [string],

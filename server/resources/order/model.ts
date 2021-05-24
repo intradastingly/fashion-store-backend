@@ -25,6 +25,7 @@ export interface OrderDocument{
   cart: Cart,
   userInfo: UserInfo,
   deliveryMethod: ShippingDocument,
+  paymentMethod: object,
 }
 
 const orderSchema = new Schema<OrderDocument>({
