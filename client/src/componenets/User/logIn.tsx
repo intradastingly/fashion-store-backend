@@ -24,6 +24,7 @@ function UserLogIn() {
     e.preventDefault();
     loginHandler(loginCredentials);
     console.log(loggedIn, "logged in bool");
+    reloadPage();
   };
 
   const onFinishFailed = (errorInfo: any) => {
