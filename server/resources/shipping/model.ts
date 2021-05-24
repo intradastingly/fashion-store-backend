@@ -1,11 +1,17 @@
 export {};
-const mongoose = require("mongoose");
+import {MongooseDocument, model, Schema} from "mongoose";
 
-const shippingSchema = new mongoose.Schema({
+export interface ShippingDocument extends MongooseDocument{
+  shipmentCompany: string,
+  deliveryTime: number,
+  shippingPrice: number,
+}
+
+const shippingSchema = new Schema<ShippingDocument>({
   // productID: {},
   shipmentCompany: { type: String, required: true },
   deliveryTime: { type: Number, required: true },
   shippingPrice: { type: Number, required: true },
 });
 
-module.exports = mongoose.model("shipping", shippingSchema);
+module.exports = model("shipping", shippingSchema);

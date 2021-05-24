@@ -1,7 +1,30 @@
 export {};
-const mongoose = require("mongoose");
+import {MongooseDocument, model, Schema} from "mongoose";
+import {AccountDocument} from "../account/model"
+import {ProductDocument} from "../product/model"
+import {ShippingDocument} from "../shipping/model"
+interface Cart extends OrderDocument{
+  product: ProductDocument,
+  quantity: Number,
+}
+interface UserInfo extends OrderDocument{
+  name: string,
+  email: string,
+  phone: number,
+  street: string,
+  zipcode: number,
+  city: string,
+}
+export interface OrderDocument extends MongooseDocument {
+  session: AccountDocument,
+  date: Date,
+  isHanddled: Boolean,
+  cart: Cart,
+  userInfo: UserInfo,
+  deliveryMethod: ShippingDocument,
+}
 
-const orderSchema = new mongoose.Schema({
+const orderSchema = new Schema<OrderDocument>({
   session:{ type: Object },
   date: { type: Date },
   ishandled: { type: Boolean },
@@ -12,4 +35,4 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {type: Object},
 });
 
-module.exports = mongoose.model("Order", orderSchema);
+module.exports = model("Order", orderSchema);
