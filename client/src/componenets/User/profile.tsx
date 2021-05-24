@@ -16,11 +16,11 @@ import {
   Context,
   useEffect,
   useRef,
+  useContext,
 } from "react";
 import { Link } from "react-router-dom";
 import AvatarPic from "../../assets/Avatar2.png";
-// import { useRequest, useSize } from "ahooks";
-/* import { useSize } from "ahooks"; */
+import { ApiContext } from "../../contexts/ApiContext";
 
 const { Paragraph } = Typography;
 const { Title } = Typography;
@@ -31,6 +31,15 @@ function UserProfile() {
   const [zipCode, setZipCode] = useState("");
   const [cityName, setCityName] = useState("");
   const [currentOrders, setCurrentOrders] = useState<Number>();
+  const {session} = useContext(ApiContext)
+  const [user, setUser] = useState<any>()
+
+  useEffect(()=>{
+    setUser(session);
+    console.log(user, "USER FROM SHEEESH");
+    
+  },[])
+
 
   return (
     <div style={profileContainer}>
@@ -39,7 +48,7 @@ function UserProfile() {
           <Avatar src={AvatarPic} size={100} />
         </div>
         <div>
-          <Title>Alexander</Title>
+          <Title>{user.username}</Title>
         </div>
       </div>
       <div style={infoContainer}>

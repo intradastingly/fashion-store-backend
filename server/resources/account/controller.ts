@@ -1,8 +1,7 @@
 export { };
+import { profile } from "console";
 import express from "express";
 const Account = require("./model");
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
 
 
 // Create new
@@ -27,10 +26,26 @@ exports.getAllAccounts = async (
   res.status(200).json(account);
 };
 
+// get specific 
+exports.getSpecificAccount = async (
+  req: express.Request,
+  res: express.Response
+) => {
+  // Långa id crashar server? problem eller okej?
+  const specificAccount = await Account.findOne({ _id: req.params.id });
+  if (!specificAccount) {
+    res.status(404).json("Account does not exist.")
+  } else {
+    res.status(201).json(specificAccount)
+  }
+};
+
+
 // Delete
 exports.deleteAccount = async (req: express.Request, res: express.Response) => {
   const deletedAccount = await Account.findOneAndDelete({ _id: req.params.id });
   res.status(200).json(deletedAccount);
+
 };
 
 // Edit

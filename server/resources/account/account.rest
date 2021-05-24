@@ -2,6 +2,10 @@
 GET http://localhost:6969/api/accounts/
 
 ###
+// GET specific account
+GET http://localhost:6969/api/accounts/60a4b9339a4b2a1748f8ea1c
+
+###
 
 
 

@@ -62,6 +62,7 @@ function ApiProvider(props: Props) {
   const [session, setSession] = useState<any>(null);
   const [order, setOrder] = useState<any>();
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<any>();
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -79,7 +80,6 @@ function ApiProvider(props: Props) {
   }, []);
 
   useEffect(() => {
-    console.log(session);
     if (session) {
       setuserIsLoggedIn(true);
     } else {
@@ -95,10 +95,18 @@ function ApiProvider(props: Props) {
 
       const sessionX = await response.json();
       setSession(sessionX);
-      console.log(sessionX, "session X");
     };
     authorizeSession();
   }, []);
+
+  const getUser = async (id: string) => {
+    const response = await fetch(`api/acount/${id}`, {
+      method: "GET",
+    });
+    const user = await response.json();
+    console.log(user);
+    return user;
+  };
 
   const loadProducts = async () => {
     const response = await fetch("/api/products", {
