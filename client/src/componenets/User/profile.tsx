@@ -37,6 +37,8 @@ function UserProfile() {
 
   useEffect(() => {
     setUser(session);
+    console.log(user);
+    
   });
 
   if (!user) return <ErrorPage/>
@@ -65,7 +67,7 @@ function UserProfile() {
                   onChange: setCustomerName,
                 }}
               >
-                Full name: {customerName}
+                Full name: {user.fullName}
               </Paragraph>
               <Paragraph
                 editable={{
@@ -74,7 +76,7 @@ function UserProfile() {
                   onChange: setStreetName,
                 }}
               >
-                Street: {streetName}
+                Street: {user.address.street}
               </Paragraph>
               <Paragraph
                 editable={{
@@ -83,7 +85,7 @@ function UserProfile() {
                   onChange: setZipCode,
                 }}
               >
-                Zip Code: {zipCode}
+                Zip Code: {user.address.zipCode}
               </Paragraph>
               <Paragraph
                 editable={{
@@ -92,7 +94,7 @@ function UserProfile() {
                   onChange: setCityName,
                 }}
               >
-                City: {cityName}
+                City: {user.address.city}
               </Paragraph>
             </div>
           </div>

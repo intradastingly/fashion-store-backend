@@ -8,8 +8,11 @@ const Account = require("./model");
 exports.newAccount = async (req: express.Request, res: express.Response) => {
   const account = new Account({
     userName: req.body.userName,
+    fullName: req.body.fullName,
     role: "plebian",
     password: req.body.password,
+    email: req.body.email,
+    address: req.body.address
   });
 
   await account.save();

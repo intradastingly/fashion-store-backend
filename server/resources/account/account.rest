@@ -14,15 +14,22 @@ POST http://localhost:6969/api/accounts/
 Content-Type: application/json
 
 {
-    "userName": "1s23",
+    "userName": "123",
+    "fullName": "Elon Musk",
     "role": "123",
-    "password": "123"
+    "password": "123",
+    "email" : "elon_musk@pornhub.com",
+    "address" : {
+        "street": "Gatan 123",
+        "zipCode": 42069,
+        "city": "Cooltown"
+    }
 }
 ###
 
 
 // DELETE product
-DELETE  http://localhost:6969/api/accounts/60a4b9549a4b2a1748f8ea1d
+DELETE  http://localhost:6969/api/accounts/60ab6aed323fd44c88c9b357
 
 ###
 

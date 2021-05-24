@@ -129,8 +129,8 @@ function ApiProvider(props: Props) {
     if (result === "Incorrect password or username") {
       setuserIsLoggedIn(false);
     } else if (result.message === "Login successful") {
-      await setSession(result.session);
-      await setuserIsLoggedIn(true);
+      setSession(result.session);
+      setuserIsLoggedIn(true);
     }
     return response;
   }
