@@ -38,7 +38,7 @@ async function orderProductSubtractor(orderedProducts: any){
     const updatedVolume = p.product.quantity - p.quantity;
     for(const e of existingProducts){
       if(e._id == p.product._id){
-        console.log(e)
+        /* console.log(e) */
         /* console.log(existingProducts) */
         /* existingProducts.quantity = updatedVolume;
         console.log(existingProducts) */
