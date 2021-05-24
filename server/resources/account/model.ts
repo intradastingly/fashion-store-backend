@@ -1,11 +1,31 @@
-export {};
-const mongoose = require("mongoose");
+export { };
+  import {MongooseDocument, model, Schema} from "mongoose";
+import bcrypt from 'bcrypt';
+const saltRounds = 10;
 
-const accountSchema = new mongoose.Schema({
+interface AccountDocument extends MongooseDocument {
+  userName: string,
+  role: string,
+  password: string,
+}
+
+const accountSchema = new Schema<AccountDocument>({
   // productID: {},
   userName: { type: String },
   role: { type: String },
-  password: { type: String }
+  password: { type: String, select: false }
 });
 
-module.exports = mongoose.model("Account", accountSchema);
+accountSchema.pre('save', async function (next) {
+  const account = this;
+
+  if (this.isModified("password") || this.isNew) {
+    const hashedPassword = await bcrypt.hash(account.password, saltRounds)
+    account.password = hashedPassword;
+    next();
+  } else {
+    return next();
+  }
+})
+
+module.exports = model("Account", accountSchema);
