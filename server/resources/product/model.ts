@@ -1,7 +1,16 @@
 export {};
-const mongoose = require("mongoose");
+import {MongooseDocument, model, Schema} from "mongoose";
 
-const productSchema = new mongoose.Schema({
+export interface ProductDocument extends MongooseDocument{
+  title: string,
+  description: string,
+  category: [string],
+  quantity: number,
+  price: number,
+  img: string,
+}
+
+const productSchema = new Schema<ProductDocument>({
   // productID: {},
   title: { type: String },
   description: { type: String },
@@ -12,4 +21,4 @@ const productSchema = new mongoose.Schema({
 
 });
 
-module.exports = mongoose.model("Product", productSchema);
+module.exports = model("Product", productSchema);
