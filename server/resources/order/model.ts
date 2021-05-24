@@ -7,7 +7,7 @@ const orderSchema = new mongoose.Schema({
   ishandled: { type: Boolean },
   cart: [{ type: Object }],
   userInfo: {type: Object},
-  deliveryMethod: { type: String },
+  deliveryMethod: { type: Object },
   totalPrice: {type: Number},
   paymentMethod: {type: Object},
 });

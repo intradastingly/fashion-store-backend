@@ -14,7 +14,7 @@ exports.login = async (req: any, res: express.Response) => {
     req.session.id = account.id;
     req.session.username = account.userName;
     req.session.role =  account.role;
-    res.status(200).json("Login Succesful");
+    res.status(200).json({message: "Login succesful", session: req.session});
 }
 
 
