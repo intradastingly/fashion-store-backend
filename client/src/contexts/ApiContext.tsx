@@ -1,4 +1,5 @@
-import { createContext, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { Redirect } from "react-router-dom";
 export interface Credentials {
   /* id: string, */
   userName: string;
@@ -20,6 +21,12 @@ export interface ShippingInfo {
   _id: String;
 }
 
+export interface Category {
+  title: string;
+  routeName: string;
+  items: ProductInfo[];
+}
+
 const userSession: Credentials = {
   /* id: "", */
   userName: "",
@@ -30,6 +37,7 @@ interface State {
   allProducts: ProductInfo[];
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
+  categories: Category[];
 }
 
 interface ContextValue extends State {
@@ -37,6 +45,7 @@ interface ContextValue extends State {
   loginHandler: (loginCredentials: Credentials, history?: any) => void;
   logOutHandler: () => void;
   loadProducts: () => void;
+  mapCategories: () => void;
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -44,10 +53,12 @@ export const ApiContext = createContext<ContextValue>({
   session: {},
   allProducts: [],
   shippingMethods: [],
+  categories: [],
   getOrder: () => {},
   loginHandler: () => {},
   logOutHandler: () => {},
   loadProducts: () => {},
+  mapCategories: () => {},
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -62,6 +73,7 @@ function ApiProvider(props: Props) {
   const [session, setSession] = useState<any>(null);
   const [order, setOrder] = useState<any>();
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -110,6 +122,35 @@ function ApiProvider(props: Props) {
     const products = await response.json();
     setAllProducts(products);
   };
+
+  // maps out all categories
+  const mapCategories = () => {
+    if (allProducts === undefined) {
+      return
+    }
+    
+    let allProductsCategories: Category[] = [];
+    for (const product of allProducts) {
+      for (const productCategory of product.category) {
+        let selectedCategory = allProductsCategories.find(
+          (c) => c.title === productCategory
+        );
+
+        if (!selectedCategory) {
+          selectedCategory = {
+            title: productCategory,
+            routeName: productCategory,
+            items: [],
+          };
+          allProductsCategories.push(selectedCategory);
+        }
+
+        selectedCategory.items.push(product);
+      }
+    }
+    setCategories(allProductsCategories);
+    return;
+  }
 
   async function loginHandler(loginCredentials: Credentials) {
     const response = await fetch("api/login", {
@@ -167,6 +208,8 @@ function ApiProvider(props: Props) {
         loginHandler: loginHandler,
         logOutHandler: logOutHandler,
         loadProducts: loadProducts,
+        mapCategories: mapCategories,
+        categories: categories,
       }}
     >
       {props.children}
