@@ -1,12 +1,14 @@
 export {};
-import {MongooseDocument, model, Schema} from "mongoose";
+import {model, Schema} from "mongoose";
 import {AccountDocument} from "../account/model"
 import {ProductDocument} from "../product/model"
 import {ShippingDocument} from "../shipping/model"
+
 interface Cart extends OrderDocument{
   product: ProductDocument,
   quantity: Number,
 }
+
 interface UserInfo extends OrderDocument{
   name: string,
   email: string,
@@ -15,7 +17,8 @@ interface UserInfo extends OrderDocument{
   zipcode: number,
   city: string,
 }
-export interface OrderDocument extends MongooseDocument {
+
+export interface OrderDocument{
   session: AccountDocument,
   date: Date,
   isHanddled: Boolean,
@@ -27,7 +30,7 @@ export interface OrderDocument extends MongooseDocument {
 const orderSchema = new Schema<OrderDocument>({
   session:{ type: Object },
   date: { type: Date },
-  ishandled: { type: Boolean },
+  isHandled: { type: Boolean },
   cart: [{ type: Object }],
   userInfo: {type: Object},
   deliveryMethod: { type: Object },
@@ -36,3 +39,4 @@ const orderSchema = new Schema<OrderDocument>({
 });
 
 module.exports = model("Order", orderSchema);
+
