@@ -9,7 +9,7 @@ import {
   Layout,
 } from "antd";
 import { HighlightOutlined } from "@ant-design/icons";
-import {
+import React, {
   CSSProperties,
   Component,
   useState,
@@ -21,6 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import AvatarPic from "../../assets/Avatar2.png";
 import { ApiContext } from "../../contexts/ApiContext";
+import ErrorPage from "../ErrorPage";
 
 const { Paragraph } = Typography;
 const { Title } = Typography;
@@ -31,15 +32,14 @@ function UserProfile() {
   const [zipCode, setZipCode] = useState("");
   const [cityName, setCityName] = useState("");
   const [currentOrders, setCurrentOrders] = useState<Number>();
-  const {session} = useContext(ApiContext)
-  const [user, setUser] = useState<any>()
+  const { session } = useContext(ApiContext);
+  const [user, setUser] = useState<any>();
 
-  useEffect(()=>{
+  useEffect(() => {
     setUser(session);
-    console.log(user, "USER FROM SHEEESH");
-    
-  },[])
+  });
 
+  if (!user) return <ErrorPage/>
 
   return (
     <div style={profileContainer}>
