@@ -2,6 +2,7 @@ export {};
 import express from "express";
 const Order = require("./model");
 const Product = require("../product/model")
+import {ProductDocument} from "../product/model"
 
 exports.newOrder = async (req: express.Request, res: express.Response) => {
     
@@ -32,16 +33,21 @@ exports.getAllOrders = async (
 };
 
 async function orderProductSubtractor(orderedProducts: any){
+  const existingProducts = await Product.find()
   for(const p of orderedProducts){
-    const updatedVolume = p.product.quantity - p.quantity;
-    await Product.findOneAndUpdate(
-        { _id: p.product._id },
-        {
-          $set: {
-            quantity: updatedVolume,
+    for(const e of existingProducts){
+      if(e._id == p.product._id){
+      const updatedVolume = e.quantity - p.quantity;
+      await Product.findOneAndUpdate(
+          { _id: p.product._id },
+          {
+            $set: {
+              quantity: updatedVolume,
+            },
           },
-        },
-        { new: true }
-      );
+          { new: true }
+        );
+      }
+    }
   }
 }
