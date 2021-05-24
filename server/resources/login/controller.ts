@@ -17,9 +17,11 @@ exports.login = async (req: any, res: express.Response) => {
   }
 
   req.session.id = account.id;
+  req.session.fullName = account.fullName;
   req.session.username = account.userName;
-  req.session.role = account.role;
-
+  req.session.email = account.email;
+  req.session.address = account.address;
+  
   res.status(200).json({ message: "Login successful", session: req.session });
 };
 

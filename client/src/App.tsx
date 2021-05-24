@@ -25,7 +25,6 @@ import { ApiContext } from "./contexts/ApiContext";
 
 function App() {
   const { loggedIn, session } = useContext(ApiContext);
-  console.log(loggedIn, "logged in bool");
 
   // if (loggedIn) {
   //   return <Redirect to="/profile" />;
