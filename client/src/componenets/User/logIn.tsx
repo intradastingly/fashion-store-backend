@@ -14,7 +14,8 @@ interface Credentials {
   password: string;
 }
 function UserLogIn() {
-  const { loginHandler, loggedIn } = useContext(ApiContext);
+  const { loginHandler, loggedIn, registerHandler, userCreated } =
+    useContext(ApiContext);
 
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
@@ -31,11 +32,32 @@ function UserLogIn() {
   const [country, setCountry] = useState<string>("");
 
   const loginCredentials = { userName: username, password: password };
+
   const onFinish = (e: any) => {
     e.preventDefault();
     loginHandler(loginCredentials);
     console.log(loggedIn, "logged in bool");
     reloadPage();
+  };
+
+  const onRegister = async () => {
+    const userInfo = {
+      userName: newUsername,
+      fullName: fullName,
+      phoneNumber: phoneNumber,
+      password: newPassword,
+      email: email,
+      address: {
+        street: street,
+        zipCode: zipCode,
+        city: city,
+        country: country,
+      },
+    };
+
+    registerHandler(userInfo);
+    setIsModalVisible(false);
+    // reloadPage();
   };
 
   const reloadPage = () => {
@@ -53,8 +75,6 @@ function UserLogIn() {
   function closeModal() {
     setIsModalVisible(false);
   }
-
-  function handleSubmit() {}
 
   return (
     <div>
@@ -100,114 +120,130 @@ function UserLogIn() {
               <Modal
                 visible={isModalVisible}
                 onCancel={closeModal}
-                onOk={handleSubmit}
+                onOk={onRegister}
               >
                 <div style={modalContainer}>
-                  <div style={modalTitle}>
-                    <h2>Register a new user</h2>
-                  </div>
-                  <div style={fullContainer}>
-                    <form name="basic" style={form}>
-                      <div style={modalFormContainer}>
-                        <div>
-                          <input
-                            autoComplete="off"
-                            style={inputField}
-                            name="username"
-                            placeholder="Username"
-                            onChange={(e: any) =>
-                              setNewUsername(e.target.value)
-                            }
-                            type="text"
-                          />
-                        </div>
-                        <div>
-                          <input
-                            autoComplete="new-password"
-                            style={inputField}
-                            name="username"
-                            placeholder="Password"
-                            onChange={(e: any) =>
-                              setNewPassword(e.target.value)
-                            }
-                            type="password"
-                          />
-                        </div>
-                        <div>
-                          <input
-                            autoComplete="new-password"
-                            style={inputField}
-                            name="FullName"
-                            placeholder="Full Name"
-                            onChange={(e: any) => setFullName(e.target.value)}
-                            type="text"
-                          />
-                        </div>
-                        <div>
-                          <input
-                            autoComplete="new-password"
-                            style={inputField}
-                            name="Phone"
-                            placeholder="Phone number"
-                            onChange={(e: any) =>
-                              setPhoneNumber(e.target.value)
-                            }
-                            type="text"
-                          />
-                        </div>
-                        <div>
-                          <input
-                            autoComplete="off"
-                            style={inputField}
-                            name="Email"
-                            placeholder="Email"
-                            onChange={(e: any) => setEmail(e.target.value)}
-                          />
-                        </div>
-                        <Space direction="vertical">
-                          <div>
-                            <h3>Where do you want the goods? 😊</h3>
-                          </div>
-                        </Space>
-                        <div>
-                          <input
-                            autoComplete="off"
-                            style={inputField}
-                            name="Street"
-                            placeholder="Street"
-                            onChange={(e: any) => setStreet(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <input
-                            autoComplete="off"
-                            style={inputField}
-                            name="ZipCode"
-                            placeholder="Zip Code"
-                            onChange={(e: any) => setZipCode(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <input
-                            autoComplete="off"
-                            style={inputField}
-                            name="City"
-                            placeholder="City"
-                            onChange={(e: any) => setCity(e.target.value)}
-                          />
-                        </div>
-                        <div>
-                          <input
-                            autoComplete="off"
-                            style={inputField}
-                            name="Country"
-                            placeholder="Country"
-                            onChange={(e: any) => setCountry(e.target.value)}
-                          />
-                        </div>
+                  {userCreated ? (
+                    <div style={successTitle}>
+                      <h3>
+                        User created, you can now log in to your new account 😎
+                      </h3>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={modalTitle}>
+                        <h2>Register a new user</h2>
                       </div>
-                    </form>
-                  </div>
+                      <div style={fullContainer}>
+                        <form name="basic" style={form}>
+                          <div style={modalFormContainer}>
+                            <div>
+                              <input
+                                autoComplete="off"
+                                style={inputField}
+                                name="username"
+                                placeholder="Username"
+                                onChange={(e: any) =>
+                                  setNewUsername(e.target.value)
+                                }
+                                type="text"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                autoComplete="new-password"
+                                style={inputField}
+                                name="username"
+                                placeholder="Password"
+                                onChange={(e: any) =>
+                                  setNewPassword(e.target.value)
+                                }
+                                type="password"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                autoComplete="new-password"
+                                style={inputField}
+                                name="FullName"
+                                placeholder="Full Name"
+                                onChange={(e: any) =>
+                                  setFullName(e.target.value)
+                                }
+                                type="text"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                autoComplete="new-password"
+                                style={inputField}
+                                name="Phone"
+                                placeholder="Phone number"
+                                onChange={(e: any) =>
+                                  setPhoneNumber(e.target.value)
+                                }
+                                type="text"
+                              />
+                            </div>
+                            <div>
+                              <input
+                                autoComplete="off"
+                                style={inputField}
+                                name="Email"
+                                placeholder="Email"
+                                onChange={(e: any) => setEmail(e.target.value)}
+                              />
+                            </div>
+                            <Space direction="vertical">
+                              <div>
+                                <h3>Where do you want the goods? 😊</h3>
+                              </div>
+                            </Space>
+                            <div>
+                              <input
+                                autoComplete="off"
+                                style={inputField}
+                                name="Street"
+                                placeholder="Street"
+                                onChange={(e: any) => setStreet(e.target.value)}
+                              />
+                            </div>
+                            <div>
+                              <input
+                                autoComplete="off"
+                                style={inputField}
+                                name="ZipCode"
+                                placeholder="Zip Code"
+                                onChange={(e: any) =>
+                                  setZipCode(e.target.value)
+                                }
+                              />
+                            </div>
+                            <div>
+                              <input
+                                autoComplete="off"
+                                style={inputField}
+                                name="City"
+                                placeholder="City"
+                                onChange={(e: any) => setCity(e.target.value)}
+                              />
+                            </div>
+                            <div>
+                              <input
+                                autoComplete="off"
+                                style={inputField}
+                                name="Country"
+                                placeholder="Country"
+                                onChange={(e: any) =>
+                                  setCountry(e.target.value)
+                                }
+                              />
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </>
+                  )}
                 </div>
               </Modal>
             </div>
@@ -248,6 +284,14 @@ const modalTitle: CSSProperties = {
   display: "flex",
   justifyContent: "center",
   width: "100%",
+};
+
+const successTitle: CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  height: "100%",
 };
 
 const form: CSSProperties = {

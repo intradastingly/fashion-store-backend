@@ -6,6 +6,15 @@ export interface Credentials {
   userName: string;
   password: string;
 }
+
+export interface registerData {
+  userName: String;
+  fullName: String;
+  phoneNumber: String;
+  password: String;
+  email: String;
+  address: Object;
+}
 export interface ProductInfo {
   category: [];
   description: String;
@@ -55,7 +64,10 @@ interface State {
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
   categories: Category[];
+
+  userCreated: boolean;
   users: userInfo[];
+
 }
 
 interface ContextValue extends State {
@@ -64,6 +76,9 @@ interface ContextValue extends State {
   logOutHandler: () => void;
   loadProducts: () => void;
   mapCategories: () => void;
+
+  registerHandler: (registerData: registerData) => void;
+  updateUserCreated: () => void;
   loadAllUsers: () => void
 }
 
@@ -75,12 +90,16 @@ export const ApiContext = createContext<ContextValue>({
   users: [],
   shippingMethods: [],
   categories: [],
+  userCreated: false,
   getOrder: () => {},
   loginHandler: () => {},
   logOutHandler: () => {},
+  registerHandler: () => {},
   loadProducts: () => {},
   mapCategories: () => {},
+  updateUserCreated: () => {},
   loadAllUsers: () => {}
+
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -97,7 +116,9 @@ function ApiProvider(props: Props) {
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<Object>();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [userCreated, setUserCreated] = useState<boolean>(false);
   const [users, setAllUsers] = useState<userInfo[]>([]);
+
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -222,6 +243,21 @@ function ApiProvider(props: Props) {
     return response;
   }
 
+  async function registerHandler(registerData: registerData) {
+    const response = await fetch("api/accounts", {
+      method: "POST",
+      body: JSON.stringify(registerData),
+      headers: { "Content-Type": "application/json" },
+    });
+    const result = await response.json();
+    console.log(response.status);
+
+    if (response.status === 201) {
+      setUserCreated(true);
+    }
+    return response;
+  }
+
   async function getOrder(order: any) {
     console.log(order);
     setOrder(order);
@@ -235,9 +271,14 @@ function ApiProvider(props: Props) {
       headers: { "Content-Type": "application/json" },
     });
   }
+
+  function updateUserCreated() {
+    setUserCreated(false);
+  }
   return (
     <ApiContext.Provider
       value={{
+        userCreated: userCreated,
         loggedIn: userIsLoggedIn,
         allProducts: allProducts,
         session: session,
@@ -247,6 +288,8 @@ function ApiProvider(props: Props) {
         logOutHandler: logOutHandler,
         loadProducts: loadProducts,
         mapCategories: mapCategories,
+        registerHandler: registerHandler,
+        updateUserCreated: updateUserCreated,
         categories: categories,
         currentUser: currentUser,
         users: users,
