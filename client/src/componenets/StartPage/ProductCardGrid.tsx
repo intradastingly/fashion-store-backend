@@ -16,6 +16,7 @@ const tagsData = ["All","Dresses", "Jeans", "Coats", "Blazers", "T-shirts", "Jum
 function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
     const {allProducts, getOrder, loggedIn} = useContext(ApiContext);
+
     const [selectedTags, setSelectedTags] = useState<any>(["All"]);
     const [filteredCategories, setFilteredCategories] = useState<any>();
     
@@ -46,6 +47,7 @@ function ProductCardGrid(){
             setFilteredCategories(filteredObject);
         }
     }, [selectedTags])
+
    
   
 

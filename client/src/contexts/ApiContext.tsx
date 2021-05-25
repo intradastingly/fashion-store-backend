@@ -34,6 +34,7 @@ const userSession: Credentials = {
 };
 interface State {
   session: any;
+  currentUser: any;
   allProducts: ProductInfo[];
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
@@ -51,6 +52,7 @@ interface ContextValue extends State {
 export const ApiContext = createContext<ContextValue>({
   loggedIn: false,
   session: {},
+  currentUser: {},
   allProducts: [],
   shippingMethods: [],
   categories: [],
@@ -73,9 +75,8 @@ function ApiProvider(props: Props) {
   const [session, setSession] = useState<any>(null);
   const [order, setOrder] = useState<any>();
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<any>();
+  const [currentUser, setCurrentUser] = useState<Object>();
   const [categories, setCategories] = useState<Category[]>([]);
-
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -106,20 +107,11 @@ function ApiProvider(props: Props) {
         method: "GET",
       });
 
-      const sessionX = await response.json();
-      setSession(sessionX);
+      const incomingSession = await response.json();
+      setSession(incomingSession);
     };
     authorizeSession();
   }, []);
-
-  const getUser = async (id: string) => {
-    const response = await fetch(`api/acount/${id}`, {
-      method: "GET",
-    });
-    const user = await response.json();
-    console.log(user);
-    return user;
-  };
 
   const loadProducts = async () => {
     const response = await fetch("/api/products", {
@@ -135,9 +127,9 @@ function ApiProvider(props: Props) {
   // maps out all categories
   const mapCategories = () => {
     if (allProducts === undefined) {
-      return
+      return;
     }
-    
+
     let allProductsCategories: Category[] = [];
     for (const product of allProducts) {
       for (const productCategory of product.category) {
@@ -159,7 +151,7 @@ function ApiProvider(props: Props) {
     }
     setCategories(allProductsCategories);
     return;
-  }
+  };
 
   async function loginHandler(loginCredentials: Credentials) {
     const response = await fetch("api/login", {
@@ -219,6 +211,7 @@ function ApiProvider(props: Props) {
         loadProducts: loadProducts,
         mapCategories: mapCategories,
         categories: categories,
+        currentUser: currentUser,
       }}
     >
       {props.children}
