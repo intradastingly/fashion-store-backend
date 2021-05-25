@@ -4,6 +4,7 @@ const Product = require("./model");
 
 // Create new product
 exports.newProduct = async (req: express.Request, res: express.Response) => {
+  req.body.category.push("All")
   const product = new Product({
     title: req.body.title,
     description: req.body.description,
