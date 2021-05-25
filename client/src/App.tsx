@@ -22,6 +22,9 @@ import ScrollToTop from "./componenets/ScrollToTop";
 import AddNewProduct from "./componenets/Admin/AddNewProduct";
 import ApiProvider from "./contexts/ApiContext";
 import { ApiContext } from "./contexts/ApiContext";
+import AdminUsers from "./componenets/Admin/AdminUsers";
+import EditUsers from "./componenets/Admin/EditUsers";
+
 
 function App() {
   const { loggedIn, session } = useContext(ApiContext);
@@ -63,6 +66,8 @@ function App() {
                 <Route path="/admin-list" component={AdminList} />
                 <Route path="/add-product" component={AddNewProduct} />
                 <Route path="/edit-product/:id" component={AdminEditDetails} />
+                <Route path="/admin-users" component={AdminUsers} />
+                <Route path="/edit-user/:id" component={EditUsers} />
               </Switch>
             </div>
             <Footer2 />

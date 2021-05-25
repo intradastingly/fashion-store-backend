@@ -1,5 +1,6 @@
+
 import React, { createContext, useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
+
 export interface Credentials {
   /* id: string, */
   userName: string;
@@ -22,6 +23,21 @@ export interface ProductInfo {
   img: string;
   price: Number;
   _id: String;
+}
+
+export interface userInfo {
+  address: {
+      city: String,
+      country: String,
+      street: String,
+      zipCode: Number
+  },
+  userName: String,
+  email: String,
+  fullName: String,
+  phoneNumber: String,
+  role: String,
+  _id: String
 }
 export interface ShippingInfo {
   shipmentCompany: string;
@@ -48,7 +64,10 @@ interface State {
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
   categories: Category[];
+
   userCreated: boolean;
+  users: userInfo[];
+
 }
 
 interface ContextValue extends State {
@@ -57,8 +76,10 @@ interface ContextValue extends State {
   logOutHandler: () => void;
   loadProducts: () => void;
   mapCategories: () => void;
+
   registerHandler: (registerData: registerData) => void;
   updateUserCreated: () => void;
+  loadAllUsers: () => void
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -66,6 +87,7 @@ export const ApiContext = createContext<ContextValue>({
   session: {},
   currentUser: {},
   allProducts: [],
+  users: [],
   shippingMethods: [],
   categories: [],
   userCreated: false,
@@ -76,6 +98,8 @@ export const ApiContext = createContext<ContextValue>({
   loadProducts: () => {},
   mapCategories: () => {},
   updateUserCreated: () => {},
+  loadAllUsers: () => {}
+
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -93,6 +117,8 @@ function ApiProvider(props: Props) {
   const [currentUser, setCurrentUser] = useState<Object>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [userCreated, setUserCreated] = useState<boolean>(false);
+  const [users, setAllUsers] = useState<userInfo[]>([]);
+
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -128,6 +154,22 @@ function ApiProvider(props: Props) {
     };
     authorizeSession();
   }, []);
+
+
+  useEffect(() => {
+    loadAllUsers();
+  }, []);
+
+  const loadAllUsers = async () => {
+    const response = await fetch("/api/accounts", {
+      method: "GET",
+      headers: {
+        "Content-type": "application-json",
+      },
+    });
+    const users = await response.json();
+    setAllUsers(users);
+  };
 
   const loadProducts = async () => {
     const response = await fetch("/api/products", {
@@ -250,6 +292,8 @@ function ApiProvider(props: Props) {
         updateUserCreated: updateUserCreated,
         categories: categories,
         currentUser: currentUser,
+        users: users,
+        loadAllUsers: loadAllUsers
       }}
     >
       {props.children}
