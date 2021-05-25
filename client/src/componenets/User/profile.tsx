@@ -28,13 +28,12 @@ const { Title } = Typography;
 
 function UserProfile() {
   const [streetName, setStreetName] = useState("");
-  const [customerName, setCustomerName] = useState("");
+  const [fullName, setFullName] = useState<string>();
   const [zipCode, setZipCode] = useState("");
   const [cityName, setCityName] = useState("");
   const [currentOrders, setCurrentOrders] = useState<Number>();
   const { session, currentUser } = useContext(ApiContext);
   const [user, setUser] = useState<any>();
-
 
   useEffect(() => {
     getUser(session.id);
@@ -48,9 +47,34 @@ function UserProfile() {
       },
     });
     const incomingUser = await response.json();
-
     setUser(incomingUser);
   };
+
+  const updateUser = async (
+    userId: string,
+    keyId: string,
+    body: string | number
+  ) => {
+    const incomingBody = {
+      [keyId]: body,
+    };
+    
+    console.log(incomingBody);
+
+    const response = await fetch(`api/accounts/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application-json",
+      },
+      body: JSON.stringify(incomingBody),
+    });
+  };
+
+  const getName = (data:string)=> {
+    setFullName(data)
+    console.log(fullName);
+    
+  }
 
   if (!user) return <ErrorPage />;
 
@@ -75,7 +99,10 @@ function UserProfile() {
                 editable={{
                   icon: <HighlightOutlined />,
                   tooltip: "click to edit text",
-                  onChange: setCustomerName,
+                  onChange: getName,
+                  onEnd: () => {
+                    updateUser(session.id, "fullName", fullName!);
+                  },
                 }}
               >
                 Full name: {user.fullName}
@@ -84,7 +111,6 @@ function UserProfile() {
                 editable={{
                   icon: <HighlightOutlined />,
                   tooltip: "click to edit text",
-                  onChange: setCustomerName,
                 }}
               >
                 Phone Number: {user.phoneNumber}
@@ -93,7 +119,6 @@ function UserProfile() {
                 editable={{
                   icon: <HighlightOutlined />,
                   tooltip: "click to edit text",
-                  onChange: setCustomerName,
                 }}
               >
                 Email: {user.email}

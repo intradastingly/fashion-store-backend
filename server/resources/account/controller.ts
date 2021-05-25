@@ -54,6 +54,7 @@ exports.deleteAccount = async (req: Request, res: Response) => {
 
 // Edit
 exports.editAccount = async (req: Request, res: Response) => {
+console.log("123");
 
   const incomingAccount = req.body;
   const oldAccount = await Account.findOne({ _id: req.params.id });
@@ -65,10 +66,10 @@ exports.editAccount = async (req: Request, res: Response) => {
     email: `${incomingAccount.email ? incomingAccount.email : oldAccount.email}`,
     phoneNumber: `${incomingAccount.phoneNumber ? incomingAccount.phoneNumber : oldAccount.phoneNumber}`,
     address: {
-      street: `${incomingAccount.address.street ? incomingAccount.address.street : oldAccount.address.street}`,
-      zipCode: `${incomingAccount.address.zipCode ? incomingAccount.address.zipCode : oldAccount.address.zipCode}`,
-      city: `${incomingAccount.address.city ? incomingAccount.address.city : oldAccount.address.city}`,
-      country: `${incomingAccount.address.country ? incomingAccount.address.country : oldAccount.address.country}`
+      street: `${incomingAccount.address?.street ? incomingAccount.address.street : oldAccount.address.street}`,
+      zipCode: `${incomingAccount.address?.zipCode ? incomingAccount.address.zipCode : oldAccount.address.zipCode}`,
+      city: `${incomingAccount.address?.city ? incomingAccount.address.city : oldAccount.address.city}`,
+      country: `${incomingAccount.address?.country ? incomingAccount.address.country : oldAccount.address.country}`
     }
   }
   if (oldAccount) {

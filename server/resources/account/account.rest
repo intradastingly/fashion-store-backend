@@ -14,9 +14,9 @@ POST http://localhost:6969/api/accounts/
 Content-Type: application/json
 
 {
-    "userName": "test",
+    "userName": "123",
     "fullName": "Elon Musk",
-    "password": "test",
+    "password": "123",
     "email" : "elon_musk@pornhub.com",
     "phoneNumber" : "0706969420",
     "address" : {
@@ -30,18 +30,17 @@ Content-Type: application/json
 
 
 // DELETE product
-DELETE  http://localhost:6969/api/accounts/60acab4591e74710c812d0d5
+DELETE  http://localhost:6969/api/accounts/60accbc52870f52c8cad3a32
 ###
 
 
 // EDIT product
-PUT http://localhost:6969/api/accounts/60acbf5991e74710c812d0d7
+PUT http://localhost:6969/api/accounts/60acdb1f2870f52c8cad3a34
 Content-Type: application/json
 
 {
-    "userName": "test22",
-    "fullName": "Elon Muskos",
-    "password": "test",
+    "userName": "testsss22",
+    "password": "stest",
     "role" : "admin",
     "email" : "elon_musk@pornhub.com",
     "phoneNumber" : "0706969420",
