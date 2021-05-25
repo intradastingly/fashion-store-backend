@@ -1,5 +1,6 @@
+
 import React, { createContext, useEffect, useState } from "react";
-import { Redirect } from "react-router-dom";
+
 export interface Credentials {
   /* id: string, */
   userName: string;
@@ -13,6 +14,21 @@ export interface ProductInfo {
   img: string;
   price: Number;
   _id: String;
+}
+
+export interface userInfo {
+  address: {
+      city: String,
+      country: String,
+      street: String,
+      zipCode: Number
+  },
+  userName: String,
+  email: String,
+  fullName: String,
+  phoneNumber: String,
+  role: String,
+  _id: String
 }
 export interface ShippingInfo {
   shipmentCompany: string;
@@ -39,6 +55,7 @@ interface State {
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
   categories: Category[];
+  users: userInfo[];
 }
 
 interface ContextValue extends State {
@@ -47,6 +64,7 @@ interface ContextValue extends State {
   logOutHandler: () => void;
   loadProducts: () => void;
   mapCategories: () => void;
+  loadAllUsers: () => void
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -54,6 +72,7 @@ export const ApiContext = createContext<ContextValue>({
   session: {},
   currentUser: {},
   allProducts: [],
+  users: [],
   shippingMethods: [],
   categories: [],
   getOrder: () => {},
@@ -61,6 +80,7 @@ export const ApiContext = createContext<ContextValue>({
   logOutHandler: () => {},
   loadProducts: () => {},
   mapCategories: () => {},
+  loadAllUsers: () => {}
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -77,6 +97,7 @@ function ApiProvider(props: Props) {
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
   const [currentUser, setCurrentUser] = useState<Object>();
   const [categories, setCategories] = useState<Category[]>([]);
+  const [users, setAllUsers] = useState<userInfo[]>([]);
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -112,6 +133,22 @@ function ApiProvider(props: Props) {
     };
     authorizeSession();
   }, []);
+
+
+  useEffect(() => {
+    loadAllUsers();
+  }, []);
+
+  const loadAllUsers = async () => {
+    const response = await fetch("/api/accounts", {
+      method: "GET",
+      headers: {
+        "Content-type": "application-json",
+      },
+    });
+    const users = await response.json();
+    setAllUsers(users);
+  };
 
   const loadProducts = async () => {
     const response = await fetch("/api/products", {
@@ -212,6 +249,8 @@ function ApiProvider(props: Props) {
         mapCategories: mapCategories,
         categories: categories,
         currentUser: currentUser,
+        users: users,
+        loadAllUsers: loadAllUsers
       }}
     >
       {props.children}

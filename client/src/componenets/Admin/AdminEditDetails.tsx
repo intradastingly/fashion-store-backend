@@ -26,7 +26,7 @@ const successDelete = () => {
 };
 
 function AdminEditDetails(props: Props, state: State){
-  const { allProducts, loadProducts, mapCategories, categories } = useContext(ApiContext);
+  const { allProducts, loadProducts, mapCategories } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [buttonDeleteLoading, setButtonDeleteLoading] = useState(false);
   const [editProduct, setEditProduct] = useState<any>({});
@@ -56,10 +56,6 @@ function AdminEditDetails(props: Props, state: State){
   const handleChange = (categoryField: any) => {
     setCategoryField(categoryField);
   };
-  
-
-
-
 
   const tagRender = (props: any) => {
     const { label, closable, onClose } = props;
