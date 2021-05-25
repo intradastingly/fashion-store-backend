@@ -64,7 +64,7 @@ interface State {
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
   categories: Category[];
-
+  order: any;
   userCreated: boolean;
   users: userInfo[];
 
@@ -90,6 +90,7 @@ export const ApiContext = createContext<ContextValue>({
   users: [],
   shippingMethods: [],
   categories: [],
+  order: [],
   userCreated: false,
   getOrder: () => {},
   loginHandler: () => {},
@@ -259,8 +260,6 @@ function ApiProvider(props: Props) {
   }
 
   async function getOrder(order: any) {
-    console.log(order);
-    setOrder(order);
     createNewOrder(order);
   }
 
@@ -270,6 +269,8 @@ function ApiProvider(props: Props) {
       body: JSON.stringify(order),
       headers: { "Content-Type": "application/json" },
     });
+    const completedOrder = await response.json();
+    setOrder(completedOrder)
   }
 
   function updateUserCreated() {
@@ -279,6 +280,8 @@ function ApiProvider(props: Props) {
     <ApiContext.Provider
       value={{
         userCreated: userCreated,
+        order: order,
+
         loggedIn: userIsLoggedIn,
         allProducts: allProducts,
         session: session,

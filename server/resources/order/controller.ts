@@ -20,7 +20,7 @@ exports.newOrder = async (req: express.Request, res: express.Response) => {
       orderProductSubtractor(req.body.cart)
     
       await order.save();
-      res.status(201).json(order);
+      res.status(200).json(order);
 }
 
 exports.getAllOrders = async (
@@ -31,6 +31,11 @@ exports.getAllOrders = async (
 
   res.status(200).json(order);
 };
+
+exports.getCurrentOrder = async (req: express.Request, res: express.Response) => {
+  const order = await Order.findOne({ _id: req.params.id });
+  res.status(200).json(order);
+}
 
 async function orderProductSubtractor(orderedProducts: any){
   const existingProducts = await Product.find()
