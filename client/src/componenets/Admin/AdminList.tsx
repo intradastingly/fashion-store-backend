@@ -1,9 +1,10 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Avatar, Button, Col, List, Row, } from "antd";
-import { CSSProperties, useContext, useState } from "react";
+import { CSSProperties, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
-import { Product } from "../ProductItemsList";
+
+
 
 interface Props {
 
@@ -18,12 +19,17 @@ function GetAdminList(props: Props){
                 <Col style={columnStyle}>
                     <div style={{ display: 'flex', justifyContent: 'space-between',
                         alignItems:'center', marginTop: '2rem', marginBottom: '3rem' }}>
-                        <h1 style={{fontWeight: 'bold'}}>ADMIN</h1>                  
+                        <h1 style={{fontWeight: 'bold'}}>All products</h1>                  
                         <Link to ={'/add-product'}> 
                             <Button type="primary" icon={<PlusOutlined />}>
                                 Add product
                             </Button>
-                        </Link> 
+                        </Link>
+                        <Link type="primary" to="/admin-users">
+                            <Button>
+                                Users
+                            </Button>
+                        </Link>
                     </div>    
 
                     <List grid={{
