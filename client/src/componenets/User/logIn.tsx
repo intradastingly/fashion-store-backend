@@ -1,4 +1,4 @@
-import { Form, Input, Button, Checkbox, Row, Col, Modal } from "antd";
+import { Form, Input, Button, Checkbox, Row, Col, Modal, Space } from "antd";
 import {
   CSSProperties,
   Component,
@@ -25,6 +25,10 @@ function UserLogIn() {
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [fullName, setFullName] = useState<string>("");
+  const [street, setStreet] = useState<string>("");
+  const [zipCode, setZipCode] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [country, setCountry] = useState<string>("");
 
   const loginCredentials = { userName: username, password: password };
   const onFinish = (e: any) => {
@@ -160,6 +164,47 @@ function UserLogIn() {
                             onChange={(e: any) => setEmail(e.target.value)}
                           />
                         </div>
+                        <Space direction="vertical">
+                          <div>
+                            <h3>Where do you want the goods? 😊</h3>
+                          </div>
+                        </Space>
+                        <div>
+                          <input
+                            autoComplete="off"
+                            style={inputField}
+                            name="Street"
+                            placeholder="Street"
+                            onChange={(e: any) => setStreet(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <input
+                            autoComplete="off"
+                            style={inputField}
+                            name="ZipCode"
+                            placeholder="Zip Code"
+                            onChange={(e: any) => setZipCode(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <input
+                            autoComplete="off"
+                            style={inputField}
+                            name="City"
+                            placeholder="City"
+                            onChange={(e: any) => setCity(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <input
+                            autoComplete="off"
+                            style={inputField}
+                            name="Country"
+                            placeholder="Country"
+                            onChange={(e: any) => setCountry(e.target.value)}
+                          />
+                        </div>
                       </div>
                     </form>
                   </div>
@@ -241,6 +286,7 @@ const modalFormContainer: CSSProperties = {
   justifyContent: "space-evenly",
   height: "100%",
   width: "100%",
+  overflow: "auto",
 };
 
 export default UserLogIn;
