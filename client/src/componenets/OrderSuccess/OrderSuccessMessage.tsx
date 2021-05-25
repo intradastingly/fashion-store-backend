@@ -1,16 +1,19 @@
 import { Result, Button, Row, Col } from 'antd';
-import { CSSProperties } from 'react';
+import { CSSProperties, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Reciept from '../OrderSuccess/Reciept';
+import { ApiContext } from "../../contexts/ApiContext";
 
 function OrderSuccessMessage() {
+    const {order} = useContext(ApiContext)
+    console.log(order)
     return (
         <Row style={containerStyle}>
             <Col span={24} style={colStyle}>
                 <Result
                     status="success"
                     title="You successfully purchased from FashionStore"
-                    subTitle={'Your order number is: ' + Math.floor(Math.random() * 1000000000000)}
+                    subTitle={'Your order number is: ' + order._id}
                     extra={[
                     <Link to='/'>
                         <Button type="primary" key="console">Continue shopping</Button>

@@ -16,13 +16,15 @@ export interface IReceipt {
 
 function Receipt(){
     const {order} = useContext(ApiContext)
-    console.log(order.cart)
+    console.log(order)
    
-    
+    /* for(const p of order.cart){
+        console.log(p)
+    } */
     return(
         <>
         {/* <Card title="Receipt" style={receiptStyle}>
-            <p>Products: {order.cart.map((item: { quantity: string; product: { title: string; }; }) => item.quantity + ' ' + item.product.title)}</p>
+            <p>Products: {order.map((item: any) => item.quantity + ' ' + item.product.title)}</p>
             <p>Delivery: {order.deliveryMethod}</p>
             <p>Total price: {order.totalPrice + ' kr, incl delivery (VAT: ' + order.totalPrice * 0.25 + ' kr.)'}</p>
         </Card> */}

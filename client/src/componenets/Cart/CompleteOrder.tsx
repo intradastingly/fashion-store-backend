@@ -3,18 +3,13 @@ import { CartContext } from '../../contexts/CartContext';
 import { Card, Col, Button } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { Route } from 'react-router-dom';
-import { ApiContext } from "../../contexts/ApiContext";
 
 function CompleteOrder(){
     const {cart, deliveryMethod, getTotalPrice, disablePlaceOrderButton, handlePlaceOrder } = useContext(CartContext);
-    const {order} = useContext(ApiContext)
 
-    console.log(order)
-    
     const onPlaceOrderClick = (history: any) => {
         handlePlaceOrder(history);
     }
-
         return(
             <>
                 <Col span={24} style={buttonContainerStyle}>
