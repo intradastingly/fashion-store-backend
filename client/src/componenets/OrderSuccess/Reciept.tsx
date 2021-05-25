@@ -1,9 +1,8 @@
-import { Component, ContextType, CSSProperties,useContext, useEffect } from 'react';
+import { Component, ContextType, CSSProperties } from 'react';
 import { Card } from 'antd';
 import { CartContext, PaymentMethod } from '../../contexts/CartContext';
 import { UserInfo } from '../Cart/InformationForm';
 import { CartItem } from '../Cart/CartItemsList';
-import { ApiContext } from "../../contexts/ApiContext";
 
 export interface IReceipt {
     session: {};
@@ -13,21 +12,25 @@ export interface IReceipt {
     paymentMethod: PaymentMethod;
     userInfo: UserInfo;
 }
-
-function Receipt(){
-    const {order} = useContext(ApiContext)
-    console.log(order.cart)
-   
+class Receipt extends Component {
+    context!: ContextType<typeof CartContext>
+    static contextType = CartContext;
     
-    return(
-        <>
-        {/* <Card title="Receipt" style={receiptStyle}>
-            <p>Products: {order.cart.map((item: { quantity: string; product: { title: string; }; }) => item.quantity + ' ' + item.product.title)}</p>
-            <p>Delivery: {order.deliveryMethod}</p>
-            <p>Total price: {order.totalPrice + ' kr, incl delivery (VAT: ' + order.totalPrice * 0.25 + ' kr.)'}</p>
-        </Card> */}
-        </>
-    )
+    render() {
+        return(
+            <CartContext.Consumer>
+                {({ receipt }) => {
+                    return (
+                        <Card title="Receipt" style={receiptStyle}>
+                            <p>Products: {receipt.cart.map((item) => item.quantity + ' ' + item.product.title)}</p>
+                            <p>Delivery: {receipt.deliveryMethod}</p>
+                            <p>Total price: {receipt.totalPrice + ' kr, incl delivery (VAT: ' + receipt.totalPrice * 0.25 + ' kr.)'}</p>
+                        </Card>
+                    );    
+                }}
+          </CartContext.Consumer>
+        )
+    }
 }
 
 export default Receipt;

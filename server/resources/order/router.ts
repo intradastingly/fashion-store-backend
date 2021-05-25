@@ -6,7 +6,6 @@ const controller = require("./controller");
 orderRouter
   .post("/order", controller.newOrder)
   .get("/order", controller.getAllOrders)
-  .get("/order/:id", controller.getCurrentOrder)
   /* .delete("/orders/:id", controller.deleteOrder)
   .put("/orders/:id", controller.editOrder);
  */
