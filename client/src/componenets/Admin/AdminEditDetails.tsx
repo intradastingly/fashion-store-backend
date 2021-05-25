@@ -48,7 +48,8 @@ function AdminEditDetails(props: Props, state: State){
     { value: 'Coats' },
     { value: 'Trousers' },
     { value: 'Sweaters' },
-    { value: 'Skirts' }
+    { value: 'Skirts' },
+    { value: 'T-shirts' }
   ];
   const filteredOptions = options.filter(o => !categoryField.includes(o))
 
