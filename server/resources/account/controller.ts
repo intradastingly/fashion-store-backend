@@ -1,5 +1,5 @@
 export { };
-import { Request, Response} from "express";
+import { Request, Response } from "express";
 const Account = require("./model");
 
 
@@ -54,16 +54,33 @@ exports.deleteAccount = async (req: Request, res: Response) => {
 
 // Edit
 exports.editAccount = async (req: Request, res: Response) => {
-  const account = await Account.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      $set: {
-        userName: req.body.userName,
-        role: req.body.role,
-        password: req.body.password,
+
+  const incomingAccount = req.body;
+  const oldAccount = await Account.findOne({ _id: req.params.id });
+  const updatedAccount = {
+    userName: `${incomingAccount.userName ? incomingAccount.userName : oldAccount.userName}`,
+    fullName: `${incomingAccount.fullName ? incomingAccount.fullName : oldAccount.fullName}`,
+    role: `${incomingAccount.role ? incomingAccount.role : oldAccount.role}`,
+    password: `${incomingAccount.password ? incomingAccount.password : oldAccount.password}`,
+    email: `${incomingAccount.email ? incomingAccount.email : oldAccount.email}`,
+    phoneNumber: `${incomingAccount.phoneNumber ? incomingAccount.phoneNumber : oldAccount.phoneNumber}`,
+    address: {
+      street: `${incomingAccount.address.street ? incomingAccount.address.street : oldAccount.address.street}`,
+      zipCode: `${incomingAccount.address.zipCode ? incomingAccount.address.zipCode : oldAccount.address.zipCode}`,
+      city: `${incomingAccount.address.city ? incomingAccount.address.city : oldAccount.address.city}`,
+      country: `${incomingAccount.address.country ? incomingAccount.address.country : oldAccount.address.country}`
+    }
+  }
+  if (oldAccount) {
+    const account = await Account.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: updatedAccount
       },
-    },
-    { new: true }
-  );
-  res.status(200).json(account);
+      { new: true }
+    );
+    res.status(200).json(account);
+  } else {
+    res.status(404).json("No account with this ID exists.");
+  }
 };

@@ -14,9 +14,9 @@ POST http://localhost:6969/api/accounts/
 Content-Type: application/json
 
 {
-    "userName": "123",
+    "userName": "test",
     "fullName": "Elon Musk",
-    "password": "123",
+    "password": "test",
     "email" : "elon_musk@pornhub.com",
     "phoneNumber" : "0706969420",
     "address" : {
@@ -35,12 +35,21 @@ DELETE  http://localhost:6969/api/accounts/60acab4591e74710c812d0d5
 
 
 // EDIT product
-PUT http://localhost:6969/api/accounts/60a4b9f99a4b2a1748f8ea1e
+PUT http://localhost:6969/api/accounts/60acbf5991e74710c812d0d7
 Content-Type: application/json
 
 {
-    "userName": "BigBoy",
-    "role": "admin",
-    "password" : "123"
+    "userName": "test22",
+    "fullName": "Elon Muskos",
+    "password": "test",
+    "role" : "admin",
+    "email" : "elon_musk@pornhub.com",
+    "phoneNumber" : "0706969420",
+    "address" : {
+         "street": "Gatan 123",
+        "zipCode": 42069,
+        "city": "Cooltown",
+        "country": "Narnsssia"
+    }
 }
 ###
