@@ -1,7 +1,8 @@
-import React, { Component, CSSProperties, useState } from "react";
+import React, { Component, CSSProperties, useContext, useEffect, useState } from "react";
 import { Form, Input, InputNumber, Button, Col, Row, message } from "antd";
 import { Product } from "../ProductItemsList";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import {ApiContext } from "../../contexts/ApiContext";
 
 const layout = {
   labelCol: {
@@ -35,12 +36,21 @@ const success = () => {
 };
 
 function AddNewProduct(props: Props, state: State) {
+  const { allProducts, mapCategories, categories, loadProducts} = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [titleField, setTitleField] = useState("");
   const [descriptionField, setDescriptionField] = useState("");
   const [priceField, setPriceField] = useState("");
   const [imageField, setImageField] = useState("");
   const [quantityField, setQuantityField] = useState("");
+  const [categoryField, setCategoryField] = useState<any[]>([]);
+
+
+  useEffect(() => {
+
+    loadProducts();
+    mapCategories();
+  }, []);
 
   const saveNewProduct = async () => {
     setButtonSaveLoading(true);
@@ -49,6 +59,7 @@ function AddNewProduct(props: Props, state: State) {
       title: titleField,
       description: descriptionField,
       quantity: quantityField,
+      category: categoryField,
       price: priceField,
       img: imageField,
     };
@@ -61,6 +72,7 @@ function AddNewProduct(props: Props, state: State) {
       },
     });
 
+
     const result = response.json();
     setTitleField("");
     setDescriptionField("");
@@ -71,6 +83,8 @@ function AddNewProduct(props: Props, state: State) {
     success();
     return result;
   };
+
+
 
   return (
     <div style={rootStyle}>
@@ -102,14 +116,13 @@ function AddNewProduct(props: Props, state: State) {
           onChange={(e: any) => setQuantityField(e.target.value)}
         />
         <label>Category: </label>
-        {/* { editProduct.category.map((c: any) => (
+    
+          <select multiple onChange={(e: any) => setCategoryField([...categoryField,e.target.value])}>
+            {categories.map((c: any) => (
+              <option value={c.title}>{c.title}</option>
+            ))}
+          </select>
 
-            <input defaultValue={c}/>
-
- 
-          ))
-            
-          } */}
 
         <Button
           type="primary"

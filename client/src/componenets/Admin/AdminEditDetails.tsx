@@ -32,7 +32,7 @@ function AdminEditDetails(props: Props, state: State){
   const [editProduct, setEditProduct] = useState<any>({});
   const [titleField, setTitleField] = useState(editProduct.title);
   const [descriptionField, setDescriptionField] = useState(editProduct.description);
-  const [categoryField, setCategoryField] = useState(editProduct.category)
+  const [categoryField, setCategoryField] = useState<any[]>([]);
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
@@ -156,13 +156,18 @@ function AdminEditDetails(props: Props, state: State){
           defaultValue={editProduct.quantity}
         />
 
-          <label>Category: </label>
-          <select name="categories" onChange={(e: any) => setCategoryField(e.target.value)}>
-            {categories.map((c: any) => (
-              <option value={c.title}>{c.title}</option>
-            ))}
-          </select>
-
+        <label>Category: </label>
+        <select
+          multiple
+          name="categories"
+          onChange={(e: any) =>
+            setCategoryField([...categoryField, e.target.value])
+          }
+        >
+          {categories.map((c: any) => (
+            <option value={c.title}>{c.title}</option>
+          ))}
+        </select>
 
         <Button
           type="primary"
