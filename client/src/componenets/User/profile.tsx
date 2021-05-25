@@ -32,16 +32,27 @@ function UserProfile() {
   const [zipCode, setZipCode] = useState("");
   const [cityName, setCityName] = useState("");
   const [currentOrders, setCurrentOrders] = useState<Number>();
-  const { session } = useContext(ApiContext);
+  const { session, currentUser } = useContext(ApiContext);
   const [user, setUser] = useState<any>();
 
-  useEffect(() => {
-    setUser(session);
-    console.log(user);
-    
-  });
 
-  if (!user) return <ErrorPage/>
+  useEffect(() => {
+    getUser(session.id);
+  }, []);
+
+  const getUser = async (id: string) => {
+    const response = await fetch(`api/accounts/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application-json",
+      },
+    });
+    const incomingUser = await response.json();
+
+    setUser(incomingUser);
+  };
+
+  if (!user) return <ErrorPage />;
 
   return (
     <div style={profileContainer}>
@@ -50,7 +61,7 @@ function UserProfile() {
           <Avatar src={AvatarPic} size={100} />
         </div>
         <div>
-          <Title>{user.username}</Title>
+          <Title>{user.userName}</Title>
         </div>
       </div>
       <div style={infoContainer}>
@@ -68,6 +79,24 @@ function UserProfile() {
                 }}
               >
                 Full name: {user.fullName}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setCustomerName,
+                }}
+              >
+                Phone Number: {user.phoneNumber}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setCustomerName,
+                }}
+              >
+                Email: {user.email}
               </Paragraph>
               <Paragraph
                 editable={{
@@ -95,6 +124,15 @@ function UserProfile() {
                 }}
               >
                 City: {user.address.city}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setCityName,
+                }}
+              >
+                Country: {user.address.country}
               </Paragraph>
             </div>
           </div>

@@ -17,8 +17,6 @@ function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
     const {allProducts, getOrder, loggedIn} = useContext(ApiContext);
     const [selectedTags, setSelectedTags] = useState<any>("All")
-    console.log(allProducts)
-    console.log(selectedTags)
    
    /*  allProducts.category.map((c:any) => {
         console.log(c)
