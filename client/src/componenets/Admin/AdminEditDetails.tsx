@@ -1,4 +1,4 @@
-import { Button, message, Select } from "antd";
+import { Button, message, Select, Tag } from "antd";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { Link, Redirect, RouteComponentProps, withRouter } from "react-router-dom";
 import {ApiContext, ProductInfo } from "../../contexts/ApiContext";
@@ -32,13 +32,53 @@ function AdminEditDetails(props: Props, state: State){
   const [editProduct, setEditProduct] = useState<any>({});
   const [titleField, setTitleField] = useState(editProduct.title);
   const [descriptionField, setDescriptionField] = useState(editProduct.description);
-  const [categoryField, setCategoryField] = useState<any[]>([]);
+  const [categoryField, setCategoryField] = useState<any[]>([])
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
 
   // tries as defaultValue on Select/option to show current category
-  const [productCategory, setProductCategory] = useState()
+  const [productCategory, setProductCategory] = useState<any>()
+
+  const options = [
+    { value: "All" },
+    { value: "Jumpsuits" },
+    { value: "Jeans" },
+    { value: "Dresses" },
+    { value: 'Coats' },
+    { value: 'Trousers' },
+    { value: 'Sweaters' },
+    { value: 'Skirts' }
+  ];
+  const filteredOptions = options.filter(o => !categoryField.includes(o))
+
+  const handleChange = (categoryField: any) => {
+    setCategoryField(categoryField);
+  };
+  
+
+
+
+
+  const tagRender = (props: any) => {
+    const { label, closable, onClose } = props;
+    const onPreventMouseDown = (event: any) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    return (
+      <Tag
+        color="blue"
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3, color: "black" }}
+      >
+        {label}
+      </Tag>
+    );
+  }
+
 
   const saveProduct = async (values: any) => {
     setButtonSaveLoading(true);
@@ -85,9 +125,11 @@ function AdminEditDetails(props: Props, state: State){
       const product = await allProducts.find(
         (p: ProductInfo) => p._id === props.match.params.id
       );
-
-      product?.category.map((c: any) => setProductCategory(c))
+      console.log(product?.category, "PRODUCT")
+      
+      // product?.category.map((c: any) => setProductCategory(c))
       setEditProduct(product);
+      setProductCategory([product?.category])
     };
     
     loadProducts();
@@ -119,7 +161,6 @@ function AdminEditDetails(props: Props, state: State){
   if (allProducts === undefined || editProduct === undefined) {
     return <ErrorPage />;
   }
-
 
   return (
     <div style={rootStyle}>
@@ -156,19 +197,23 @@ function AdminEditDetails(props: Props, state: State){
           defaultValue={editProduct.quantity}
         />
 
-        <label>Category: </label>
-        <select
-          multiple
-          name="categories"
-          onChange={(e: any) =>
-            setCategoryField([...categoryField, e.target.value])
-          }
+        <label>Category: {productCategory?.map((p: any) => (<span> {p + " " + categoryField} </span>))}</label>
+        <Select
+          onChange={handleChange} 
+          defaultValue={[ `${productCategory}` ]}
+          mode="multiple" 
+          showArrow
+          value={categoryField}
+          tagRender={(props: any) => tagRender(props)}
+          style={{ width: "100%" }}
+          options={options}
         >
-          {categories.map((c: any) => (
-            <option value={c.title}>{c.title}</option>
+          {filteredOptions.map((item: any) => (
+            <Select.Option key={item} value={item}>
+              {item}
+            </Select.Option>
           ))}
-        </select>
-
+        </Select>
         <Button
           type="primary"
           onClick={saveProduct}
