@@ -80,7 +80,7 @@ function ProductCardGrid(){
                         xl: 4,
                         xxl: 4,
                     }}
-                    dataSource={filteredCategories}
+                    dataSource={!filteredCategories ? allProducts : filteredCategories}
                     renderItem={(item: any) => (
                         <List.Item >
                             <Link to={'/product/' + item._id}>
