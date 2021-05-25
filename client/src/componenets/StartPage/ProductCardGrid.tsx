@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
 import { ProductInfo, ApiContext } from '../../contexts/ApiContext';
 import CheckableTag from 'antd/lib/tag/CheckableTag';
+import { isJSDocTypeTag } from 'typescript';
+
 
 const { Meta } = Card;
 const success = () => {
@@ -16,11 +18,9 @@ const tagsData = ["All","Dresses", "Jeans", "Coats", "Blazers", "T-shirts", "Jum
 function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
     const {allProducts, getOrder, loggedIn} = useContext(ApiContext);
-    const [selectedTags, setSelectedTags] = useState<any>(["All"]);
+    const [selectedTags, setSelectedTags] = useState(["All"]);
     const [filteredCategories, setFilteredCategories] = useState<any>();
-    
-    console.log(filteredCategories)
-
+  
     function filterArray(array: any[], filters: any) {
         const filterKeys = Object.keys(filters);
         return array.filter(item => {
@@ -36,7 +36,7 @@ function ProductCardGrid(){
     useEffect(()=>{
         if(allProducts){
             const filter = {
-                category: (category: any) => {
+                category: (category: [string]) => {
                     for(const c of selectedTags){
                         if(category.includes(c)) return true;
                     }
@@ -49,8 +49,9 @@ function ProductCardGrid(){
    
   
 
-    function handleChange(tag: any,checked: any){
-        const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter((t: any) => t !== tag);
+    function handleChange(tag: string,checked: boolean){
+
+        const nextSelectedTags = checked ? [...selectedTags, tag] : selectedTags.filter((t: string) => t !== tag);
         setSelectedTags(nextSelectedTags)
     }
 
