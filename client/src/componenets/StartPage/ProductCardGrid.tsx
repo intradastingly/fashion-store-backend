@@ -46,6 +46,7 @@ function ProductCardGrid(){
             setFilteredCategories(filteredObject);
         }
     }, [selectedTags])
+
    
   
 

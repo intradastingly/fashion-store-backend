@@ -28,20 +28,55 @@ const { Title } = Typography;
 
 function UserProfile() {
   const [streetName, setStreetName] = useState("");
-  const [customerName, setCustomerName] = useState("");
+  const [fullName, setFullName] = useState<string>();
   const [zipCode, setZipCode] = useState("");
   const [cityName, setCityName] = useState("");
   const [currentOrders, setCurrentOrders] = useState<Number>();
-  const { session } = useContext(ApiContext);
+  const { session, currentUser } = useContext(ApiContext);
   const [user, setUser] = useState<any>();
 
   useEffect(() => {
-    setUser(session);
-    console.log(user);
-    
-  });
+    getUser(session.id);
+  }, []);
 
-  if (!user) return <ErrorPage/>
+  const getUser = async (id: string) => {
+    const response = await fetch(`api/accounts/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application-json",
+      },
+    });
+    const incomingUser = await response.json();
+    setUser(incomingUser);
+  };
+
+  const updateUser = async (
+    userId: string,
+    keyId: string,
+    body: string | number
+  ) => {
+    const incomingBody = {
+      [keyId]: body,
+    };
+    
+    console.log(incomingBody);
+
+    const response = await fetch(`api/accounts/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application-json",
+      },
+      body: JSON.stringify(incomingBody),
+    });
+  };
+
+  const getName = (data:string)=> {
+    setFullName(data)
+    console.log(fullName);
+    
+  }
+
+  if (!user) return <ErrorPage />;
 
   return (
     <div style={profileContainer}>
@@ -50,7 +85,7 @@ function UserProfile() {
           <Avatar src={AvatarPic} size={100} />
         </div>
         <div>
-          <Title>{user.username}</Title>
+          <Title>{user.userName}</Title>
         </div>
       </div>
       <div style={infoContainer}>
@@ -64,10 +99,29 @@ function UserProfile() {
                 editable={{
                   icon: <HighlightOutlined />,
                   tooltip: "click to edit text",
-                  onChange: setCustomerName,
+                  onChange: getName,
+                  onEnd: () => {
+                    updateUser(session.id, "fullName", fullName!);
+                  },
                 }}
               >
                 Full name: {user.fullName}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                }}
+              >
+                Phone Number: {user.phoneNumber}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                }}
+              >
+                Email: {user.email}
               </Paragraph>
               <Paragraph
                 editable={{
@@ -95,6 +149,15 @@ function UserProfile() {
                 }}
               >
                 City: {user.address.city}
+              </Paragraph>
+              <Paragraph
+                editable={{
+                  icon: <HighlightOutlined />,
+                  tooltip: "click to edit text",
+                  onChange: setCityName,
+                }}
+              >
+                Country: {user.address.country}
               </Paragraph>
             </div>
           </div>
