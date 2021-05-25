@@ -1,4 +1,4 @@
-import { Form, Input, Button, Checkbox, Row, Col } from "antd";
+import { Form, Input, Button, Checkbox, Row, Col, Modal } from "antd";
 import {
   CSSProperties,
   Component,
@@ -18,6 +18,13 @@ function UserLogIn() {
 
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const [newUsername, setNewUsername] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [fullName, setFullName] = useState<string>("");
 
   const loginCredentials = { userName: username, password: password };
   const onFinish = (e: any) => {
@@ -27,16 +34,23 @@ function UserLogIn() {
     reloadPage();
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
-  };
-
   const reloadPage = () => {
     setTimeout(reload, 300);
     function reload() {
       window.location.reload();
     }
   };
+
+  function openModal(e: any) {
+    e.preventDefault();
+    setIsModalVisible(true);
+  }
+
+  function closeModal() {
+    setIsModalVisible(false);
+  }
+
+  function handleSubmit() {}
 
   return (
     <div>
@@ -51,22 +65,107 @@ function UserLogIn() {
           >
             LOG IN{" "}
           </h1>
-          <div>
-            <form name="basic" style={formContainer}>
-              <input
-                name="username"
-                placeholder="username"
-                onChange={(e: any) => setUsername(e.target.value)}
-                type="text"
-              />
-              <input
-                name="username"
-                placeholder="password"
-                onChange={(e: any) => setPassword(e.target.value)}
-                type="text"
-              />
-              <button onClick={(e: any) => onFinish(e)}>Log In</button>
+          <div style={fullContainer}>
+            <form name="basic">
+              <div style={formContainer}>
+                <div>
+                  <input
+                    style={inputField}
+                    name="username"
+                    placeholder="username"
+                    onChange={(e: any) => setUsername(e.target.value)}
+                    type="text"
+                  />
+                </div>
+                <div>
+                  <input
+                    style={inputField}
+                    name="username"
+                    placeholder="password"
+                    onChange={(e: any) => setPassword(e.target.value)}
+                    type="password"
+                  />
+                </div>
+              </div>
+              <div style={buttonContainer}>
+                <Button onClick={(e: any) => onFinish(e)}>Log In</Button>
+                <Button onClick={(e: any) => openModal(e)}>Register</Button>
+              </div>
             </form>
+            <div>
+              <Modal
+                visible={isModalVisible}
+                onCancel={closeModal}
+                onOk={handleSubmit}
+              >
+                <div style={modalContainer}>
+                  <div style={modalTitle}>
+                    <h2>Register a new user</h2>
+                  </div>
+                  <div style={fullContainer}>
+                    <form name="basic" style={form}>
+                      <div style={modalFormContainer}>
+                        <div>
+                          <input
+                            autoComplete="off"
+                            style={inputField}
+                            name="username"
+                            placeholder="Username"
+                            onChange={(e: any) =>
+                              setNewUsername(e.target.value)
+                            }
+                            type="text"
+                          />
+                        </div>
+                        <div>
+                          <input
+                            autoComplete="new-password"
+                            style={inputField}
+                            name="username"
+                            placeholder="Password"
+                            onChange={(e: any) =>
+                              setNewPassword(e.target.value)
+                            }
+                            type="password"
+                          />
+                        </div>
+                        <div>
+                          <input
+                            autoComplete="new-password"
+                            style={inputField}
+                            name="FullName"
+                            placeholder="Full Name"
+                            onChange={(e: any) => setFullName(e.target.value)}
+                            type="text"
+                          />
+                        </div>
+                        <div>
+                          <input
+                            autoComplete="new-password"
+                            style={inputField}
+                            name="Phone"
+                            placeholder="Phone number"
+                            onChange={(e: any) =>
+                              setPhoneNumber(e.target.value)
+                            }
+                            type="text"
+                          />
+                        </div>
+                        <div>
+                          <input
+                            autoComplete="off"
+                            style={inputField}
+                            name="Email"
+                            placeholder="Email"
+                            onChange={(e: any) => setEmail(e.target.value)}
+                          />
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </Modal>
+            </div>
           </div>
         </Col>
       </Row>
@@ -87,15 +186,60 @@ const columnStyle: CSSProperties = {
   marginBottom: "3rem",
 };
 
-const buttonStyle: CSSProperties = {
-  marginBottom: "10rem",
+const modalContainer: CSSProperties = {
+  height: "50vh",
+  display: "flex",
+  flexDirection: "column",
+};
+
+const buttonContainer: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-around",
+  marginTop: "2rem",
+  width: "10rem",
+};
+
+const modalTitle: CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+  width: "100%",
+};
+
+const form: CSSProperties = {
+  height: "100%",
+  width: "100%",
 };
 
 const formContainer: CSSProperties = {
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
+  alignItems: "space-between",
+  justifyContent: "space-around",
+  width: "100%",
+  height: "100%",
+};
+
+const fullContainer: CSSProperties = {
+  width: "100%",
+  height: "100%",
+  display: "flex",
   justifyContent: "center",
+};
+
+const inputField: CSSProperties = {
+  borderBottom: "1px solid lightgray",
+  outline: "none",
+  padding: "4px 10px",
+  border: "3px solid #9176f2",
+  borderRadius: "5px",
+};
+
+const modalFormContainer: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "space-evenly",
+  height: "100%",
   width: "100%",
 };
 
