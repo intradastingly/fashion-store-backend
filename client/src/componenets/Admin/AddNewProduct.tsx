@@ -1,28 +1,11 @@
-import React, { Component, CSSProperties, useState } from "react";
-import { Form, Input, InputNumber, Button, Col, Row, message } from "antd";
+import React, { CSSProperties, useContext, useEffect, useState } from "react";
+import { Button, message } from "antd";
 import { Product } from "../ProductItemsList";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
+import {ApiContext } from "../../contexts/ApiContext";
+import { Select, Tag } from 'antd';
 
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
 
-/* eslint-disable no-template-curly-in-string */
-const validateMessages = {
-  required: "${label} is required!",
-  types: {
-    email: "${label} is not a valid email!",
-    number: "${label} is not a valid number!",
-  },
-  number: {
-    range: "${label} must be between ${min} and ${max}",
-  },
-};
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 interface State {
@@ -35,12 +18,37 @@ const success = () => {
 };
 
 function AddNewProduct(props: Props, state: State) {
+  const { mapCategories, loadProducts} = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [titleField, setTitleField] = useState("");
   const [descriptionField, setDescriptionField] = useState("");
   const [priceField, setPriceField] = useState("");
   const [imageField, setImageField] = useState("");
   const [quantityField, setQuantityField] = useState("");
+  const [categoryField, setCategoryField] = useState<any[]>([]);
+
+
+  const options = [
+    { value: "All" },
+    { value: "Jumpsuits" },
+    { value: "Jeans" },
+    { value: "Dresses" },
+    { value: 'Coats' },
+    { value: 'Trousers' },
+    { value: 'Sweaters' },
+    { value: 'Skirts' }
+  ];
+  const filteredOptions = options.filter(o => !categoryField.includes(o))
+
+  const handleChange = (categoryField: any) => {
+    setCategoryField(categoryField);
+  };
+
+  useEffect(() => {
+
+    loadProducts();
+    mapCategories();
+  }, []);
 
   const saveNewProduct = async () => {
     setButtonSaveLoading(true);
@@ -49,6 +57,7 @@ function AddNewProduct(props: Props, state: State) {
       title: titleField,
       description: descriptionField,
       quantity: quantityField,
+      category: categoryField,
       price: priceField,
       img: imageField,
     };
@@ -61,6 +70,7 @@ function AddNewProduct(props: Props, state: State) {
       },
     });
 
+
     const result = response.json();
     setTitleField("");
     setDescriptionField("");
@@ -72,7 +82,34 @@ function AddNewProduct(props: Props, state: State) {
     return result;
   };
 
+
+
+
+  const tagRender = (props: any) => {
+    const { label, closable, onClose } = props;
+    const onPreventMouseDown = (event: any) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+    return (
+      <Tag
+        color="blue"
+        onMouseDown={onPreventMouseDown}
+        closable={closable}
+        onClose={onClose}
+        style={{ marginRight: 3, color: "black" }}
+      >
+        {label}
+      </Tag>
+    );
+  }
+
+
+
+
   return (
+
+
     <div style={rootStyle}>
       <form style={layoutStyle}>
         <h2>Add New Product</h2>
@@ -102,20 +139,31 @@ function AddNewProduct(props: Props, state: State) {
           onChange={(e: any) => setQuantityField(e.target.value)}
         />
         <label>Category: </label>
-        {/* { editProduct.category.map((c: any) => (
+        <Select
+          onChange={handleChange}
+          mode="multiple"
+          showArrow
+          value={categoryField}
+          tagRender={(props: any) => tagRender(props)}
+          style={{ width: "100%" }}
+          options={options}
+          >
 
-            <input defaultValue={c}/>
+          {filteredOptions.map((item: any) => (
+            <Select.Option key={item} value={item}>
+              {item}
+            </Select.Option>
+          ))}
 
- 
-          ))
-            
-          } */}
+          </Select>
+        
 
         <Button
           type="primary"
           onClick={saveNewProduct}
           htmlType="submit"
           loading={buttonSaveLoading}
+          style={{marginTop: "1rem"}}
         >
           Save
         </Button>
