@@ -11,6 +11,7 @@ import {
   Form,
   Input,
   Spin,
+  Collapse,
 } from "antd";
 import { HighlightOutlined } from "@ant-design/icons";
 import React, {
@@ -30,15 +31,26 @@ import GetAdminList from "../Admin/AdminList";
 
 const { Paragraph } = Typography;
 const { Title } = Typography;
+const { Panel } = Collapse;
 
 function UserProfile() {
-  const { session, currentUser } = useContext(ApiContext);
+  const { session, currentUser, getUserSpecificOrders, orders } =
+    useContext(ApiContext);
   const [user, setUser] = useState<any>();
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  //useeffect for getting the correct account information
   useEffect(() => {
     getUser(session.id);
   }, []);
+
+  useEffect(() => {
+    if (!orders) {
+      getUserSpecificOrders(session.id);
+    } else {
+      return;
+    }
+  });
 
   const getUser = async (id: string) => {
     const response = await fetch(`api/accounts/${id}`, {
@@ -52,8 +64,6 @@ function UserProfile() {
   };
 
   const updateUser = async (id: string, data: any) => {
-    console.log(data, "Incoming data from form");
-
     const response = await fetch(`api/accounts/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),
@@ -62,7 +72,6 @@ function UserProfile() {
       },
     });
     const result = await response.json();
-    console.log(result, "Result from server after fetch has been made");
     return result;
   };
 
@@ -190,12 +199,63 @@ function UserProfile() {
                 <div>
                   <Title level={3}>My Orders</Title>
                 </div>
-                <div>
-                  <h4>You have no orders at this moment.</h4>
-                </div>
-                <div>
-                  <Button>Details</Button>
-                </div>
+                {!orders ? (
+                  <div>
+                    <h4>You have no orders at this moment.</h4>
+                  </div>
+                ) : (
+                  <Collapse style={collapseStyle} accordion>
+                    {orders.map((order: any, i: string) => (
+                      <Panel header={order._id} key={i}>
+                        <Collapse ghost accordion>
+                          {order.cart.map((product: any, key: string) => (
+                            <Panel header="Products" key={key}>
+                              <div>
+                                <p>Item: {product.product.title}</p>
+                                <p>Price: {product.product.price}kr </p>
+                                <p>Quantity: {product.quantity} </p>
+                              </div>
+                            </Panel>
+                          ))}
+                          <Panel header="Billing info" key="2">
+                            <div>
+                              <p>{order.userInfo.name}</p>
+                              <p>{order.userInfo.email}</p>
+                              <p>{order.userInfo.phone}</p>
+                              <p>
+                                {order.userInfo.street +
+                                  ", " +
+                                  order.userInfo.zipcode +
+                                  ", " +
+                                  order.userInfo.city +
+                                  ", " +
+                                  order.userInfo.country}
+                              </p>
+                            </div>
+                          </Panel>
+                          <Panel header="Shipping" key="3">
+                            <div>
+                              <p>{order.userInfo.name}</p>
+                              <p>{order.userInfo.email}</p>
+                              <p>{order.userInfo.phone}</p>
+                              <p>
+                                {order.userInfo.street +
+                                  ", " +
+                                  order.userInfo.zipcode +
+                                  ", " +
+                                  order.userInfo.city +
+                                  ", " +
+                                  order.userInfo.country}
+                              </p>
+                            </div>
+                          </Panel>
+                        </Collapse>
+                        <h5>Total price: {order.totalPrice}</h5>
+                        <h5>Shipped: {order.ishandled ? "Yes" : "No"}</h5>
+                      </Panel>
+                    ))}
+                  </Collapse>
+                )}
               </div>
             </div>
           </div>
@@ -213,6 +273,10 @@ const layout = {
 
 const modalStyle: CSSProperties = {
   height: "26rem",
+};
+
+const collapseStyle: CSSProperties = {
+  width: "30rem",
 };
 
 const profileContainer: CSSProperties = {
@@ -275,6 +339,7 @@ const orderContainer: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  minWidth: "20rem",
 };
 
 const flexCenterColumn: CSSProperties = {

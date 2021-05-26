@@ -67,6 +67,7 @@ interface State {
   userCreated: boolean;
   users: userInfo[];
   activeUser: any;
+  orders: any;
 }
 
 interface ContextValue extends State {
@@ -75,7 +76,7 @@ interface ContextValue extends State {
   logOutHandler: () => void;
   loadProducts: () => void;
   mapCategories: () => void;
-
+  getUserSpecificOrders: (id: string) => void;
   registerHandler: (registerData: registerData) => void;
   updateUserCreated: () => void;
   loadAllUsers: () => void;
@@ -93,6 +94,7 @@ export const ApiContext = createContext<ContextValue>({
   order: [],
   userCreated: false,
   activeUser: {},
+  orders: {},
   getOrder: () => {},
   loginHandler: () => {},
   logOutHandler: () => {},
@@ -102,6 +104,7 @@ export const ApiContext = createContext<ContextValue>({
   updateUserCreated: () => {},
   loadAllUsers: () => {},
   getUser: () => {},
+  getUserSpecificOrders: (id: string) =>{}
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -121,6 +124,7 @@ function ApiProvider(props: Props) {
   const [userCreated, setUserCreated] = useState<boolean>(false);
   const [users, setAllUsers] = useState<userInfo[]>([]);
   const [activeUser, setActiveUser] = useState();
+  const [orders, setOrders] = useState();
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -137,6 +141,8 @@ function ApiProvider(props: Props) {
     loadShippingMethods();
   }, []);
 
+
+  // useeffect for checking if user is logged in
   useEffect(() => {
     if (session) {
       setuserIsLoggedIn(true);
@@ -145,6 +151,7 @@ function ApiProvider(props: Props) {
     }
   });
 
+  //useeffect for authorizing a session 
   useEffect(() => {
     const authorizeSession = async () => {
       const response = await fetch(`api/authenticated`, {
@@ -165,7 +172,7 @@ function ApiProvider(props: Props) {
     const response = await fetch("/api/accounts", {
       method: "GET",
       headers: {
-        "Content-type": "application-json",
+        "Content-type": "application/json",
       },
     });
     const users = await response.json();
@@ -176,7 +183,7 @@ function ApiProvider(props: Props) {
     const response = await fetch("/api/products", {
       method: "GET",
       headers: {
-        "Content-type": "application-json",
+        "Content-type": "application/json",
       },
     });
     const products = await response.json();
@@ -212,6 +219,7 @@ function ApiProvider(props: Props) {
     return;
   };
 
+  // handling function for logging in a user
   async function loginHandler(loginCredentials: Credentials) {
     const response = await fetch("api/login", {
       method: "POST",
@@ -229,13 +237,13 @@ function ApiProvider(props: Props) {
     return response;
   }
 
+  // handler for logging out a user
   async function logOutHandler() {
     const response = await fetch("api/logout", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
     const result = await response.json();
-    console.log(result);
     if (result === "logout succ") {
       setuserIsLoggedIn(false);
       setSession(null);
@@ -245,6 +253,7 @@ function ApiProvider(props: Props) {
     return response;
   }
 
+  // register logic, with full fetch call
   async function registerHandler(registerData: registerData) {
     const response = await fetch("api/accounts", {
       method: "POST",
@@ -252,7 +261,6 @@ function ApiProvider(props: Props) {
       headers: { "Content-Type": "application/json" },
     });
     const result = await response.json();
-    console.log(response.status);
 
     if (response.status === 201) {
       setUserCreated(true);
@@ -260,12 +268,25 @@ function ApiProvider(props: Props) {
     return response;
   }
 
+  // function for getting one order
   async function getOrder(order: any) {
-    console.log(order);
     setOrder(order);
     createNewOrder(order);
   }
 
+  //logic for getting all orders for specific user from database objectID
+  const getUserSpecificOrders = async (id: string)=>{
+    const response = await fetch(`api/order/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      }
+    });
+    const result = await response.json();
+    setOrders(result)
+  }
+
+  // create order logic
   async function createNewOrder(order: any) {
     const response = await fetch("api/order", {
       method: "POST",
@@ -274,6 +295,7 @@ function ApiProvider(props: Props) {
     });
   }
 
+  // get one user logic [CURRENTLY UNUSED!!]
   const getUser = async (id: string) => {
     const response = await fetch(`api/accounts/${id}`, {
       method: "GET",
@@ -310,8 +332,10 @@ function ApiProvider(props: Props) {
         currentUser: currentUser,
         users: users,
         activeUser: activeUser,
+        orders: orders,
         loadAllUsers: loadAllUsers,
         getUser: getUser,
+        getUserSpecificOrders: getUserSpecificOrders,
       }}
     >
       {props.children}
