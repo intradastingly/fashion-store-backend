@@ -52,10 +52,9 @@ function UserProfile() {
     console.log(user);
   };
 
-
   const updateUser = async (id: string, data: any) => {
     console.log(data, "Incoming data from form");
-   
+
     const response = await fetch(`api/accounts/${id}`, {
       method: "PUT",
       body: JSON.stringify(data),
@@ -68,17 +67,17 @@ function UserProfile() {
     return result;
   };
 
-
   const showModal = () => {
     setIsModalVisible(true);
   };
-  const handleOk = () => {
+  const onFinish = (values: any) => {
+    updateUser(session.id, values);
     setIsModalVisible(false);
   };
   const handleCancel = () => {
     setIsModalVisible(false);
   };
-  
+
   /* eslint-disable no-template-curly-in-string */
   const validateMessages = {
     required: "${label} is required!",
@@ -91,9 +90,6 @@ function UserProfile() {
     },
   };
   /* eslint-enable no-template-curly-in-string */
-
-  const onFinish = (values: any) => {
-    updateUser(session.id, values);
 
 
   if (!user) return <LoadingPage />;
@@ -115,76 +111,10 @@ function UserProfile() {
         )}
       </div>
       <div style={infoContainer}>
-
-        <div style={customerContainer}>
-          <div style={customerInfo}>
-            <div>
-              <Title level={3}>My information</Title>
-            </div>
-            <div>
-              <Paragraph>Full name: {user.fullName}</Paragraph>
-              <Paragraph>Phone Number: {user.phoneNumber}</Paragraph>
-              <Paragraph>Email: {user.email}</Paragraph>
-              <Paragraph>Street: {user.address.street}</Paragraph>
-              <Paragraph>Zip Code: {user.address.zipCode}</Paragraph>
-              <Paragraph>City: {user.address.city}</Paragraph>
-              <Paragraph>Country: {user.address.country}</Paragraph>
-            </div>
-            <Button type="primary" onClick={showModal}>
-              Edit Information
-            </Button>
-            <Modal
-              title="Edit your profile"
-              visible={isModalVisible}
-              onOk={handleOk}
-              onCancel={handleCancel}
-            >
-              <div style={modalStyle}>
-                <Form
-                  {...layout}
-                  name="userEditor"
-                  onFinish={onFinish}
-                  validateMessages={validateMessages}
-                >
-                  <Form.Item name={"fullName"} label="Name">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={"phoneNumber"} label="Phone Number">
-                    <Input />
-                  </Form.Item>
-
-                  <Form.Item
-                    name={"email"}
-                    rules={[{ type: "email" }]}
-                    label="Email"
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={["address", "street"]} label="Street">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={["address", "zipCode"]} label="Zip Code">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={["address", "city"]} label="City">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item name={["address", "country"]} label="Country">
-                    <Input />
-                  </Form.Item>
-                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
-                    <Button type="primary" htmlType="submit">
-                      Submit
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
-            </Modal>
-
+        <div style={customerContainer}></div>
         {user.role === "admin" ? (
           <div style={adminComponentContainer}>
             <GetAdminList />
-
           </div>
         ) : (
           <div style={customerContainer}>
@@ -193,71 +123,68 @@ function UserProfile() {
                 <Title level={3}>My information</Title>
               </div>
               <div>
-                <Paragraph
-                  editable={{
-                    icon: <HighlightOutlined />,
-                    tooltip: "click to edit text",
-                    onChange: getName,
-                    onEnd: () => {
-                      updateUser(session.id, "fullName", fullName!);
-                    },
-                  }}
-                >
-                  Full name: {user.fullName}
-                </Paragraph>
-                <Paragraph
-                  editable={{
-                    icon: <HighlightOutlined />,
-                    tooltip: "click to edit text",
-                  }}
-                >
-                  Phone Number: {user.phoneNumber}
-                </Paragraph>
-                <Paragraph
-                  editable={{
-                    icon: <HighlightOutlined />,
-                    tooltip: "click to edit text",
-                  }}
-                >
-                  Email: {user.email}
-                </Paragraph>
-                <Paragraph
-                  editable={{
-                    icon: <HighlightOutlined />,
-                    tooltip: "click to edit text",
-                    onChange: setStreetName,
-                  }}
-                >
-                  Street: {user.address.street}
-                </Paragraph>
-                <Paragraph
-                  editable={{
-                    icon: <HighlightOutlined />,
-                    tooltip: "click to edit text",
-                    onChange: setZipCode,
-                  }}
-                >
-                  Zip Code: {user.address.zipCode}
-                </Paragraph>
-                <Paragraph
-                  editable={{
-                    icon: <HighlightOutlined />,
-                    tooltip: "click to edit text",
-                    onChange: setCityName,
-                  }}
-                >
-                  City: {user.address.city}
-                </Paragraph>
-                <Paragraph
-                  editable={{
-                    icon: <HighlightOutlined />,
-                    tooltip: "click to edit text",
-                    onChange: setCityName,
-                  }}
-                >
-                  Country: {user.address.country}
-                </Paragraph>
+                <Paragraph>Full name: {user.fullName}</Paragraph>
+                <Paragraph>Phone Number: {user.phoneNumber}</Paragraph>
+                <Paragraph>Email: {user.email}</Paragraph>
+                <Paragraph>Street: {user.address.street}</Paragraph>
+                <Paragraph>Zip Code: {user.address.zipCode}</Paragraph>
+                <Paragraph>City: {user.address.city}</Paragraph>
+                <Paragraph>Country: {user.address.country}</Paragraph>
               </div>
+              <Button type="primary" onClick={showModal}>
+                Edit Information
+              </Button>
+              <Modal
+                title="Edit your profile"
+                visible={isModalVisible}
+                onCancel={handleCancel}
+                footer={[
+                  <Button key="back" onClick={handleCancel}>
+                    Cancel
+                  </Button>,
+                ]}
+              >
+                <div style={modalStyle}>
+                  <Form
+                    {...layout}
+                    name="userEditor"
+                    onFinish={onFinish}
+                    validateMessages={validateMessages}
+                  >
+                    <Form.Item name={"fullName"} label="Name">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name={"phoneNumber"} label="Phone Number">
+                      <Input />
+                    </Form.Item>
+
+                    <Form.Item
+                      name={"email"}
+                      rules={[{ type: "email" }]}
+                      label="Email"
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name={["address", "street"]} label="Street">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name={["address", "zipCode"]} label="Zip Code">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name={["address", "city"]} label="City">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item name={["address", "country"]} label="Country">
+                      <Input />
+                    </Form.Item>
+                    <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                      <Button type="primary" htmlType="submit">
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </Form>
+                </div>
+              </Modal>
             </div>
             <div style={customerInfo}>
               {/* Here we can map out orders that match the session.username with links to that order */}
