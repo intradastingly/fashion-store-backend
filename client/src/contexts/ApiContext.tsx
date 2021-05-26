@@ -1,4 +1,3 @@
-
 import React, { createContext, useEffect, useState } from "react";
 
 export interface Credentials {
@@ -27,17 +26,17 @@ export interface ProductInfo {
 
 export interface userInfo {
   address: {
-      city: String,
-      country: String,
-      street: String,
-      zipCode: Number
-  },
-  userName: String,
-  email: String,
-  fullName: String,
-  phoneNumber: String,
-  role: String,
-  _id: String
+    city: String;
+    country: String;
+    street: String;
+    zipCode: Number;
+  };
+  userName: String;
+  email: String;
+  fullName: String;
+  phoneNumber: String;
+  role: String;
+  _id: String;
 }
 export interface ShippingInfo {
   shipmentCompany: string;
@@ -67,7 +66,7 @@ interface State {
   order: any;
   userCreated: boolean;
   users: userInfo[];
-
+  activeUser: any;
 }
 
 interface ContextValue extends State {
@@ -79,7 +78,8 @@ interface ContextValue extends State {
 
   registerHandler: (registerData: registerData) => void;
   updateUserCreated: () => void;
-  loadAllUsers: () => void
+  loadAllUsers: () => void;
+  getUser: (id: string) => void;
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -92,6 +92,7 @@ export const ApiContext = createContext<ContextValue>({
   categories: [],
   order: [],
   userCreated: false,
+  activeUser: {},
   getOrder: () => {},
   loginHandler: () => {},
   logOutHandler: () => {},
@@ -99,8 +100,8 @@ export const ApiContext = createContext<ContextValue>({
   loadProducts: () => {},
   mapCategories: () => {},
   updateUserCreated: () => {},
-  loadAllUsers: () => {}
-
+  loadAllUsers: () => {},
+  getUser: () => {},
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -119,7 +120,7 @@ function ApiProvider(props: Props) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [userCreated, setUserCreated] = useState<boolean>(false);
   const [users, setAllUsers] = useState<userInfo[]>([]);
-
+  const [activeUser, setActiveUser] = useState();
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -155,7 +156,6 @@ function ApiProvider(props: Props) {
     };
     authorizeSession();
   }, []);
-
 
   useEffect(() => {
     loadAllUsers();
@@ -224,6 +224,7 @@ function ApiProvider(props: Props) {
     } else if (result.message === "Login successful") {
       setSession(result.session);
       setuserIsLoggedIn(true);
+      getUser(session.id);
     }
     return response;
   }
@@ -273,6 +274,18 @@ function ApiProvider(props: Props) {
     });
   }
 
+  const getUser = async (id: string) => {
+    const response = await fetch(`api/accounts/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application-json",
+      },
+    });
+    const incomingUser = await response.json();
+
+    setActiveUser(incomingUser);
+  };
+
   function updateUserCreated() {
     setUserCreated(false);
   }
@@ -296,7 +309,9 @@ function ApiProvider(props: Props) {
         categories: categories,
         currentUser: currentUser,
         users: users,
-        loadAllUsers: loadAllUsers
+        activeUser: activeUser,
+        loadAllUsers: loadAllUsers,
+        getUser: getUser,
       }}
     >
       {props.children}
