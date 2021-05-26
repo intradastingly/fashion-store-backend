@@ -25,7 +25,7 @@ function ProductDetails(props: Props){
         const productId = String((props.match.params as any).id)
         const product = allProducts.find((p: ProductInfo) => p._id === productId);
         setProduct(product)
-    }) 
+    }, []) 
 
     function handleAddClick(){
         success();

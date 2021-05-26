@@ -1,9 +1,46 @@
 import React, { createContext, useEffect, useState } from "react";
+import { CartItem } from "../componenets/Cart/CartItemsList";
 
 export interface Credentials {
   /* id: string, */
   userName: string;
   password: string;
+}
+
+interface UserInfo {
+  city: String,
+  email: String,
+  name: String,
+  phone: String,
+  street: String,
+  zipcode: String
+}
+
+export interface Order {
+    _id: String
+    cart: CartItem[],
+    date: String,
+    deliveryMethod: ShippingInfo,
+    isHandled: Boolean,
+    userInfo: UserInfo,
+    totalPrice: Number,
+    paymentMethod: {
+      phone: String
+    },
+    session: {
+      userName: String;
+      fullName: String;
+      phoneNumber: String;
+      password: String;
+      email: String;
+      id: String
+      address: {
+        city: String,
+        country: String,
+        street: String,
+        zipCode: Number
+      }
+    },
 }
 
 export interface registerData {
@@ -14,6 +51,7 @@ export interface registerData {
   email: String;
   address: Object;
 }
+
 export interface ProductInfo {
   category: [];
   description: String;

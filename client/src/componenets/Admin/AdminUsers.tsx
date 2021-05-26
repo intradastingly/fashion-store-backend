@@ -22,10 +22,14 @@ function AdminUsers() {
             marginBottom: "3rem",
           }}
         >
-          <h1 style={{ fontWeight: "bold" }}>All Users</h1>
-          <Link to={"/profile"}>
-            <Button type="primary">All Products</Button>
-          </Link>
+        <div>
+            <h1 style={{ fontWeight: "bold", fontSize: "1rem" }}>All Users</h1>
+        </div>
+        <div style={{display: "flex"}}>
+            <Link to={"/profile"}>
+                <Button type="primary">Back</Button>
+            </Link>
+        </div>
         </div>
 
         <List

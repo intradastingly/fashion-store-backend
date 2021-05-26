@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Avatar, Button, Col, List, Row } from "antd";
+import { AutoComplete, Avatar, Button, Col, List, Row } from "antd";
 import { CSSProperties, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
@@ -11,25 +11,34 @@ function GetAdminList(props: Props) {
 
   return (
     <Row style={containerStyle}>
-      <Col style={columnStyle}>
+      <Col style={col}>
+        <h1 style={{ fontWeight: "bold", fontSize: "1rem",marginTop: "1rem", display: "flex", }}>All products</h1>
         <div
           style={{
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "2rem",
+            marginTop: "1rem",
             marginBottom: "3rem",
           }}
         >
-          <h1 style={{ fontWeight: "bold" }}>All products</h1>
-          <Link to={"/add-product"}>
-            <Button type="primary" icon={<PlusOutlined />}>
-              Add product
-            </Button>
-          </Link>
-          <Link type="primary" to="/admin-users">
-            <Button>Users</Button>
-          </Link>
+        <div style={btnContainer}>
+          <div>
+            <Link to={"/add-product"}>
+              <Button type="primary" icon={<PlusOutlined />}>
+                Add product
+              </Button>
+            </Link>
+          </div>
+          <div>
+            <Link type="primary" to="/admin-users">
+              <Button>Users</Button>
+            </Link>
+            <Link type="primary" to="/admin-orders">
+              <Button>Orders</Button>
+            </Link>
+          </div>
+        </div>
         </div>
 
         <List
@@ -63,15 +72,24 @@ function GetAdminList(props: Props) {
   );
 }
 
+const col : CSSProperties = {
+  margin: "auto",
+  width: "80%"
+}
+
+const btnContainer : CSSProperties = {
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center"
+}
+
 const containerStyle: CSSProperties = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   paddingBottom: "8rem",
-};
-
-const columnStyle: CSSProperties = {
-  width: "80%",
+  textAlign: "center",
 };
 
 const editStyle: CSSProperties = {

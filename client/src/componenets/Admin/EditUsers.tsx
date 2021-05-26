@@ -106,16 +106,14 @@ function EditUsers(props: Props) {
     setRoleField("");
     setEmailField("");
     successSave();
-    // api context get all users
     loadAllUsers();
     return result;
   };
 
-  console.log(editUser);
-
   if (buttonDeleteLoading || buttonSaveLoading) {
     return <Redirect to="/admin-users" />;
   }
+  
   return (
     <div style={rootStyle}>
       <form style={layoutStyle}>

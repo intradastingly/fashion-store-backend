@@ -122,6 +122,7 @@ function UserProfile() {
         {user.role === "admin" ? (
           <div style={adminComponentContainer}>
             <GetAdminList />
+            
           </div>
         ) : (
           <div style={customerContainer}>
