@@ -2,10 +2,8 @@ import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { Button, message } from "antd";
 import { Product } from "../ProductItemsList";
 import { Link, RouteComponentProps, withRouter } from "react-router-dom";
-import {ApiContext } from "../../contexts/ApiContext";
-import { Select, Tag } from 'antd';
-
-
+import { ApiContext } from "../../contexts/ApiContext";
+import { Select, Tag } from "antd";
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 interface State {
@@ -18,7 +16,7 @@ const success = () => {
 };
 
 function AddNewProduct(props: Props, state: State) {
-  const { mapCategories, loadProducts} = useContext(ApiContext);
+  const { mapCategories, loadProducts } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [titleField, setTitleField] = useState("");
   const [descriptionField, setDescriptionField] = useState("");
@@ -27,25 +25,24 @@ function AddNewProduct(props: Props, state: State) {
   const [quantityField, setQuantityField] = useState("");
   const [categoryField, setCategoryField] = useState<any[]>([]);
 
-
   const options = [
     { value: "All" },
     { value: "Jumpsuits" },
     { value: "Jeans" },
     { value: "Dresses" },
-    { value: 'Coats' },
-    { value: 'Trousers' },
-    { value: 'Sweaters' },
-    { value: 'Skirts' }
+    { value: "Coats" },
+    { value: "Trousers" },
+    { value: "Sweaters" },
+    { value: "Skirts" },
+    { value: "T-shirts" },
   ];
-  const filteredOptions = options.filter(o => !categoryField.includes(o))
+  const filteredOptions = options.filter((o) => !categoryField.includes(o));
 
   const handleChange = (categoryField: any) => {
     setCategoryField(categoryField);
   };
 
   useEffect(() => {
-
     loadProducts();
     mapCategories();
   }, []);
@@ -70,7 +67,6 @@ function AddNewProduct(props: Props, state: State) {
       },
     });
 
-
     const result = response.json();
     setTitleField("");
     setDescriptionField("");
@@ -81,9 +77,6 @@ function AddNewProduct(props: Props, state: State) {
     success();
     return result;
   };
-
-
-
 
   const tagRender = (props: any) => {
     const { label, closable, onClose } = props;
@@ -102,14 +95,9 @@ function AddNewProduct(props: Props, state: State) {
         {label}
       </Tag>
     );
-  }
-
-
-
+  };
 
   return (
-
-
     <div style={rootStyle}>
       <form style={layoutStyle}>
         <h2>Add New Product</h2>
@@ -147,27 +135,24 @@ function AddNewProduct(props: Props, state: State) {
           tagRender={(props: any) => tagRender(props)}
           style={{ width: "100%" }}
           options={options}
-          >
-
+        >
           {filteredOptions.map((item: any) => (
             <Select.Option key={item} value={item}>
               {item}
             </Select.Option>
           ))}
-
-          </Select>
-        
+        </Select>
 
         <Button
           type="primary"
           onClick={saveNewProduct}
           htmlType="submit"
           loading={buttonSaveLoading}
-          style={{marginTop: "1rem"}}
+          style={{ marginTop: "1rem" }}
         >
           Save
         </Button>
-        <Link to="/admin-list">Back</Link>
+        <Link to="/profile">Back</Link>
       </form>
     </div>
   );

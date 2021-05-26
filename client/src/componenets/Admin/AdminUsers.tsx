@@ -1,13 +1,14 @@
-import { PlusOutlined } from "@ant-design/icons";
-import { Avatar, Button, Col, List, Row } from "antd";
-import { CSSProperties, useContext } from "react";
+import { Button, Col, List, Row } from "antd";
+import React, { CSSProperties, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
 
-interface Props {}
+function AdminUsers() {
+  const { loadAllUsers, users } = useContext(ApiContext);
 
-function GetAdminList(props: Props) {
-  const { allProducts } = useContext(ApiContext);
+  useEffect(() => {
+    loadAllUsers();
+  }, []);
 
   return (
     <Row style={containerStyle}>
@@ -21,14 +22,9 @@ function GetAdminList(props: Props) {
             marginBottom: "3rem",
           }}
         >
-          <h1 style={{ fontWeight: "bold" }}>All products</h1>
-          <Link to={"/add-product"}>
-            <Button type="primary" icon={<PlusOutlined />}>
-              Add product
-            </Button>
-          </Link>
-          <Link type="primary" to="/admin-users">
-            <Button>Users</Button>
+          <h1 style={{ fontWeight: "bold" }}>All Users</h1>
+          <Link to={"/profile"}>
+            <Button type="primary">All Products</Button>
           </Link>
         </div>
 
@@ -42,16 +38,15 @@ function GetAdminList(props: Props) {
             xl: 1,
             xxl: 1,
           }}
-          dataSource={allProducts}
-          renderItem={(item) => (
+          dataSource={users}
+          renderItem={(user) => (
             <List.Item>
-              <Link to={"/edit-product/" + item._id}>
+              <Link to={"/edit-user/" + user._id}>
                 <List.Item.Meta
-                  avatar={<Avatar size={64} src={item.img} />}
                   title={
-                    <Link to={"/edit-product/" + item._id}>{item.title}</Link>
+                    <Link to={"/edit-user/" + user._id}>{user.fullName}</Link>
                   }
-                  description={[item.description.split(".")[0]]}
+                  description={[user.role.split(".")[0]]}
                 />
                 <p style={editStyle}>edit</p>
               </Link>
@@ -71,6 +66,7 @@ const containerStyle: CSSProperties = {
 };
 
 const columnStyle: CSSProperties = {
+  marginTop: "8rem",
   width: "80%",
 };
 
@@ -82,4 +78,4 @@ const editStyle: CSSProperties = {
   alignItems: "center",
 };
 
-export default GetAdminList;
+export default AdminUsers;
