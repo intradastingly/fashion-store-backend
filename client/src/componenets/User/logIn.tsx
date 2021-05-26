@@ -8,18 +8,26 @@ import {
 } from "react";
 import { Link, Route } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
+import LoadingPage from "../LoadingPage";
 
 interface Credentials {
   userName: string;
   password: string;
 }
 function UserLogIn() {
-  const { loginHandler, loggedIn, registerHandler, userCreated, getUser } =
-    useContext(ApiContext);
+  const {
+    loginHandler,
+    loggedIn,
+    registerHandler,
+    userCreated,
+    getUser,
+    session,
+  } = useContext(ApiContext);
 
   const [password, setPassword] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [newUsername, setNewUsername] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -35,6 +43,7 @@ function UserLogIn() {
 
   const onFinish = (e: any) => {
     e.preventDefault();
+    renderLoading();
     loginHandler(loginCredentials);
     console.log(loggedIn, "logged in bool");
     reloadPage();
@@ -75,6 +84,12 @@ function UserLogIn() {
   function closeModal() {
     setIsModalVisible(false);
   }
+
+  function renderLoading() {
+    setLoading(true);
+    setTimeout(() => setLoading(false), 5000);
+  }
+  if (loading) return <LoadingPage />;
 
   return (
     <div>
