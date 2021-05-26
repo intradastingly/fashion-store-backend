@@ -49,7 +49,6 @@ function UserProfile() {
     });
     const incomingUser = await response.json();
     setUser(incomingUser);
-    console.log(user);
   };
 
   const updateUser = async (id: string, data: any) => {
@@ -91,7 +90,6 @@ function UserProfile() {
   };
   /* eslint-enable no-template-curly-in-string */
 
-
   if (!user) return <LoadingPage />;
 
   return (
@@ -106,7 +104,7 @@ function UserProfile() {
           </div>
         ) : (
           <div>
-            <Title>{user.name}</Title>
+            <Title>{user.userName}</Title>
           </div>
         )}
       </div>
@@ -227,7 +225,7 @@ const profileContainer: CSSProperties = {
 
 const avatarContainer: CSSProperties = {
   width: "100%",
-  height: "15vh",
+  height: "10%",
   display: "flex",
   justifyContent: "space-around",
   flexDirection: "column",

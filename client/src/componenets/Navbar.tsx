@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import AddToBadge from "./Badge";
 import ApiProvider from "../contexts/ApiContext";
 import { ApiContext } from "../contexts/ApiContext";
+import LoadingPage from "./LoadingPage";
 
 function Navbar() {
   const { loggedIn, logOutHandler, session } = useContext(ApiContext);
@@ -18,49 +19,50 @@ function Navbar() {
     }
   };
 
-  return (
-    <Header style={layoutStyle}>
-      <Row style={{ width: "100%" }}>
-        <Col span={8}>
-          <Link to="/">
-            <img src={logo} alt="logo" style={logoStyle} />
-          </Link>
-        </Col>
-        <Col span={10} offset={6}>
-          <Menu mode="horizontal" style={menuStyle}>
-            <Menu.Item key="0">
-              {!loggedIn ? (
-                <Button href="/login" type="link">
-                  Log in
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    logOutHandler();
-                    reloadPage();
-                  }}
-                  type="link"
-                >
-                  Log out
-                </Button>
-              )}
-            </Menu.Item>
+  if (loggedIn) {
+    console.log(session);
+  }
 
-            <Menu.Item key="1">
-              <Link to="/cart" style={{ color: "white" }}>
-                <ShoppingCartOutlined style={iconStyle} />{" "}
-              </Link>
-              <AddToBadge />
-            </Menu.Item>
-            <Menu.Item key="2">
-              <Link to="/admin">
-                <h3 style={{ color: "white", marginTop: "1.5rem" }}>Admin</h3>
-              </Link>
-            </Menu.Item>
-          </Menu>
-        </Col>
-      </Row>
-    </Header>
+  return (
+    <div style={layoutStyle}>
+      <div style={logoContainer}>
+        <Link to="/">
+          <img src={logo} alt="logo" style={logoStyle} />
+        </Link>
+      </div>
+      <div style={actionContainer}>
+        <div style={navRightContainer}>
+          {!loggedIn ? (
+            <Button href="/login" type="primary" size="small">
+              Log in
+            </Button>
+          ) : (
+            <Button
+              onClick={() => {
+                logOutHandler();
+                reloadPage();
+              }}
+              type="link"
+            >
+              Log out
+            </Button>
+          )}
+
+          <Link to="/cart" style={{ color: "white" }}>
+            <AddToBadge />
+          </Link>
+          {!session ? null : session.role === "admin" ? (
+            <Link to="/profile">
+              <h3 style={{ color: "white" }}>Panel</h3>
+            </Link>
+          ) : (
+            <Link to="/profile">
+              <h3 style={{ color: "white" }}>Profile</h3>
+            </Link>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -69,8 +71,8 @@ const layoutStyle: CSSProperties = {
   background: "black",
   height: window.innerWidth > 768 ? "6rem" : "5rem",
   display: "flex",
+  justifyContent: "center",
   alignItems: "center",
-  justifyItems: "center",
   textDecoration: "none",
   zIndex: 100,
   borderBottom: "none",
@@ -83,24 +85,22 @@ const logoStyle: CSSProperties = {
   width: window.innerWidth > 768 ? "11.5rem" : "8rem",
 };
 
-const iconStyle: CSSProperties = {
-  color: "white",
-  fontSize: "2.3rem",
-  float: "right",
-  position: "absolute",
-  margin: window.innerWidth > 768 ? "2.3rem -1.6rem" : "2.3rem -1.5rem",
-  boxSizing: "border-box",
+const navRightContainer: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-evenly",
+  alignItems: "center",
+  height: "100%",
+  width: "80%",
 };
 
-const menuStyle: CSSProperties = {
-  float: "right",
-  background: "black",
-  color: "white",
+const logoContainer: CSSProperties = {
+  width: "100%",
+};
+
+const actionContainer: CSSProperties = {
+  width: "50%",
   display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  marginTop: window.innerWidth > 768 ? "1.2rem" : "-0.3rem",
-  marginRight: window.innerWidth > 768 ? "0" : "-2rem",
+  justifyContent: "center",
 };
 
 export default Navbar;
