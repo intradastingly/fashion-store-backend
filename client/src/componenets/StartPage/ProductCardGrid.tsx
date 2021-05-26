@@ -3,10 +3,8 @@ import { Card, Col, List, Row, message } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../../contexts/CartContext';
-import { ProductInfo, ApiContext } from '../../contexts/ApiContext';
+import { ApiContext } from '../../contexts/ApiContext';
 import CheckableTag from 'antd/lib/tag/CheckableTag';
-import { isJSDocTypeTag } from 'typescript';
-
 
 const { Meta } = Card;
 const success = () => {
@@ -17,7 +15,7 @@ const tagsData = ["All","Dresses", "Jeans", "Coats", "Blazers", "T-shirts", "Jum
 
 function ProductCardGrid(){
     const {addProductToCart} = useContext(CartContext);
-    const {allProducts, getOrder, loggedIn} = useContext(ApiContext);
+    const {allProducts} = useContext(ApiContext);
     const [selectedTags, setSelectedTags] = useState(["All"]);
     const [filteredCategories, setFilteredCategories] = useState<any>();
   

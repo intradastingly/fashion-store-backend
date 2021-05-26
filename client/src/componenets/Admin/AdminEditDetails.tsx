@@ -40,8 +40,6 @@ function AdminEditDetails(props: Props, state: State) {
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
-
-  // tries as defaultValue on Select/option to show current category
   const [productCategory, setProductCategory] = useState<any>();
 
   const options = [
@@ -80,7 +78,7 @@ function AdminEditDetails(props: Props, state: State) {
     );
   };
 
-  const saveProduct = async (values: any) => {
+  const saveProduct = async () => {
     setButtonSaveLoading(true);
 
     const body = {
@@ -109,7 +107,6 @@ function AdminEditDetails(props: Props, state: State) {
     setImageField("");
     setButtonSaveLoading(false);
     successSave();
-    // api context get all products
     loadProducts();
 
     return result;
@@ -123,9 +120,7 @@ function AdminEditDetails(props: Props, state: State) {
       const product = await allProducts.find(
         (p: ProductInfo) => p._id === props.match.params.id
       );
-      console.log(product?.category, "PRODUCT");
 
-      // product?.category.map((c: any) => setProductCategory(c))
       setEditProduct(product);
       setProductCategory([product?.category]);
     };
@@ -145,7 +140,6 @@ function AdminEditDetails(props: Props, state: State) {
     });
 
     const result = await response.json();
-    // api context get all products
     loadProducts();
     setButtonDeleteLoading(false);
     successDelete();
@@ -194,7 +188,6 @@ function AdminEditDetails(props: Props, state: State) {
           onChange={(e: any) => setQuantityField(e.target.value)}
           defaultValue={editProduct.quantity}
         />
-
         <label>
           Category:{" "}
           {productCategory?.map((p: any) => (

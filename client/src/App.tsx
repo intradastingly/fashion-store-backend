@@ -24,6 +24,7 @@ import ApiProvider from "./contexts/ApiContext";
 import { ApiContext } from "./contexts/ApiContext";
 import AdminUsers from "./componenets/Admin/AdminUsers";
 import EditUsers from "./componenets/Admin/EditUsers";
+import AdminOrders from "./componenets/Admin/AdminOrders";
 
 function App() {
   const { loggedIn, session } = useContext(ApiContext);
@@ -67,6 +68,7 @@ function App() {
                 <Route path="/edit-product/:id" component={AdminEditDetails} />
                 <Route path="/admin-users" component={AdminUsers} />
                 <Route path="/edit-user/:id" component={EditUsers} />
+                <Route path="/admin-orders" component={AdminOrders} />
               </Switch>
             </div>
             <Footer2 />
