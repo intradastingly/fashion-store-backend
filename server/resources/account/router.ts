@@ -1,5 +1,5 @@
-export {};
-const express = require("express");
+export { };
+import express from "express";
 const accountRouter = express.Router();
 const controller = require("./controller");
 

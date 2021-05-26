@@ -7,6 +7,9 @@ import {
   Space,
   Avatar,
   Layout,
+  Modal,
+  Form,
+  Input,
   Spin,
 } from "antd";
 import { HighlightOutlined } from "@ant-design/icons";
@@ -29,13 +32,9 @@ const { Paragraph } = Typography;
 const { Title } = Typography;
 
 function UserProfile() {
-  const [streetName, setStreetName] = useState("");
-  const [fullName, setFullName] = useState<string>();
-  const [zipCode, setZipCode] = useState("");
-  const [cityName, setCityName] = useState("");
-  const [currentOrders, setCurrentOrders] = useState<Number>();
   const { session, currentUser } = useContext(ApiContext);
   const [user, setUser] = useState<any>();
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     getUser(session.id);
@@ -45,7 +44,7 @@ function UserProfile() {
     const response = await fetch(`api/accounts/${id}`, {
       method: "GET",
       headers: {
-        "Content-type": "application-json",
+        "Content-type": "application/json",
       },
     });
     const incomingUser = await response.json();
@@ -53,30 +52,49 @@ function UserProfile() {
     console.log(user);
   };
 
-  const updateUser = async (
-    userId: string,
-    keyId: string,
-    body: string | number
-  ) => {
-    const incomingBody = {
-      [keyId]: body,
-    };
 
-    console.log(incomingBody);
-
-    const response = await fetch(`api/accounts/${userId}`, {
+  const updateUser = async (id: string, data: any) => {
+    console.log(data, "Incoming data from form");
+   
+    const response = await fetch(`api/accounts/${id}`, {
       method: "PUT",
+      body: JSON.stringify(data),
       headers: {
-        "Content-type": "application-json",
+        "Content-type": "application/json",
       },
-      body: JSON.stringify(incomingBody),
     });
+    const result = await response.json();
+    console.log(result, "Result from server after fetch has been made");
+    return result;
   };
 
-  const getName = (data: string) => {
-    setFullName(data);
-    console.log(fullName);
+
+  const showModal = () => {
+    setIsModalVisible(true);
   };
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  
+  /* eslint-disable no-template-curly-in-string */
+  const validateMessages = {
+    required: "${label} is required!",
+    types: {
+      email: "${label} is not a valid email!",
+      number: "${label} is not a valid number!",
+    },
+    number: {
+      range: "${label} must be between ${min} and ${max}",
+    },
+  };
+  /* eslint-enable no-template-curly-in-string */
+
+  const onFinish = (values: any) => {
+    updateUser(session.id, values);
+
 
   if (!user) return <LoadingPage />;
 
@@ -97,9 +115,76 @@ function UserProfile() {
         )}
       </div>
       <div style={infoContainer}>
+
+        <div style={customerContainer}>
+          <div style={customerInfo}>
+            <div>
+              <Title level={3}>My information</Title>
+            </div>
+            <div>
+              <Paragraph>Full name: {user.fullName}</Paragraph>
+              <Paragraph>Phone Number: {user.phoneNumber}</Paragraph>
+              <Paragraph>Email: {user.email}</Paragraph>
+              <Paragraph>Street: {user.address.street}</Paragraph>
+              <Paragraph>Zip Code: {user.address.zipCode}</Paragraph>
+              <Paragraph>City: {user.address.city}</Paragraph>
+              <Paragraph>Country: {user.address.country}</Paragraph>
+            </div>
+            <Button type="primary" onClick={showModal}>
+              Edit Information
+            </Button>
+            <Modal
+              title="Edit your profile"
+              visible={isModalVisible}
+              onOk={handleOk}
+              onCancel={handleCancel}
+            >
+              <div style={modalStyle}>
+                <Form
+                  {...layout}
+                  name="userEditor"
+                  onFinish={onFinish}
+                  validateMessages={validateMessages}
+                >
+                  <Form.Item name={"fullName"} label="Name">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name={"phoneNumber"} label="Phone Number">
+                    <Input />
+                  </Form.Item>
+
+                  <Form.Item
+                    name={"email"}
+                    rules={[{ type: "email" }]}
+                    label="Email"
+                  >
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name={["address", "street"]} label="Street">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name={["address", "zipCode"]} label="Zip Code">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name={["address", "city"]} label="City">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item name={["address", "country"]} label="Country">
+                    <Input />
+                  </Form.Item>
+                  <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                    <Button type="primary" htmlType="submit">
+                      Submit
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </div>
+            </Modal>
+
         {user.role === "admin" ? (
           <div style={adminComponentContainer}>
             <GetAdminList />
+
           </div>
         ) : (
           <div style={customerContainer}>
@@ -194,6 +279,16 @@ function UserProfile() {
     </div>
   );
 }
+
+// form in modal offset styling
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+
+const modalStyle: CSSProperties = {
+  height: "26rem",
+};
 
 const profileContainer: CSSProperties = {
   height: "100vh",
