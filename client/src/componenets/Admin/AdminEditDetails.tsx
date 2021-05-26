@@ -1,10 +1,14 @@
 import { Button, message, Select, Tag } from "antd";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
-import { Link, Redirect, RouteComponentProps, withRouter } from "react-router-dom";
-import {ApiContext, ProductInfo } from "../../contexts/ApiContext";
+import {
+  Link,
+  Redirect,
+  RouteComponentProps,
+  withRouter,
+} from "react-router-dom";
+import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import ErrorPage from "../ErrorPage";
 import { Product } from "../ProductItemsList";
-
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
@@ -15,43 +19,43 @@ interface State {
   buttonDeleteLoading: boolean;
 }
 
-
-
 const successSave = () => {
-  message.success('The product has been updated', 3);
+  message.success("The product has been updated", 3);
 };
 
 const successDelete = () => {
-  message.success('The product has been deleted', 3);
+  message.success("The product has been deleted", 3);
 };
 
-function AdminEditDetails(props: Props, state: State){
+function AdminEditDetails(props: Props, state: State) {
   const { allProducts, loadProducts, mapCategories } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [buttonDeleteLoading, setButtonDeleteLoading] = useState(false);
   const [editProduct, setEditProduct] = useState<any>({});
   const [titleField, setTitleField] = useState(editProduct.title);
-  const [descriptionField, setDescriptionField] = useState(editProduct.description);
-  const [categoryField, setCategoryField] = useState<any[]>([])
+  const [descriptionField, setDescriptionField] = useState(
+    editProduct.description
+  );
+  const [categoryField, setCategoryField] = useState<any[]>([]);
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
 
   // tries as defaultValue on Select/option to show current category
-  const [productCategory, setProductCategory] = useState<any>()
+  const [productCategory, setProductCategory] = useState<any>();
 
   const options = [
     { value: "All" },
     { value: "Jumpsuits" },
     { value: "Jeans" },
     { value: "Dresses" },
-    { value: 'Coats' },
-    { value: 'Trousers' },
-    { value: 'Sweaters' },
-    { value: 'Skirts' },
-    { value: 'T-shirts' }
+    { value: "Coats" },
+    { value: "Trousers" },
+    { value: "Sweaters" },
+    { value: "Skirts" },
+    { value: "T-shirts" },
   ];
-  const filteredOptions = options.filter(o => !categoryField.includes(o))
+  const filteredOptions = options.filter((o) => !categoryField.includes(o));
 
   const handleChange = (categoryField: any) => {
     setCategoryField(categoryField);
@@ -74,8 +78,7 @@ function AdminEditDetails(props: Props, state: State){
         {label}
       </Tag>
     );
-  }
-
+  };
 
   const saveProduct = async (values: any) => {
     setButtonSaveLoading(true);
@@ -86,7 +89,7 @@ function AdminEditDetails(props: Props, state: State){
       quantity: quantityField,
       price: priceField,
       img: imageField,
-      category: categoryField
+      category: categoryField,
     };
 
     const response = await fetch("/api/products/" + props.match.params.id, {
@@ -109,8 +112,6 @@ function AdminEditDetails(props: Props, state: State){
     // api context get all products
     loadProducts();
 
-    
-
     return result;
   };
 
@@ -122,13 +123,13 @@ function AdminEditDetails(props: Props, state: State){
       const product = await allProducts.find(
         (p: ProductInfo) => p._id === props.match.params.id
       );
-      console.log(product?.category, "PRODUCT")
-      
+      console.log(product?.category, "PRODUCT");
+
       // product?.category.map((c: any) => setProductCategory(c))
       setEditProduct(product);
-      setProductCategory([product?.category])
+      setProductCategory([product?.category]);
     };
-    
+
     loadProducts();
     mapCategories();
   }, []);
@@ -149,10 +150,9 @@ function AdminEditDetails(props: Props, state: State){
     setButtonDeleteLoading(false);
     return result;
   };
-  
 
-  if(buttonDeleteLoading || buttonSaveLoading) {
-    return <Redirect to="/admin-list" />
+  if (buttonDeleteLoading || buttonSaveLoading) {
+    return <Redirect to="/profile" />;
   }
 
   if (allProducts === undefined || editProduct === undefined) {
@@ -194,11 +194,16 @@ function AdminEditDetails(props: Props, state: State){
           defaultValue={editProduct.quantity}
         />
 
-        <label>Category: {productCategory?.map((p: any) => (<span> {p + " " + categoryField} </span>))}</label>
+        <label>
+          Category:{" "}
+          {productCategory?.map((p: any) => (
+            <span> {p + " " + categoryField} </span>
+          ))}
+        </label>
         <Select
-          onChange={handleChange} 
-          defaultValue={[ `${productCategory}` ]}
-          mode="multiple" 
+          onChange={handleChange}
+          defaultValue={[`${productCategory}`]}
+          mode="multiple"
           showArrow
           value={categoryField}
           tagRender={(props: any) => tagRender(props)}
@@ -231,7 +236,7 @@ function AdminEditDetails(props: Props, state: State){
         >
           Delete
         </Button>
-        <Link to="/admin-list">Back</Link>
+        <Link to="/profile">Back</Link>
       </form>
     </div>
   );
@@ -243,9 +248,9 @@ const rootStyle: CSSProperties = {
   height: "100%",
   marginTop: "10rem",
   justifyContent: "center",
-  alignItems: "center"
+  alignItems: "center",
 };
-  
+
 const layoutStyle: CSSProperties = {
   display: "flex",
   flexDirection: "column",

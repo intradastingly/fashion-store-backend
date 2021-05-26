@@ -14,7 +14,7 @@ interface Credentials {
   password: string;
 }
 function UserLogIn() {
-  const { loginHandler, loggedIn, registerHandler, userCreated } =
+  const { loginHandler, loggedIn, registerHandler, userCreated, getUser } =
     useContext(ApiContext);
 
   const [password, setPassword] = useState<string>("");

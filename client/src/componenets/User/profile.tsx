@@ -7,6 +7,7 @@ import {
   Space,
   Avatar,
   Layout,
+  Spin,
 } from "antd";
 import { HighlightOutlined } from "@ant-design/icons";
 import React, {
@@ -21,7 +22,8 @@ import React, {
 import { Link } from "react-router-dom";
 import AvatarPic from "../../assets/Avatar2.png";
 import { ApiContext } from "../../contexts/ApiContext";
-import ErrorPage from "../ErrorPage";
+import LoadingPage from "../LoadingPage";
+import GetAdminList from "../Admin/AdminList";
 
 const { Paragraph } = Typography;
 const { Title } = Typography;
@@ -48,6 +50,7 @@ function UserProfile() {
     });
     const incomingUser = await response.json();
     setUser(incomingUser);
+    console.log(user);
   };
 
   const updateUser = async (
@@ -58,7 +61,7 @@ function UserProfile() {
     const incomingBody = {
       [keyId]: body,
     };
-    
+
     console.log(incomingBody);
 
     const response = await fetch(`api/accounts/${userId}`, {
@@ -70,13 +73,12 @@ function UserProfile() {
     });
   };
 
-  const getName = (data:string)=> {
-    setFullName(data)
+  const getName = (data: string) => {
+    setFullName(data);
     console.log(fullName);
-    
-  }
+  };
 
-  if (!user) return <ErrorPage />;
+  if (!user) return <LoadingPage />;
 
   return (
     <div style={profileContainer}>
@@ -84,98 +86,110 @@ function UserProfile() {
         <div>
           <Avatar src={AvatarPic} size={100} />
         </div>
-        <div>
-          <Title>{user.userName}</Title>
-        </div>
+        {user.role === "admin" ? (
+          <div>
+            <Title>{user.role}</Title>
+          </div>
+        ) : (
+          <div>
+            <Title>{user.name}</Title>
+          </div>
+        )}
       </div>
       <div style={infoContainer}>
-        <div style={customerContainer}>
-          <div style={customerInfo}>
-            <div>
-              <Title level={3}>My information</Title>
+        {user.role === "admin" ? (
+          <div style={adminComponentContainer}>
+            <GetAdminList />
+          </div>
+        ) : (
+          <div style={customerContainer}>
+            <div style={customerInfo}>
+              <div>
+                <Title level={3}>My information</Title>
+              </div>
+              <div>
+                <Paragraph
+                  editable={{
+                    icon: <HighlightOutlined />,
+                    tooltip: "click to edit text",
+                    onChange: getName,
+                    onEnd: () => {
+                      updateUser(session.id, "fullName", fullName!);
+                    },
+                  }}
+                >
+                  Full name: {user.fullName}
+                </Paragraph>
+                <Paragraph
+                  editable={{
+                    icon: <HighlightOutlined />,
+                    tooltip: "click to edit text",
+                  }}
+                >
+                  Phone Number: {user.phoneNumber}
+                </Paragraph>
+                <Paragraph
+                  editable={{
+                    icon: <HighlightOutlined />,
+                    tooltip: "click to edit text",
+                  }}
+                >
+                  Email: {user.email}
+                </Paragraph>
+                <Paragraph
+                  editable={{
+                    icon: <HighlightOutlined />,
+                    tooltip: "click to edit text",
+                    onChange: setStreetName,
+                  }}
+                >
+                  Street: {user.address.street}
+                </Paragraph>
+                <Paragraph
+                  editable={{
+                    icon: <HighlightOutlined />,
+                    tooltip: "click to edit text",
+                    onChange: setZipCode,
+                  }}
+                >
+                  Zip Code: {user.address.zipCode}
+                </Paragraph>
+                <Paragraph
+                  editable={{
+                    icon: <HighlightOutlined />,
+                    tooltip: "click to edit text",
+                    onChange: setCityName,
+                  }}
+                >
+                  City: {user.address.city}
+                </Paragraph>
+                <Paragraph
+                  editable={{
+                    icon: <HighlightOutlined />,
+                    tooltip: "click to edit text",
+                    onChange: setCityName,
+                  }}
+                >
+                  Country: {user.address.country}
+                </Paragraph>
+              </div>
             </div>
-            <div>
-              <Paragraph
-                editable={{
-                  icon: <HighlightOutlined />,
-                  tooltip: "click to edit text",
-                  onChange: getName,
-                  onEnd: () => {
-                    updateUser(session.id, "fullName", fullName!);
-                  },
-                }}
-              >
-                Full name: {user.fullName}
-              </Paragraph>
-              <Paragraph
-                editable={{
-                  icon: <HighlightOutlined />,
-                  tooltip: "click to edit text",
-                }}
-              >
-                Phone Number: {user.phoneNumber}
-              </Paragraph>
-              <Paragraph
-                editable={{
-                  icon: <HighlightOutlined />,
-                  tooltip: "click to edit text",
-                }}
-              >
-                Email: {user.email}
-              </Paragraph>
-              <Paragraph
-                editable={{
-                  icon: <HighlightOutlined />,
-                  tooltip: "click to edit text",
-                  onChange: setStreetName,
-                }}
-              >
-                Street: {user.address.street}
-              </Paragraph>
-              <Paragraph
-                editable={{
-                  icon: <HighlightOutlined />,
-                  tooltip: "click to edit text",
-                  onChange: setZipCode,
-                }}
-              >
-                Zip Code: {user.address.zipCode}
-              </Paragraph>
-              <Paragraph
-                editable={{
-                  icon: <HighlightOutlined />,
-                  tooltip: "click to edit text",
-                  onChange: setCityName,
-                }}
-              >
-                City: {user.address.city}
-              </Paragraph>
-              <Paragraph
-                editable={{
-                  icon: <HighlightOutlined />,
-                  tooltip: "click to edit text",
-                  onChange: setCityName,
-                }}
-              >
-                Country: {user.address.country}
-              </Paragraph>
+            <div style={customerInfo}>
+              {/* Here we can map out orders that match the session.username with links to that order */}
+              <div style={orderContainer}>
+                <div>
+                  <Title level={3}>My Orders</Title>
+                </div>
+                <div>
+                  <h4>You have no orders at this moment.</h4>
+                </div>
+                <div>
+                  <Button>Details</Button>
+                </div>
+              </div>
             </div>
           </div>
-          <div style={customerInfo}>
-            {/* Here we can map out orders that match the session.username with links to that order */}
-            <div style={orderContainer}>
-              <div>
-                <Title level={3}>My Orders</Title>
-              </div>
-              <div>
-                <h4>You have no orders at this moment.</h4>
-              </div>
-              <div>
-                <Button>Details</Button>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
@@ -209,12 +223,18 @@ const infoContainer: CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  overflow: "auto",
 };
 
 const customerInfo: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
+};
+
+const adminComponentContainer: CSSProperties = {
+  height: "100%",
+  overflow: "auto",
 };
 
 const customerContainer: CSSProperties = {
