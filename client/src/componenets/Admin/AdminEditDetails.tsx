@@ -1,4 +1,4 @@
-import { Button, message, Select, Tag } from "antd";
+import { Button, message, Select, Tag, Popconfirm } from "antd";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import {
   Link,
@@ -148,6 +148,7 @@ function AdminEditDetails(props: Props, state: State) {
     // api context get all products
     loadProducts();
     setButtonDeleteLoading(false);
+    successDelete();
     return result;
   };
 
@@ -225,17 +226,16 @@ function AdminEditDetails(props: Props, state: State) {
           Save
         </Button>
 
-        <Button
-          type="primary"
-          danger
-          onClick={() => {
-            handleDelete();
-            successDelete();
-          }}
-          loading={buttonDeleteLoading}
+        <Popconfirm
+          title="Are you sure？"
+          okText="Yes"
+          onConfirm={handleDelete}
+          cancelText="No"
         >
-          Delete
-        </Button>
+          <Button type="primary" danger loading={buttonDeleteLoading}>
+            Delete
+          </Button>
+        </Popconfirm>
         <Link to="/profile">Back</Link>
       </form>
     </div>

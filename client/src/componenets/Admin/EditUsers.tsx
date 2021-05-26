@@ -1,4 +1,4 @@
-import { Button, message } from "antd";
+import { Button, message, Popconfirm } from "antd";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { Link, Redirect, RouteComponentProps } from "react-router-dom";
 import { ApiContext, userInfo } from "../../contexts/ApiContext";
@@ -63,6 +63,8 @@ function EditUsers(props: Props) {
     setButtonDeleteLoading(false);
 
     loadAllUsers();
+    successDelete();
+
     return result;
   };
 
@@ -189,19 +191,22 @@ function EditUsers(props: Props) {
         >
           Save
         </Button>
-
-        <Button
-          type="primary"
-          danger
-          onClick={() => {
-            handleDelete();
-            successDelete();
-          }}
-          loading={buttonDeleteLoading}
+        <Popconfirm
+          title="Are you sure？"
+          okText="Yes"
+          onConfirm={handleDelete}
+          cancelText="No"
         >
-          Delete
-        </Button>
-        <Link to="/profile">Back</Link>
+          <Button
+            type="primary"
+            danger
+            onClick={() => {}}
+            loading={buttonDeleteLoading}
+          >
+            Delete
+          </Button>
+        </Popconfirm>
+        <Link to="/admin-users">Back</Link>
       </form>
     </div>
   );
