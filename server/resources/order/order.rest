@@ -19,9 +19,15 @@ GET http://localhost:6969/api/order/
 ###
 
 
+// GET specific orders
+GET http://localhost:6969/api/order/60ae16dc6e9f9140e4c42255
+
+###
+
+
 
 // DELETE product
-DELETE  http://localhost:6969/api/products/60a3b917a8a280045c36428a
+DELETE  http://localhost:6969/api/products/60ae16dc6e9f9140e4c42255
 
 ###
 
