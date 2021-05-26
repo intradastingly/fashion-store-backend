@@ -28,21 +28,24 @@ function Navbar() {
         </Col>
         <Col span={10} offset={6}>
           <Menu mode="horizontal" style={menuStyle}>
-            {!loggedIn ? (
-              <Button href="/login" type="link">
-                Log in
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  logOutHandler();
-                  reloadPage();
-                }}
-                type="link"
-              >
-                Log out
-              </Button>
-            )}
+            <Menu.Item key="0">
+              {!loggedIn ? (
+                <Button href="/login" type="link">
+                  Log in
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    logOutHandler();
+                    reloadPage();
+                  }}
+                  type="link"
+                >
+                  Log out
+                </Button>
+              )}
+            </Menu.Item>
+
             <Menu.Item key="1">
               <Link to="/cart" style={{ color: "white" }}>
                 <ShoppingCartOutlined style={iconStyle} />{" "}
