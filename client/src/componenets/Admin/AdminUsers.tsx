@@ -44,7 +44,20 @@ function AdminUsers() {
               <Link to={"/edit-user/" + user._id}>
                 <List.Item.Meta
                   title={
-                    <Link to={"/edit-user/" + user._id}>{user.fullName}</Link>
+                    <>
+                      <div style={userContainer}>
+                        <div style={prefixContainer}>
+                          Username:&nbsp;
+                          <Link to={"/edit-user/" + user._id}>
+                            {user.userName}
+                          </Link>
+                        </div>
+                        <div style={prefixContainer}>
+                          Name:&nbsp;
+                          <span>{user.fullName}</span>
+                        </div>
+                      </div>
+                    </>
                   }
                   description={[user.role.split(".")[0]]}
                 />
@@ -68,6 +81,15 @@ const containerStyle: CSSProperties = {
 const columnStyle: CSSProperties = {
   marginTop: "8rem",
   width: "80%",
+};
+
+const userContainer: CSSProperties = {
+  display: "flex",
+  flexDirection: "column",
+};
+
+const prefixContainer: CSSProperties = {
+  display: "flex",
 };
 
 const editStyle: CSSProperties = {
