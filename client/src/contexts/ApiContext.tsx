@@ -276,18 +276,23 @@ function ApiProvider(props: Props) {
 
   // handler for logging out a user
   async function logOutHandler() {
-    const response = await fetch("api/logout", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
+    // const response = await fetch("api/logout", {
+    //   method: "DELETE",
+    //   headers: { "Content-Type": "application/json" },
+    // });
+
+
+    // const result = await response.json();
+
+    const result = await fetchRequest("api/logout", "DELETE")
+
     if (result === "logout succ") {
       setuserIsLoggedIn(false);
       setSession(null);
     } else if (result === "already logged out") {
       setuserIsLoggedIn(false);
     }
-    return response;
+    return result;
   }
 
   // register logic, with full fetch call
