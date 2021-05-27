@@ -1,14 +1,27 @@
-import { Form, Input, Button, Checkbox, Row, Col, Modal, Space } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Checkbox,
+  Row,
+  Col,
+  Modal,
+  Space,
+  Typography,
+  message,
+} from "antd";
 import {
   CSSProperties,
   Component,
   ContextType,
   useState,
   useContext,
+  useEffect,
 } from "react";
 import { Link, Route } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
 import LoadingPage from "../LoadingPage";
+import RegisterForm from "./Register";
 
 interface Credentials {
   userName: string;
@@ -40,33 +53,23 @@ function UserLogIn() {
   const [country, setCountry] = useState<string>("");
 
   const loginCredentials = { userName: username, password: password };
+  const { Title } = Typography;
+
+  const success = () => {
+    message.success("User created ✔");
+  };
+
+  useEffect(() => {
+    onRegister();
+  }, [userCreated]);
 
   const onFinish = (e: any) => {
     e.preventDefault();
     renderLoading();
     loginHandler(loginCredentials);
     console.log(loggedIn, "logged in bool");
+
     reloadPage();
-  };
-
-  const onRegister = async () => {
-    const userInfo = {
-      userName: newUsername,
-      fullName: fullName,
-      phoneNumber: phoneNumber,
-      password: newPassword,
-      email: email,
-      address: {
-        street: street,
-        zipCode: zipCode,
-        city: city,
-        country: country,
-      },
-    };
-
-    registerHandler(userInfo);
-    setIsModalVisible(false);
-    // reloadPage();
   };
 
   const reloadPage = () => {
@@ -74,6 +77,14 @@ function UserLogIn() {
     function reload() {
       window.location.reload();
     }
+  };
+
+  const onRegister = () => {
+    if (userCreated === true) {
+      setIsModalVisible(false);
+      success();
+    }
+    console.log(userCreated);
   };
 
   function openModal(e: any) {
@@ -132,133 +143,35 @@ function UserLogIn() {
               </div>
             </form>
             <div>
+              {/* {userCreated ? (
+                <message/>
+                <div style={successTitle}>
+                  <div>
+                    <Title level={4}>User created! ✔</Title>
+                    <Title level={5}>
+                      You can now log in and spend your hard earned cash.
+                    </Title>
+                  </div>
+                </div>
+              ): null} */}
               <Modal
                 visible={isModalVisible}
+                footer={[
+                  <Button key="back" onClick={closeModal}>
+                    Cancel
+                  </Button>,
+                ]}
                 onCancel={closeModal}
-                onOk={onRegister}
               >
                 <div style={modalContainer}>
-                  {userCreated ? (
-                    <div style={successTitle}>
-                      <h3>
-                        User created, you can now log in to your new account 😎
-                      </h3>
+                  <>
+                    <div style={modalTitle}>
+                      <h2>Register a new user</h2>
                     </div>
-                  ) : (
-                    <>
-                      <div style={modalTitle}>
-                        <h2>Register a new user</h2>
-                      </div>
-                      <div style={fullContainer}>
-                        <form name="basic" style={form}>
-                          <div style={modalFormContainer}>
-                            <div>
-                              <input
-                                autoComplete="off"
-                                style={inputField}
-                                name="username"
-                                placeholder="Username"
-                                onChange={(e: any) =>
-                                  setNewUsername(e.target.value)
-                                }
-                                type="text"
-                              />
-                            </div>
-                            <div>
-                              <input
-                                autoComplete="new-password"
-                                style={inputField}
-                                name="username"
-                                placeholder="Password"
-                                onChange={(e: any) =>
-                                  setNewPassword(e.target.value)
-                                }
-                                type="password"
-                              />
-                            </div>
-                            <div>
-                              <input
-                                autoComplete="new-password"
-                                style={inputField}
-                                name="FullName"
-                                placeholder="Full Name"
-                                onChange={(e: any) =>
-                                  setFullName(e.target.value)
-                                }
-                                type="text"
-                              />
-                            </div>
-                            <div>
-                              <input
-                                autoComplete="new-password"
-                                style={inputField}
-                                name="Phone"
-                                placeholder="Phone number"
-                                onChange={(e: any) =>
-                                  setPhoneNumber(e.target.value)
-                                }
-                                type="text"
-                              />
-                            </div>
-                            <div>
-                              <input
-                                autoComplete="off"
-                                style={inputField}
-                                name="Email"
-                                placeholder="Email"
-                                onChange={(e: any) => setEmail(e.target.value)}
-                              />
-                            </div>
-                            <Space direction="vertical">
-                              <div>
-                                <h3>Where do you want the goods? 😊</h3>
-                              </div>
-                            </Space>
-                            <div>
-                              <input
-                                autoComplete="off"
-                                style={inputField}
-                                name="Street"
-                                placeholder="Street"
-                                onChange={(e: any) => setStreet(e.target.value)}
-                              />
-                            </div>
-                            <div>
-                              <input
-                                autoComplete="off"
-                                style={inputField}
-                                name="ZipCode"
-                                placeholder="Zip Code"
-                                onChange={(e: any) =>
-                                  setZipCode(e.target.value)
-                                }
-                              />
-                            </div>
-                            <div>
-                              <input
-                                autoComplete="off"
-                                style={inputField}
-                                name="City"
-                                placeholder="City"
-                                onChange={(e: any) => setCity(e.target.value)}
-                              />
-                            </div>
-                            <div>
-                              <input
-                                autoComplete="off"
-                                style={inputField}
-                                name="Country"
-                                placeholder="Country"
-                                onChange={(e: any) =>
-                                  setCountry(e.target.value)
-                                }
-                              />
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </>
-                  )}
+                    <div style={fullContainer}>
+                      <RegisterForm />
+                    </div>
+                  </>
                 </div>
               </Modal>
             </div>
@@ -286,6 +199,7 @@ const modalContainer: CSSProperties = {
   height: "50vh",
   display: "flex",
   flexDirection: "column",
+  overflow: "auto",
 };
 
 const buttonContainer: CSSProperties = {

@@ -281,10 +281,9 @@ function ApiProvider(props: Props) {
     //   headers: { "Content-Type": "application/json" },
     // });
 
-
     // const result = await response.json();
 
-    const result = await fetchRequest("api/logout", "DELETE")
+    const result = await fetchRequest("api/logout", "DELETE");
 
     if (result === "logout succ") {
       setuserIsLoggedIn(false);
@@ -305,11 +304,12 @@ function ApiProvider(props: Props) {
 
     // const result = await response.json();
 
-    const result = await fetchRequest("api/accounts", "POST", registerData)
+    const result = await fetchRequest("api/accounts", "POST", registerData);
 
-    if (result.status === 201) {
+    if (result) {
       setUserCreated(true);
     }
+    console.log(result);
     return result;
   }
 
@@ -328,8 +328,8 @@ function ApiProvider(props: Props) {
     //   },
     // });
     // const result = await response.json();
-    
-    const result = await fetchRequest(`api/order/${id}`, "GET")
+
+    const result = await fetchRequest(`api/order/${id}`, "GET");
     setOrders(result);
   };
 
@@ -340,8 +340,8 @@ function ApiProvider(props: Props) {
       body: JSON.stringify(order),
       headers: { "Content-Type": "application/json" },
     });
-    const result = await response.json()
-    setOrder(result)
+    const result = await response.json();
+    setOrder(result);
   }
 
   // get one user logic [CURRENTLY UNUSED!!]
