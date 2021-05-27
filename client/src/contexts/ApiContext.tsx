@@ -206,15 +206,15 @@ function ApiProvider(props: Props) {
   }, []);
 
   const loadAllUsers = async () => {
-    const response = await fetch("/api/accounts", {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
+    // const response = await fetch("/api/accounts", {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    // });
 
-  
-    const users = await response.json();
+    const result = await fetchRequest("/api/accounts", "GET")
+    const users = await result;
     setAllUsers(users);
   };
 
