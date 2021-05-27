@@ -38,7 +38,7 @@ function UserProfile() {
     useContext(ApiContext);
   const [user, setUser] = useState<any>();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  console.log(orders)
   //useeffect for getting the correct account information
   useEffect(() => {
     getUser(session.id);
@@ -252,7 +252,7 @@ function UserProfile() {
                           </Panel>
                         </Collapse>
                         <h5>Total price: {order.totalPrice}</h5>
-                        <h5>Shipped: {order.ishandled ? "Yes" : "No"}</h5>
+                        <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
                       </Panel>
                     ))}
                   </Collapse>
