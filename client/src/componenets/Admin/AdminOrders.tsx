@@ -12,8 +12,6 @@ interface Props extends RouteComponentProps<{ id: string }> {}
 
 function AdminOrders(props: Props) {
 
-    // const { loadAllOrders} = useContext(ApiContext);
-
     const [allOrders, setAllOrders] = useState<any>();
     useEffect(() => {
 
@@ -29,6 +27,24 @@ function AdminOrders(props: Props) {
         }
         loadAllOrders()
     }, []);
+
+    const changeIsShippedSwitch = async (checked: any, id:any) => {
+
+      let body = {
+        isHandled: checked,
+      };
+      
+      const response = await fetch("/api/orders/" + id, {
+        method: "PUT",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-type": "application/json",
+        },
+      });
+      const orders = await response.json();
+      
+      return orders;
+    };
 
 
     if(!allOrders) return <LoadingPage />
@@ -70,7 +86,6 @@ function AdminOrders(props: Props) {
             dataSource={allOrders}
             renderItem={(order: Order) => (
               <List.Item>
-                <Link to={"/edit-order/" + order._id}>
                   <List.Item.Meta
                     title={
                       <div>
@@ -82,12 +97,17 @@ function AdminOrders(props: Props) {
                         <span style={{ marginRight: "1rem" }}>
                           Order id: {order._id}
                         </span>
-                        <span>Shipped: {JSON.stringify(order.isHandled)}</span>
+                        <span style={{ marginRight: "1rem" }}>Shipped: {JSON.stringify(order.isHandled)}</span>
+                        
+                        { !order.isHandled && (
+                          <>
+                            <Switch onChange={(checked) => changeIsShippedSwitch(checked, order._id)} />
+                          </>
+                        )}
                       </div>
                     }
                   />
-                  <p style={editStyle}>edit</p>
-                </Link>
+                  <p style={editStyle}></p>
               </List.Item>
             )}
           />
@@ -114,6 +134,7 @@ const editStyle: CSSProperties = {
   justifyContent: "flex-end",
   borderBottom: "1px solid lightgrey",
   alignItems: "center",
+  marginTop: "1rem"
 };
 
 export default AdminOrders

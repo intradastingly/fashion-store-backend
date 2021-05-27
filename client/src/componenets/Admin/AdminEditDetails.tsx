@@ -40,9 +40,6 @@ function AdminEditDetails(props: Props, state: State) {
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
-  const [productCategory, setProductCategory] = useState<any>();
-
-  const[specificCategory, setSpecificCategory] = useState("")
 
   const options = [
     { value: "All" },
@@ -124,27 +121,12 @@ function AdminEditDetails(props: Props, state: State) {
       );
 
       setEditProduct(product);
-      setProductCategory(product?.category);
-      console.log(product?.category)
-
-      product?.category.map((p: any) => (
-        // console.log(p)
-        setSpecificCategory(p)
-      ))
     };
 
     loadProducts();
     mapCategories();
-    // getProductCategory();
   }, []);
 
-  // const getProductCategory = () => {
-  //   // productCategory.map((p: any) => (
-  //   //   setSpecificCategory(p)
-  //   ))
-
-  //   console.log(specificCategory)
-  // }
 
   const handleDelete = async () => {
     setButtonDeleteLoading(true);
@@ -171,7 +153,6 @@ function AdminEditDetails(props: Props, state: State) {
     return <ErrorPage />;
   }
 
-  // console.log(productCategory)
 
   return (
     <div style={rootStyle}>
@@ -208,21 +189,12 @@ function AdminEditDetails(props: Props, state: State) {
           onChange={(e: any) => setQuantityField(e.target.value)}
           defaultValue={editProduct.quantity}
         />
-        <label>
-          Category:{" "}
-          {productCategory?.map((p: any) => (
-
-            console.log(categoryField, p)
-            // <span> {p + " " + categoryField} </span>
-            ))}
-        </label>
-
-
+        <label> Category: </label>
           <Select
           onChange={handleChange}
           mode="multiple"
           showArrow
-          defaultValue={[`${specificCategory}`]}
+          defaultValue={["All"]}
           tagRender={(props: any) => tagRender(props)}
           style={{ width: "100%" }}
           options={options}
