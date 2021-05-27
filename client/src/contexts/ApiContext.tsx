@@ -166,13 +166,14 @@ function ApiProvider(props: Props) {
 
   useEffect(() => {
     const loadShippingMethods = async () => {
-      const response = await fetch("/api/shipping", {
-        method: "GET",
-        headers: {
-          "Content-type": "application-json",
-        },
-      });
-      const shipping = await response.json();
+      // const response = await fetch("/api/shipping", {
+      //   method: "GET",
+      //   headers: {
+      //     "Content-type": "application-json",
+      //   },
+      // });
+      const result = fetchRequest("/api/shipping", "GET")
+      const shipping = await result;
       setShippingMethods(shipping);
     };
     loadProducts();
