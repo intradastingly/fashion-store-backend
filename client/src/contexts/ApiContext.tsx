@@ -62,7 +62,7 @@ export interface ProductInfo {
   _id: String;
 }
 
-export interface userInfo {
+export interface AccountInfo {
   address: {
     city: String;
     country: String;
@@ -103,8 +103,8 @@ interface State {
   categories: Category[];
   order: any;
   userCreated: boolean;
-  users: userInfo[];
-  activeUser: any;
+  users: AccountInfo[];
+  activeUser: AccountInfo;
   orders: any;
 }
 
@@ -131,7 +131,7 @@ export const ApiContext = createContext<ContextValue>({
   categories: [],
   order: [],
   userCreated: false,
-  activeUser: {},
+  activeUser: {} as AccountInfo,
   orders: {},
   getOrder: () => {},
   loginHandler: () => {},
@@ -160,8 +160,8 @@ function ApiProvider(props: Props) {
   const [currentUser, setCurrentUser] = useState<Object>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [userCreated, setUserCreated] = useState<boolean>(false);
-  const [users, setAllUsers] = useState<userInfo[]>([]);
-  const [activeUser, setActiveUser] = useState();
+  const [users, setAllUsers] = useState<AccountInfo[]>([]);
+  const [activeUser, setActiveUser] = useState<AccountInfo>();
   const [orders, setOrders] = useState();
 
   useEffect(() => {
@@ -291,25 +291,14 @@ function ApiProvider(props: Props) {
 
   // create order logic
   async function createNewOrder(order: any) {
-    const response = await fetch("api/order", {
-      method: "POST",
-      body: JSON.stringify(order),
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
+    const result = await fetchRequest("api/order", "POST", order);
     setOrder(result);
   }
 
   // get one user logic [CURRENTLY UNUSED!!]
   const getUser = async (id: string) => {
-    const response = await fetch(`api/accounts/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application-json",
-      },
-    });
-    const incomingUser = await response.json();
-
+    const result = await fetchRequest(`api/accounts/${id}`, "GET");
+    const incomingUser = await result;
     setActiveUser(incomingUser);
   };
 
@@ -347,7 +336,7 @@ function ApiProvider(props: Props) {
         categories: categories,
         currentUser: currentUser,
         users: users,
-        activeUser: activeUser,
+        activeUser: activeUser!,
         orders: orders,
         loadAllUsers: loadAllUsers,
         getUser: getUser,
