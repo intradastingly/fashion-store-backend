@@ -291,12 +291,7 @@ function ApiProvider(props: Props) {
 
   // create order logic
   async function createNewOrder(order: any) {
-    const response = await fetch("api/order", {
-      method: "POST",
-      body: JSON.stringify(order),
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
+    const result = await fetchRequest("api/order", "POST", order);
     setOrder(result);
   }
 
