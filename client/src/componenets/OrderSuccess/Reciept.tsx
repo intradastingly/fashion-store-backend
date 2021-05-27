@@ -18,7 +18,7 @@ function Receipt(){
     const {order} = useContext(ApiContext)
     console.log(order)
    
-    /* for(const p of order.cart){
+   /*  for(const p of order){
         console.log(p)
     } */
     return(

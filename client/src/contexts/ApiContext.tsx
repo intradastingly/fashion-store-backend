@@ -331,6 +331,8 @@ function ApiProvider(props: Props) {
       body: JSON.stringify(order),
       headers: { "Content-Type": "application/json" },
     });
+    const result = await response.json()
+    setOrder(result)
   }
 
   // get one user logic [CURRENTLY UNUSED!!]

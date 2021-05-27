@@ -195,7 +195,7 @@ class CartProvider extends Component<{}, State> {
 
         const {getOrder} = this.context;
         getOrder(this.state.receipt)
-        /* history.push('/ordersuccess'); */
+        history.push('/ordersuccess');
 
         this.clearCart();
         

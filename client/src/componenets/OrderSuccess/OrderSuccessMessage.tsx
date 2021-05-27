@@ -6,8 +6,8 @@ import { ApiContext } from "../../contexts/ApiContext";
 
 function OrderSuccessMessage() {
     const {order} = useContext(ApiContext)
-    console.log(order)
-    return (
+
+     return (
         <Row style={containerStyle}>
             <Col span={24} style={colStyle}>
                 <Result
