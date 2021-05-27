@@ -40,7 +40,6 @@ function AdminEditDetails(props: Props, state: State) {
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
-  const [productCategory, setProductCategory] = useState<any>();
 
   const options = [
     { value: "All" },
@@ -122,12 +121,12 @@ function AdminEditDetails(props: Props, state: State) {
       );
 
       setEditProduct(product);
-      setProductCategory([product?.category]);
     };
 
     loadProducts();
     mapCategories();
   }, []);
+
 
   const handleDelete = async () => {
     setButtonDeleteLoading(true);
@@ -153,6 +152,7 @@ function AdminEditDetails(props: Props, state: State) {
   if (allProducts === undefined || editProduct === undefined) {
     return <ErrorPage />;
   }
+
 
   return (
     <div style={rootStyle}>
@@ -185,31 +185,26 @@ function AdminEditDetails(props: Props, state: State) {
         <label>Quantity: </label>
         <input
           name="quantity"
+          required
           onChange={(e: any) => setQuantityField(e.target.value)}
           defaultValue={editProduct.quantity}
         />
-        <label>
-          Category:{" "}
-          {productCategory?.map((p: any) => (
-            <span> {p + " " + categoryField} </span>
-          ))}
-        </label>
-        <Select
+        <label> Category: </label>
+          <Select
           onChange={handleChange}
-          defaultValue={[`${productCategory}`]}
           mode="multiple"
           showArrow
-          value={categoryField}
+          defaultValue={["All"]}
           tagRender={(props: any) => tagRender(props)}
           style={{ width: "100%" }}
           options={options}
-        >
-          {filteredOptions.map((item: any) => (
-            <Select.Option key={item} value={item}>
-              {item}
-            </Select.Option>
-          ))}
-        </Select>
+          >
+            {filteredOptions.map((item: any) => (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            ))}
+          </Select>
         <Button
           type="primary"
           onClick={saveProduct}
@@ -234,6 +229,7 @@ function AdminEditDetails(props: Props, state: State) {
     </div>
   );
 }
+
 
 const rootStyle: CSSProperties = {
   display: "flex",
