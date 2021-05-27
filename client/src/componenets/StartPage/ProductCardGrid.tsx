@@ -1,10 +1,11 @@
 import React, { useContext, CSSProperties, useState, useEffect } from "react";
-import { Card, Col, List, Row, message } from "antd";
+import { Card, Col, List, Row, message, Menu, Dropdown, Button, Space  } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
 import { ApiContext } from "../../contexts/ApiContext";
 import CheckableTag from "antd/lib/tag/CheckableTag";
+import useWindowDimensions from "../../windowSize";
 
 const { Meta } = Card;
 const success = () => {
@@ -29,7 +30,23 @@ function ProductCardGrid() {
   const { allProducts } = useContext(ApiContext);
   const [selectedTags, setSelectedTags] = useState(["All"]);
   const [filteredCategories, setFilteredCategories] = useState<any>();
+  const { height, width } = useWindowDimensions();
 
+  const menu = (
+    <Menu>
+      {tagsData.map(item => (
+        <Menu.Item>
+          <a 
+            target="_blank" 
+            rel="noopener noreferrer"
+            onClick={handleClick}
+          >{item}</a>
+        </Menu.Item>
+        )
+      )}
+    </Menu>
+  )
+  
   function filterArray(array: any[], filters: any) {
     const filterKeys = Object.keys(filters);
     return array.filter((item) => {
@@ -86,10 +103,14 @@ function ProductCardGrid() {
     }
   }
 
+  function handleClick(event: any){
+    setSelectedTags([event.target.innerHTML])
+  }
+
   return (
     <Row style={cardContainer}>
       <Row style={categoriesContainer}>
-        {tagsData.map((tag) => (
+        { (width >= 900) ? tagsData.map((tag) => (
           <CheckableTag
             key={tag}
             style={tagStyle}
@@ -98,7 +119,17 @@ function ProductCardGrid() {
           >
             {tag}
           </CheckableTag>
-        ))}
+        )) : 
+        <Space direction="vertical">
+          <Space wrap>
+            <Dropdown 
+              overlay={menu}
+              placement='bottomRight'
+            >
+              <Button>Categories</Button>
+            </Dropdown>
+          </Space>
+        </Space>}
       </Row>
       <Col span={24} style={columnStyle}>
         {
@@ -173,3 +204,4 @@ const columnStyle: CSSProperties = {
   alignItems: "center",
   marginTop: "1rem",
 };
+

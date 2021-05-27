@@ -34,11 +34,6 @@ exports.getAllOrders = async (
   res.status(200).json(order);
 };
 
-/* exports.getCurrentOrder = async (req: express.Request, res: express.Response) => {
-  const order = await Order.findOne({ _id: req.params.id });
-  res.status(200).json(order);
-} */
-
 // get specific orders that corresponds with the logged in user
 exports.getUserSpecificOrders = async (
   req: express.Request,
