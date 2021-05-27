@@ -31,7 +31,7 @@ function ProductCardGrid() {
   const [selectedTags, setSelectedTags] = useState(["All"]);
   const [filteredCategories, setFilteredCategories] = useState<any>();
   const { height, width } = useWindowDimensions();
-
+  
   const menu = (
     <Menu>
       {tagsData.map(item => (
