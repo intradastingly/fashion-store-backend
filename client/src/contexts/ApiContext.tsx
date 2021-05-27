@@ -258,12 +258,15 @@ function ApiProvider(props: Props) {
 
   // handling function for logging in a user
   async function loginHandler(loginCredentials: Credentials) {
-    const response = await fetch("api/login", {
-      method: "POST",
-      body: JSON.stringify(loginCredentials),
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
+    // const response = await fetch("api/login", {
+    //   method: "POST",
+    //   body: JSON.stringify(loginCredentials),
+    //   headers: { "Content-Type": "application/json" },
+    // });
+    // const result = await response.json();
+
+    const result = await fetchRequest("api/login", "POST", loginCredentials)
+
     if (result === "Incorrect password or username") {
       setuserIsLoggedIn(false);
     } else if (result.message === "Login successful") {
@@ -271,7 +274,7 @@ function ApiProvider(props: Props) {
       setuserIsLoggedIn(true);
       getUser(session.id);
     }
-    return response;
+    return result;
   }
 
   // handler for logging out a user
