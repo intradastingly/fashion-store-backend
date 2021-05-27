@@ -42,6 +42,8 @@ function AdminEditDetails(props: Props, state: State) {
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
   const [productCategory, setProductCategory] = useState<any>();
 
+  const[specificCategory, setSpecificCategory] = useState("")
+
   const options = [
     { value: "All" },
     { value: "Jumpsuits" },
@@ -122,12 +124,27 @@ function AdminEditDetails(props: Props, state: State) {
       );
 
       setEditProduct(product);
-      setProductCategory([product?.category]);
+      setProductCategory(product?.category);
+      console.log(product?.category)
+
+      product?.category.map((p: any) => (
+        // console.log(p)
+        setSpecificCategory(p)
+      ))
     };
 
     loadProducts();
     mapCategories();
+    // getProductCategory();
   }, []);
+
+  // const getProductCategory = () => {
+  //   // productCategory.map((p: any) => (
+  //   //   setSpecificCategory(p)
+  //   ))
+
+  //   console.log(specificCategory)
+  // }
 
   const handleDelete = async () => {
     setButtonDeleteLoading(true);
@@ -153,6 +170,8 @@ function AdminEditDetails(props: Props, state: State) {
   if (allProducts === undefined || editProduct === undefined) {
     return <ErrorPage />;
   }
+
+  // console.log(productCategory)
 
   return (
     <div style={rootStyle}>
@@ -185,31 +204,35 @@ function AdminEditDetails(props: Props, state: State) {
         <label>Quantity: </label>
         <input
           name="quantity"
+          required
           onChange={(e: any) => setQuantityField(e.target.value)}
           defaultValue={editProduct.quantity}
         />
         <label>
           Category:{" "}
           {productCategory?.map((p: any) => (
-            <span> {p + " " + categoryField} </span>
-          ))}
+
+            console.log(categoryField, p)
+            // <span> {p + " " + categoryField} </span>
+            ))}
         </label>
-        <Select
+
+
+          <Select
           onChange={handleChange}
-          defaultValue={[`${productCategory}`]}
           mode="multiple"
           showArrow
-          value={categoryField}
+          defaultValue={[`${specificCategory}`]}
           tagRender={(props: any) => tagRender(props)}
           style={{ width: "100%" }}
           options={options}
-        >
-          {filteredOptions.map((item: any) => (
-            <Select.Option key={item} value={item}>
-              {item}
-            </Select.Option>
-          ))}
-        </Select>
+          >
+            {filteredOptions.map((item: any) => (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            ))}
+          </Select>
         <Button
           type="primary"
           onClick={saveProduct}
@@ -234,6 +257,7 @@ function AdminEditDetails(props: Props, state: State) {
     </div>
   );
 }
+
 
 const rootStyle: CSSProperties = {
   display: "flex",

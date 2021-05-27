@@ -33,6 +33,17 @@ exports.getAllOrders = async (
   res.status(200).json(order);
 };
 
+exports.editOrder = async (req: express.Request, res: express.Response) => {
+const order = await Order.findOneAndUpdate(
+    { _id: req.params.id },
+    {
+      $set: {
+        isHandled: req.body.isHandled
+      },
+    },
+    { new: true }
+  );
+};
 
 // get specific orders that corresponds with the logged in user
 exports.getUserSpecificOrders = async (
@@ -42,7 +53,7 @@ exports.getUserSpecificOrders = async (
   const userSpecificOrders = await Order.find({ "session.id": req.params.id });
 
   res.status(200).json(userSpecificOrders);
-}
+};
 
 
 async function orderProductSubtractor(orderedProducts: any) {
