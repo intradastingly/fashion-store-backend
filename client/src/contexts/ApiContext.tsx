@@ -8,39 +8,39 @@ export interface Credentials {
 }
 
 interface UserInfo {
-  city: String,
-  email: String,
-  name: String,
-  phone: String,
-  street: String,
-  zipcode: String
+  city: String;
+  email: String;
+  name: String;
+  phone: String;
+  street: String;
+  zipcode: String;
 }
 
 export interface Order {
-    _id: String
-    cart: CartItem[],
-    date: String,
-    deliveryMethod: ShippingInfo,
-    isHandled: Boolean,
-    userInfo: UserInfo,
-    totalPrice: Number,
-    paymentMethod: {
-      phone: String
-    },
-    session: {
-      userName: String;
-      fullName: String;
-      phoneNumber: String;
-      password: String;
-      email: String;
-      id: String
-      address: {
-        city: String,
-        country: String,
-        street: String,
-        zipCode: Number
-      }
-    },
+  _id: String;
+  cart: CartItem[];
+  date: String;
+  deliveryMethod: ShippingInfo;
+  isHandled: Boolean;
+  userInfo: UserInfo;
+  totalPrice: Number;
+  paymentMethod: {
+    phone: String;
+  };
+  session: {
+    userName: String;
+    fullName: String;
+    phoneNumber: String;
+    password: String;
+    email: String;
+    id: String;
+    address: {
+      city: String;
+      country: String;
+      street: String;
+      zipCode: Number;
+    };
+  };
 }
 
 export interface registerData {
@@ -142,7 +142,7 @@ export const ApiContext = createContext<ContextValue>({
   updateUserCreated: () => {},
   loadAllUsers: () => {},
   getUser: () => {},
-  getUserSpecificOrders: (id: string) =>{}
+  getUserSpecificOrders: (id: string) => {},
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -179,7 +179,6 @@ function ApiProvider(props: Props) {
     loadShippingMethods();
   }, []);
 
-
   // useeffect for checking if user is logged in
   useEffect(() => {
     if (session) {
@@ -189,7 +188,7 @@ function ApiProvider(props: Props) {
     }
   });
 
-  //useeffect for authorizing a session 
+  //useeffect for authorizing a session
   useEffect(() => {
     const authorizeSession = async () => {
       const response = await fetch(`api/authenticated`, {
@@ -298,6 +297,8 @@ function ApiProvider(props: Props) {
       body: JSON.stringify(registerData),
       headers: { "Content-Type": "application/json" },
     });
+
+    
     const result = await response.json();
 
     if (response.status === 201) {
@@ -313,24 +314,28 @@ function ApiProvider(props: Props) {
   }
 
   //logic for getting all orders for specific user from database objectID
-  const getUserSpecificOrders = async (id: string)=>{
-    const response = await fetch(`api/order/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      }
-    });
-    const result = await response.json();
-    setOrders(result)
-  }
+  const getUserSpecificOrders = async (id: string) => {
+    // const response = await fetch(`api/order/${id}`, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    // });
+    // const result = await response.json();
+    
+    const result = await fetchRequest(`api/order/${id}`, "GET")
+    setOrders(result);
+  };
 
   // create order logic
   async function createNewOrder(order: any) {
-    const response = await fetch("api/order", {
-      method: "POST",
-      body: JSON.stringify(order),
-      headers: { "Content-Type": "application/json" },
-    });
+    // const response = await fetch("api/order", {
+    //   method: "POST",
+    //   body: JSON.stringify(order),
+    //   headers: { "Content-Type": "application/json" },
+    // });
+
+    await fetchRequest("api/order", "POST", order);
   }
 
   // get one user logic [CURRENTLY UNUSED!!]
@@ -344,6 +349,17 @@ function ApiProvider(props: Props) {
     const incomingUser = await response.json();
 
     setActiveUser(incomingUser);
+  };
+
+  const fetchRequest = async (url: string, method: string, body?: any) => {
+    const response = await fetch(url, {
+      method: method,
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const content = await response.json();
+    return content;
   };
 
   function updateUserCreated() {
