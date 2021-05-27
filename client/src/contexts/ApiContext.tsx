@@ -166,13 +166,7 @@ function ApiProvider(props: Props) {
 
   useEffect(() => {
     const loadShippingMethods = async () => {
-      // const response = await fetch("/api/shipping", {
-      //   method: "GET",
-      //   headers: {
-      //     "Content-type": "application-json",
-      //   },
-      // });
-      const result = fetchRequest("/api/shipping", "GET")
+      const result = fetchRequest("/api/shipping", "GET");
       const shipping = await result;
       setShippingMethods(shipping);
     };
@@ -192,15 +186,9 @@ function ApiProvider(props: Props) {
   //useeffect for authorizing a session
   useEffect(() => {
     const authorizeSession = async () => {
-
-      // const response = await fetch(`api/authenticated`, {
-      //   method: "GET",
-      // });
-
-      const result = await fetchRequest(`api/authenticated`, "GET")
+      const result = await fetchRequest(`api/authenticated`, "GET");
       const incomingSession = await result;
       setSession(incomingSession);
-
     };
     authorizeSession();
   }, []);
@@ -210,26 +198,12 @@ function ApiProvider(props: Props) {
   }, []);
 
   const loadAllUsers = async () => {
-    // const response = await fetch("/api/accounts", {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    // });
-
-    const result = await fetchRequest("/api/accounts", "GET")
+    const result = await fetchRequest("/api/accounts", "GET");
     const users = await result;
     setAllUsers(users);
   };
 
   const loadProducts = async () => {
-    // const response = await fetch("/api/products", {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    // });
-
     const result = await fetchRequest("/api/products", "GET");
 
     const products = await result;
@@ -268,13 +242,6 @@ function ApiProvider(props: Props) {
 
   // handling function for logging in a user
   async function loginHandler(loginCredentials: Credentials) {
-    // const response = await fetch("api/login", {
-    //   method: "POST",
-    //   body: JSON.stringify(loginCredentials),
-    //   headers: { "Content-Type": "application/json" },
-    // });
-    // const result = await response.json();
-
     const result = await fetchRequest("api/login", "POST", loginCredentials);
 
     if (result === "Incorrect password or username") {
@@ -289,13 +256,6 @@ function ApiProvider(props: Props) {
 
   // handler for logging out a user
   async function logOutHandler() {
-    // const response = await fetch("api/logout", {
-    //   method: "DELETE",
-    //   headers: { "Content-Type": "application/json" },
-    // });
-
-    // const result = await response.json();
-
     const result = await fetchRequest("api/logout", "DELETE");
 
     if (result === "logout succ") {
@@ -309,14 +269,6 @@ function ApiProvider(props: Props) {
 
   // register logic, with full fetch call
   async function registerHandler(registerData: registerData) {
-    // const response = await fetch("api/accounts", {
-    //   method: "POST",
-    //   body: JSON.stringify(registerData),
-    //   headers: { "Content-Type": "application/json" },
-    // });
-
-    // const result = await response.json();
-
     const result = await fetchRequest("api/accounts", "POST", registerData);
 
     if (result.status === 201) {
@@ -333,14 +285,6 @@ function ApiProvider(props: Props) {
 
   //logic for getting all orders for specific user from database objectID
   const getUserSpecificOrders = async (id: string) => {
-    // const response = await fetch(`api/order/${id}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    // });
-    // const result = await response.json();
-
     const result = await fetchRequest(`api/order/${id}`, "GET");
     setOrders(result);
   };
