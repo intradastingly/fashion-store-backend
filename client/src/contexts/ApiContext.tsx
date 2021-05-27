@@ -292,19 +292,20 @@ function ApiProvider(props: Props) {
 
   // register logic, with full fetch call
   async function registerHandler(registerData: registerData) {
-    const response = await fetch("api/accounts", {
-      method: "POST",
-      body: JSON.stringify(registerData),
-      headers: { "Content-Type": "application/json" },
-    });
+    // const response = await fetch("api/accounts", {
+    //   method: "POST",
+    //   body: JSON.stringify(registerData),
+    //   headers: { "Content-Type": "application/json" },
+    // });
 
-    
-    const result = await response.json();
+    // const result = await response.json();
 
-    if (response.status === 201) {
+    const result = await fetchRequest("api/accounts", "POST", registerData)
+
+    if (result.status === 201) {
       setUserCreated(true);
     }
-    return response;
+    return result;
   }
 
   // function for getting one order
