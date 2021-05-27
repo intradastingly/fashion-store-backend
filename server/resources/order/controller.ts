@@ -8,6 +8,7 @@ import { ProductDocument } from "../product/model"
 exports.newOrder = async (req: express.Request, res: express.Response) => {
 
   const order = new Order({
+    _id: req.body.id,
     session: req.body.session,
     date: new Date(),
     isHandled: false,
@@ -33,6 +34,10 @@ exports.getAllOrders = async (
   res.status(200).json(order);
 };
 
+/* exports.getCurrentOrder = async (req: express.Request, res: express.Response) => {
+  const order = await Order.findOne({ _id: req.params.id });
+  res.status(200).json(order);
+} */
 
 // get specific orders that corresponds with the logged in user
 exports.getUserSpecificOrders = async (
