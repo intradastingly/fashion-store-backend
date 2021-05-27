@@ -120,8 +120,9 @@ class CartProvider extends Component<{}, State> {
     } 
 
     deleteProductFromCart = (id: number) => {
+        console.log(id)
         let cartItems = this.state.cart;
-        const newCartItemsList = cartItems.filter((item: CartItem) => item.product.id !== id);
+        const newCartItemsList = cartItems.filter((item: CartItem) => item.product._id !== id);
         localStorage.setItem('cartItems', JSON.stringify(newCartItemsList));
         this.setState({ cart: newCartItemsList });
     }

@@ -25,6 +25,7 @@ function CartItemsList() {
     return (
         <CartContext.Consumer>
             {({ cart }) => {
+                
                 return (
                     <Row style={listContainerStyle}>
                         <Col span={24} style={columnStyle}>
@@ -35,10 +36,10 @@ function CartItemsList() {
                                 <List.Item
                                     actions={[<button key="delete-item" 
                                     style={deleteStyle}
-                                    onClick={() => handleDelete(item.product.id)}>delete</button>]}>
+                                    onClick={() => handleDelete(item.product._id)}>delete</button>]}>
                                     <List.Item.Meta                    
                                         avatar={<Avatar src={item.product.imageUrl} />}
-                                        title={<Link to={'/product/' + item.product.id}>{item.product.title}</Link>}
+                                        title={<Link to={'/product/' + item.product._id}>{item.product.title}</Link>}
                                         description={[<span style={descriptionStyle}>{item.product.description.substring(0, 35) + '...'}</span>,
                                         <InputNumber min={1} max={10} defaultValue={item.quantity} onChange={(value) => onChangeQuantity(value, item.product)} style={numberInputStyle} />,
                                         item.product.price * item.quantity + ' kr']}
