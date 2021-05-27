@@ -74,11 +74,6 @@ function ProductCardGrid() {
   }, [selectedTags]);
 
   function handleChange(tag: string, checked: boolean) {
-    // const allTagChecked = tag === "All";
-    // allTagChecked
-    //   ? setSelectedTags(["All"])
-    //   :
-
     const nextSelectedTags = checked
       ? [...selectedTags, tag]
       : selectedTags.filter((t: string) => t !== tag);

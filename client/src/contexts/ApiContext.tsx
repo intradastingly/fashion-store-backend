@@ -271,9 +271,10 @@ function ApiProvider(props: Props) {
   async function registerHandler(registerData: registerData) {
     const result = await fetchRequest("api/accounts", "POST", registerData);
 
-    if (result.status === 201) {
+    if (result) {
       setUserCreated(true);
     }
+    console.log(result);
     return result;
   }
 
