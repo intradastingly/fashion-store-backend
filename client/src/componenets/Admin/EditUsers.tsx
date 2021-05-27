@@ -1,7 +1,7 @@
 import { Button, message, Popconfirm } from "antd";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { Link, Redirect, RouteComponentProps } from "react-router-dom";
-import { ApiContext, userInfo } from "../../contexts/ApiContext";
+import { ApiContext, AccountInfo } from "../../contexts/ApiContext";
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
@@ -39,7 +39,7 @@ function EditUsers(props: Props) {
         return;
       }
       const user = await users.find(
-        (u: userInfo) => u._id === props.match.params.id
+        (u: AccountInfo) => u._id === props.match.params.id
       );
 
       setEditUser(user);
