@@ -38,7 +38,7 @@ function UserProfile() {
     useContext(ApiContext);
   const [user, setUser] = useState<any>();
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  console.log(orders)
   //useeffect for getting the correct account information
   useEffect(() => {
     getUser(session.id);
@@ -122,7 +122,6 @@ function UserProfile() {
         {user.role === "admin" ? (
           <div style={adminComponentContainer}>
             <GetAdminList />
-            
           </div>
         ) : (
           <div style={customerContainer}>
@@ -159,33 +158,61 @@ function UserProfile() {
                     onFinish={onFinish}
                     validateMessages={validateMessages}
                   >
-                    <Form.Item name={"fullName"} label="Name">
+                    <Form.Item
+                      initialValue={user.fullName}
+                      name={"fullName"}
+                      label="Name"
+                    >
                       <Input />
                     </Form.Item>
-                    <Form.Item name={"phoneNumber"} label="Phone Number">
+                    <Form.Item
+                      initialValue={user.phoneNumber}
+                      name={"phoneNumber"}
+                      label="Phone Number"
+                    >
                       <Input />
                     </Form.Item>
 
                     <Form.Item
+                      initialValue={user.email}
                       name={"email"}
                       rules={[{ type: "email" }]}
                       label="Email"
                     >
                       <Input />
                     </Form.Item>
-                    <Form.Item name={["address", "street"]} label="Street">
+                    <Form.Item
+                      initialValue={user.address.street}
+                      name={["address", "street"]}
+                      label="Street"
+                    >
                       <Input />
                     </Form.Item>
-                    <Form.Item name={["address", "zipCode"]} label="Zip Code">
+                    <Form.Item
+                      initialValue={user.address.zipCode}
+                      name={["address", "zipCode"]}
+                      label="Zip Code"
+                    >
                       <Input />
                     </Form.Item>
-                    <Form.Item name={["address", "city"]} label="City">
+                    <Form.Item
+                      initialValue={user.address.city}
+                      name={["address", "city"]}
+                      label="City"
+                    >
                       <Input />
                     </Form.Item>
-                    <Form.Item name={["address", "country"]} label="Country">
+                    <Form.Item
+                      initialValue={user.address.country}
+                      name={["address", "country"]}
+                      label="Country"
+                    >
                       <Input />
                     </Form.Item>
-                    <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+                    <Form.Item
+                      initialValue={user.fullName}
+                      wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
+                    >
                       <Button type="primary" htmlType="submit">
                         Submit
                       </Button>
@@ -209,15 +236,15 @@ function UserProfile() {
                     {orders.map((order: any, i: string) => (
                       <Panel header={order._id} key={i}>
                         <Collapse ghost accordion>
-                          {order.cart.map((product: any, key: string) => (
-                            <Panel header="Products" key={key}>
+                          <Panel header="Products" key="1">
+                            {order.cart.map((product: any, key: string) => (
                               <div>
                                 <p>Item: {product.product.title}</p>
                                 <p>Price: {product.product.price}kr </p>
                                 <p>Quantity: {product.quantity} </p>
                               </div>
-                            </Panel>
-                          ))}
+                            ))}
+                          </Panel>
                           <Panel header="Billing info" key="2">
                             <div>
                               <p>{order.userInfo.name}</p>
@@ -252,7 +279,7 @@ function UserProfile() {
                           </Panel>
                         </Collapse>
                         <h5>Total price: {order.totalPrice}</h5>
-                        <h5>Shipped: {order.ishandled ? "Yes" : "No"}</h5>
+                        <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
                       </Panel>
                     ))}
                   </Collapse>

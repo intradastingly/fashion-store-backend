@@ -31,7 +31,7 @@ DELETE  http://localhost:6969/api/products/60a3b917a8a280045c36428a
 
 
 // EDIT product
-PUT http://localhost:6969/api/products/60a3be97372119312c306bca
+PUT http://localhost:6969/api/products/60a50c1dd2f3e72e9c2eabdd
 Content-Type: application/json
 
 {

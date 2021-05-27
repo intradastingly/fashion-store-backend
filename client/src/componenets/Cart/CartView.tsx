@@ -56,7 +56,6 @@ function CartView() {
     return getTotalPriceProducts();
   }
 
-  console.log(cart.length)
   if(cart.length === 0){
     return (
       <Row style={cartViewContainerStyle}>

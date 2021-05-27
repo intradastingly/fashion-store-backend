@@ -1,6 +1,13 @@
-import { Form, Input, Button, Row, Col } from 'antd';
-import { Component, ContextType, CSSProperties } from 'react';
-import { CartContext } from '../../contexts/CartContext';
+import { Form, Input, Button, Row, Col } from "antd";
+import {
+  Component,
+  ContextType,
+  CSSProperties,
+  useContext,
+  useEffect,
+} from "react";
+import { ApiContext } from "../../contexts/ApiContext";
+import { CartContext } from "../../contexts/CartContext";
 
 const layout = {
   labelCol: { span: 5 },
@@ -9,13 +16,13 @@ const layout = {
 
 /* eslint-disable no-template-curly-in-string */
 const validateMessages = {
-  required: '${label} is required!',
+  required: "${label} is required!",
   types: {
-    email: '${label} is not a valid email!',
-    number: '${label} is not a valid number!',
+    email: "${label} is not a valid email!",
+    number: "${label} is not a valid number!",
   },
   number: {
-    range: '${label} must be between ${min} and ${max}',
+    range: "${label} must be between ${min} and ${max}",
   },
 };
 
@@ -31,77 +38,108 @@ interface Props {
   next(): void;
 }
 
-class InformationForm extends Component<Props> {
-  context!: ContextType<typeof CartContext>
-  static contextType = CartContext;
+function InformationForm(props: Props) {
+  const { session, getUser, activeUser } = useContext(ApiContext);
+  const { updateUserInfo } = useContext(CartContext);
 
-  onValuesChange = (values: any, allValues: any) => {
-    const { updateUserInfo } = this.context;
+  useEffect(() => {
+    getUser(session.id);
+    console.log(activeUser);
+    
+  }, []);
+
+  const onValuesChange = (values: any, allValues: any) => {
     updateUserInfo(allValues.user);
   };
 
-  onFinish = (values: UserInfo) => {
-    console.log('Success:', values);
-    this.props.next();
+  const onFinish = (values: UserInfo) => {
+    console.log("Success:", values);
+    props.next();
   };
 
-  render() {
-      return (
-          <Row style={formContainerStyle}>
-            <Col span={24} style={columnStyle}>
-              <h2>Your information</h2>
-              <Form {...layout} 
-                name="nest-messages" 
-                onValuesChange={this.onValuesChange} 
-                validateMessages={validateMessages}
-                onFinish={this.onFinish}>
-                <Form.Item name={['user', 'name']} label="Name" 
-                    rules={[{ required: true }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['user', 'email']} label="Email" 
-                    rules={[{ type: 'email', required: true }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['user', 'phone']} label="Phone" 
-                    rules={[{ min: 10, max: 10, required: true }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['user', 'street']} label="Street" 
-                    rules={[{ required: true }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['user', 'zipcode']} label="Zipcode" 
-                    rules={[{ required: true }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item name={['user', 'city']} label="City" 
-                    rules={[{ required: true }]}>
-                    <Input />
-                </Form.Item>
-                <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 5 }}>
-                  <Button type="primary" htmlType="submit">
-                    Next
-                  </Button>
-                </Form.Item>
-              </Form>
-            </Col>
-        </Row>
-      );
-    };
-  }
-
-  export default InformationForm;
-
-  const formContainerStyle: CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-around',
-    alignItems: 'space-around',
-    width: '100%',
-    margin: 'auto'
+  return (
+    <Row style={formContainerStyle}>
+      <Col span={24} style={columnStyle}>
+        <h2>Your information</h2>
+        {activeUser ? (
+          <Form
+            {...layout}
+            name="nest-messages"
+            onValuesChange={onValuesChange}
+            validateMessages={validateMessages}
+            onFinish={onFinish}
+          >
+            <Form.Item
+              name={["user", "name"]}
+              initialValue={activeUser.fullName}
+              label="Name"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["user", "email"]}
+              initialValue={activeUser.email}
+              label="Email"
+              rules={[{ type: "email", required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["user", "phone"]}
+              initialValue={activeUser.phoneNumber}
+              label="Phone"
+              rules={[{ min: 10, max: 10, required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["user", "street"]}
+              initialValue={activeUser.address.street}
+              label="Street"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["user", "zipcode"]}
+              initialValue={activeUser.address.zipCode}
+              label="Zipcode"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name={["user", "city"]}
+              initialValue={activeUser.address.city}
+              label="City"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 5 }}>
+              <Button type="primary" htmlType="submit">
+                Next
+              </Button>
+            </Form.Item>
+          </Form>
+        ) : null}
+      </Col>
+    </Row>
+  );
 }
+
+export default InformationForm;
+
+const formContainerStyle: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-around",
+  alignItems: "space-around",
+  width: "100%",
+  margin: "auto",
+};
 
 const columnStyle: CSSProperties = {
-    marginTop: '3rem',
-    marginBottom: '3rem',
-}
+  marginTop: "3rem",
+  marginBottom: "3rem",
+};

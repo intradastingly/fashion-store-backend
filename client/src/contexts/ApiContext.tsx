@@ -62,7 +62,7 @@ export interface ProductInfo {
   _id: String;
 }
 
-export interface userInfo {
+export interface AccountInfo {
   address: {
     city: String;
     country: String;
@@ -103,8 +103,8 @@ interface State {
   categories: Category[];
   order: any;
   userCreated: boolean;
-  users: userInfo[];
-  activeUser: any;
+  users: AccountInfo[];
+  activeUser: AccountInfo;
   orders: any;
 }
 
@@ -131,7 +131,7 @@ export const ApiContext = createContext<ContextValue>({
   categories: [],
   order: [],
   userCreated: false,
-  activeUser: {},
+  activeUser: {} as AccountInfo,
   orders: {},
   getOrder: () => {},
   loginHandler: () => {},
@@ -160,19 +160,14 @@ function ApiProvider(props: Props) {
   const [currentUser, setCurrentUser] = useState<Object>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [userCreated, setUserCreated] = useState<boolean>(false);
-  const [users, setAllUsers] = useState<userInfo[]>([]);
-  const [activeUser, setActiveUser] = useState();
+  const [users, setAllUsers] = useState<AccountInfo[]>([]);
+  const [activeUser, setActiveUser] = useState<AccountInfo>();
   const [orders, setOrders] = useState();
 
   useEffect(() => {
     const loadShippingMethods = async () => {
-      const response = await fetch("/api/shipping", {
-        method: "GET",
-        headers: {
-          "Content-type": "application-json",
-        },
-      });
-      const shipping = await response.json();
+      const result = fetchRequest("/api/shipping", "GET");
+      const shipping = await result;
       setShippingMethods(shipping);
     };
     loadProducts();
@@ -191,11 +186,8 @@ function ApiProvider(props: Props) {
   //useeffect for authorizing a session
   useEffect(() => {
     const authorizeSession = async () => {
-      const response = await fetch(`api/authenticated`, {
-        method: "GET",
-      });
-
-      const incomingSession = await response.json();
+      const result = await fetchRequest(`api/authenticated`, "GET");
+      const incomingSession = await result;
       setSession(incomingSession);
     };
     authorizeSession();
@@ -206,24 +198,16 @@ function ApiProvider(props: Props) {
   }, []);
 
   const loadAllUsers = async () => {
-    const response = await fetch("/api/accounts", {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const users = await response.json();
+    const result = await fetchRequest("/api/accounts", "GET");
+    const users = await result;
     setAllUsers(users);
   };
 
   const loadProducts = async () => {
-    const response = await fetch("/api/products", {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const products = await response.json();
+    const result = await fetchRequest("/api/products", "GET");
+
+    const products = await result;
+
     setAllProducts(products);
   };
 
@@ -258,12 +242,8 @@ function ApiProvider(props: Props) {
 
   // handling function for logging in a user
   async function loginHandler(loginCredentials: Credentials) {
-    const response = await fetch("api/login", {
-      method: "POST",
-      body: JSON.stringify(loginCredentials),
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
+    const result = await fetchRequest("api/login", "POST", loginCredentials);
+
     if (result === "Incorrect password or username") {
       setuserIsLoggedIn(false);
     } else if (result.message === "Login successful") {
@@ -271,18 +251,11 @@ function ApiProvider(props: Props) {
       setuserIsLoggedIn(true);
       getUser(session.id);
     }
-    return response;
+    return result;
   }
 
   // handler for logging out a user
   async function logOutHandler() {
-    // const response = await fetch("api/logout", {
-    //   method: "DELETE",
-    //   headers: { "Content-Type": "application/json" },
-    // });
-
-    // const result = await response.json();
-
     const result = await fetchRequest("api/logout", "DELETE");
 
     if (result === "logout succ") {
@@ -296,14 +269,6 @@ function ApiProvider(props: Props) {
 
   // register logic, with full fetch call
   async function registerHandler(registerData: registerData) {
-    // const response = await fetch("api/accounts", {
-    //   method: "POST",
-    //   body: JSON.stringify(registerData),
-    //   headers: { "Content-Type": "application/json" },
-    // });
-
-    // const result = await response.json();
-
     const result = await fetchRequest("api/accounts", "POST", registerData);
 
     if (result) {
@@ -321,39 +286,20 @@ function ApiProvider(props: Props) {
 
   //logic for getting all orders for specific user from database objectID
   const getUserSpecificOrders = async (id: string) => {
-    // const response = await fetch(`api/order/${id}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-type": "application/json",
-    //   },
-    // });
-    // const result = await response.json();
-
     const result = await fetchRequest(`api/order/${id}`, "GET");
     setOrders(result);
   };
 
   // create order logic
   async function createNewOrder(order: any) {
-    const response = await fetch("api/order", {
-      method: "POST",
-      body: JSON.stringify(order),
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
+    const result = await fetchRequest("api/order", "POST", order);
     setOrder(result);
   }
 
   // get one user logic [CURRENTLY UNUSED!!]
   const getUser = async (id: string) => {
-    const response = await fetch(`api/accounts/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application-json",
-      },
-    });
-    const incomingUser = await response.json();
-
+    const result = await fetchRequest(`api/accounts/${id}`, "GET");
+    const incomingUser = await result;
     setActiveUser(incomingUser);
   };
 
@@ -391,7 +337,7 @@ function ApiProvider(props: Props) {
         categories: categories,
         currentUser: currentUser,
         users: users,
-        activeUser: activeUser,
+        activeUser: activeUser!,
         orders: orders,
         loadAllUsers: loadAllUsers,
         getUser: getUser,
