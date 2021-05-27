@@ -191,12 +191,15 @@ function ApiProvider(props: Props) {
   //useeffect for authorizing a session
   useEffect(() => {
     const authorizeSession = async () => {
-      const response = await fetch(`api/authenticated`, {
-        method: "GET",
-      });
 
-      const incomingSession = await response.json();
+      // const response = await fetch(`api/authenticated`, {
+      //   method: "GET",
+      // });
+
+      const result = await fetchRequest(`api/authenticated`, "GET")
+      const incomingSession = await result;
       setSession(incomingSession);
+
     };
     authorizeSession();
   }, []);
