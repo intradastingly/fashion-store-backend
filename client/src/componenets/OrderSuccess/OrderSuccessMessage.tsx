@@ -6,8 +6,26 @@ import { ApiContext } from "../../contexts/ApiContext";
 
 function OrderSuccessMessage() {
     const {order} = useContext(ApiContext)
-    console.log(order)
-    return (
+
+    if(!order){
+        return (
+            <Row style={containerStyle}>
+            <Col span={24} style={colStyle}>
+                <Result
+                    status="warning"
+                    title="No Order to display"
+                    extra={[
+                    <Link to='/'>
+                        <Button type="primary" key="console">Continue shopping</Button>
+                    </Link>
+                    ]}
+                />
+            </Col>
+        </Row>
+        )
+    }
+
+     return (
         <Row style={containerStyle}>
             <Col span={24} style={colStyle}>
                 <Result

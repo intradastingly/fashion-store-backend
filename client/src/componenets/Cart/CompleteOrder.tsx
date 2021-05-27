@@ -15,9 +15,9 @@ function CompleteOrder(){
         <>
         <Col span={24} style={buttonContainerStyle}>
             <Card title="Order summary" style={{ width: '80%', marginTop: '7rem' }}>
-                <p>Products: {cart.map((item) => item.quantity + ' ' + item.product.title)}, </p>
-                <p>Delivery: {deliveryMethod.shipmentCompany}</p>
-                <p>Total price: {getTotalPrice() + ' kr, incl delivery and VAT'}</p>
+                <h3>Products: {cart.map((item) => <p style={productStyle}>{item.quantity + ' ' + item.product.title}</p>)}</h3>
+                <h3>Delivery: {deliveryMethod.shipmentCompany}</h3>
+                <h3>Total price: {getTotalPrice() + ' kr, incl delivery and VAT'}</h3>
             </Card>
         </Col>
         <Col span={24} style={buttonContainerStyle}>
@@ -46,4 +46,8 @@ const buttonContainerStyle: CSSProperties = {
     alignItems: 'center',
     marginTop: '-3rem',
     marginBottom: '8rem'
+}
+
+const productStyle: CSSProperties = {
+    paddingLeft: "1rem",
 }

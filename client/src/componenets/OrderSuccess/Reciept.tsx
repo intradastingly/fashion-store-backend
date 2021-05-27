@@ -16,18 +16,21 @@ export interface IReceipt {
 
 function Receipt(){
     const {order} = useContext(ApiContext)
-    console.log(order)
-   
-    /* for(const p of order.cart){
-        console.log(p)
-    } */
+
+    if(!order){
+        return (
+            <Card title="Receipt" style={receiptStyle}>
+                <p>No order</p>
+            </Card>
+        )
+    }
     return(
         <>
-        {/* <Card title="Receipt" style={receiptStyle}>
-            <p>Products: {order.map((item: any) => item.quantity + ' ' + item.product.title)}</p>
-            <p>Delivery: {order.deliveryMethod}</p>
-            <p>Total price: {order.totalPrice + ' kr, incl delivery (VAT: ' + order.totalPrice * 0.25 + ' kr.)'}</p>
-        </Card> */}
+            <Card title="Receipt" style={receiptStyle}>
+                <h3>Products: {order.cart.map((item: any) => <p style={productStyle}>{item.quantity + ' ' + item.product.title}</p>)}</h3>
+                <h3>Delivery: {order.deliveryMethod.shipmentCompany}</h3>
+                <h3>Total price: {order.totalPrice + ' kr, incl delivery (VAT: ' + order.totalPrice * 0.25 + ' kr.)'}</h3>
+            </Card>
         </>
     )
 }
@@ -39,4 +42,8 @@ const receiptStyle: CSSProperties = {
     display: 'flex',
     flexDirection: 'column',
     marginTop: '5rem'
+}
+
+const productStyle: CSSProperties = {
+    paddingLeft: "1rem",
 }

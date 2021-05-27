@@ -33,7 +33,7 @@ const steps = [
 
 function CartView() {
   const { loggedIn, logOutHandler, session } = useContext(ApiContext);
-  const { getTotalPriceProducts } = useContext(CartContext);
+  const { getTotalPriceProducts, cart } = useContext(CartContext);
   const [current, setCurrent] = useState<number>(0);
 
   const next = () => {
@@ -54,6 +54,19 @@ function CartView() {
 
   function totalPrice() {
     return getTotalPriceProducts();
+  }
+
+  if(cart.length === 0){
+    return (
+      <Row style={cartViewContainerStyle}>
+         <CartItemsList />
+        <div>
+          <h3 style={priceTextStyle}>
+            Nothing in cart. <a href="/"> Go back</a> 
+          </h3>
+        </div>
+    </Row>
+    )
   }
 
   return (

@@ -8,6 +8,7 @@ import { ProductDocument } from "../product/model"
 exports.newOrder = async (req: express.Request, res: express.Response) => {
 
   const order = new Order({
+    _id: req.body.id,
     session: req.body.session,
     date: new Date(),
     isHandled: false,
@@ -33,6 +34,7 @@ exports.getAllOrders = async (
   res.status(200).json(order);
 };
 
+
 exports.editOrder = async (req: express.Request, res: express.Response) => {
 const order = await Order.findOneAndUpdate(
     { _id: req.params.id },
@@ -44,6 +46,8 @@ const order = await Order.findOneAndUpdate(
     { new: true }
   );
 };
+
+
 
 // get specific orders that corresponds with the logged in user
 exports.getUserSpecificOrders = async (

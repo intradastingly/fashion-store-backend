@@ -4,7 +4,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import { CSSProperties, useContext } from "react";
+import { CSSProperties, useContext, useState, useEffect } from "react";
 import "./App.css";
 import AdminEditDetails from "./componenets/Admin/AdminEditDetails";
 import AdminList from "./componenets/Admin/AdminList";
@@ -28,18 +28,18 @@ import AdminOrders from "./componenets/Admin/AdminOrders";
 
 function App() {
   const { loggedIn, session } = useContext(ApiContext);
+  const [loggedInAsAdmin, setLoggedInAsAdmin] = useState(false);
 
-  // if (loggedIn) {
-  //   return <Redirect to="/profile" />;
-  // }
+  function checkIfAdmin() {
+    if (loggedIn && session.role === "admin") {
+      setLoggedInAsAdmin(true);
+      console.log(loggedInAsAdmin);
+    }
+  }
 
-  // <Route exact path="/login" component={userLogIn}>
-  //                 {session.userName ? <Redirect to="/profile" /> : null}
-
-  //                 <Route exact path="/profile" component={UserProfile}>
-  //                   {!session.userName ? <Redirect to="/" /> : null}
-  //                 </Route>
-  //               </Route>
+  useEffect(() => {
+    checkIfAdmin();
+  });
 
   return (
     <ApiProvider>
@@ -56,19 +56,42 @@ function App() {
                 <Route path="/ordersuccess" component={OrderSuccessMessage} />
                 <Route exact path="/" component={StartPageView} />
                 <Route path="/cart" component={CartView} />
+
                 <Route path="/login" component={userLogIn}>
                   {loggedIn ? <Redirect to="/profile" /> : null}
                 </Route>
+
                 <Route path="/profile" component={UserProfile}>
                   {!loggedIn ? <Redirect to="/login" /> : null}
                 </Route>
-                <Route path="/admin" component={AdminLogIn} />
-                <Route path="/admin-list" component={AdminList} />
-                <Route path="/add-product" component={AddNewProduct} />
-                <Route path="/edit-product/:id" component={AdminEditDetails} />
-                <Route path="/admin-users" component={AdminUsers} />
-                <Route path="/edit-user/:id" component={EditUsers} />
-                <Route path="/admin-orders" component={AdminOrders} />
+
+                <Route path="/admin" component={AdminLogIn}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
+
+                <Route path="/admin-list" component={AdminList}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
+
+                <Route path="/add-product" component={AddNewProduct}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
+
+                <Route path="/edit-product/:id" component={AdminEditDetails}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
+
+                <Route path="/admin-users" component={AdminUsers}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
+
+                <Route path="/edit-user/:id" component={EditUsers}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
+
+                <Route path="/admin-orders" component={AdminOrders}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
               </Switch>
             </div>
             <Footer2 />
