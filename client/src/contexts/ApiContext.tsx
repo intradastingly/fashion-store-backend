@@ -212,18 +212,24 @@ function ApiProvider(props: Props) {
         "Content-type": "application/json",
       },
     });
+
+  
     const users = await response.json();
     setAllUsers(users);
   };
 
   const loadProducts = async () => {
-    const response = await fetch("/api/products", {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const products = await response.json();
+    // const response = await fetch("/api/products", {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-type": "application/json",
+    //   },
+    // });
+
+    const result = await fetchRequest("/api/products", "GET");
+
+    const products = await result;
+
     setAllProducts(products);
   };
 
@@ -265,7 +271,7 @@ function ApiProvider(props: Props) {
     // });
     // const result = await response.json();
 
-    const result = await fetchRequest("api/login", "POST", loginCredentials)
+    const result = await fetchRequest("api/login", "POST", loginCredentials);
 
     if (result === "Incorrect password or username") {
       setuserIsLoggedIn(false);
@@ -284,10 +290,9 @@ function ApiProvider(props: Props) {
     //   headers: { "Content-Type": "application/json" },
     // });
 
-
     // const result = await response.json();
 
-    const result = await fetchRequest("api/logout", "DELETE")
+    const result = await fetchRequest("api/logout", "DELETE");
 
     if (result === "logout succ") {
       setuserIsLoggedIn(false);
@@ -308,7 +313,7 @@ function ApiProvider(props: Props) {
 
     // const result = await response.json();
 
-    const result = await fetchRequest("api/accounts", "POST", registerData)
+    const result = await fetchRequest("api/accounts", "POST", registerData);
 
     if (result.status === 201) {
       setUserCreated(true);
@@ -331,8 +336,8 @@ function ApiProvider(props: Props) {
     //   },
     // });
     // const result = await response.json();
-    
-    const result = await fetchRequest(`api/order/${id}`, "GET")
+
+    const result = await fetchRequest(`api/order/${id}`, "GET");
     setOrders(result);
   };
 
@@ -343,8 +348,8 @@ function ApiProvider(props: Props) {
       body: JSON.stringify(order),
       headers: { "Content-Type": "application/json" },
     });
-    const result = await response.json()
-    setOrder(result)
+    const result = await response.json();
+    setOrder(result);
   }
 
   // get one user logic [CURRENTLY UNUSED!!]
