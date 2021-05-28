@@ -34,11 +34,10 @@ const { Title } = Typography;
 const { Panel } = Collapse;
 
 function UserProfile() {
-  const { session, currentUser, getUserSpecificOrders, orders } =
+  const { session, activeUser, getUserSpecificOrders, orders, getUser, updateUser } =
     useContext(ApiContext);
-  const [user, setUser] = useState<any>();
   const [isModalVisible, setIsModalVisible] = useState(false);
-  console.log(orders)
+
   //useeffect for getting the correct account information
   useEffect(() => {
     getUser(session.id);
@@ -51,29 +50,6 @@ function UserProfile() {
       return;
     }
   });
-
-  const getUser = async (id: string) => {
-    const response = await fetch(`api/accounts/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const incomingUser = await response.json();
-    setUser(incomingUser);
-  };
-
-  const updateUser = async (id: string, data: any) => {
-    const response = await fetch(`api/accounts/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const result = await response.json();
-    return result;
-  };
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -99,196 +75,207 @@ function UserProfile() {
   };
   /* eslint-enable no-template-curly-in-string */
 
-  if (!user) return <LoadingPage />;
+  // if (!currentUser) return <LoadingPage />;
 
   return (
     <div style={profileContainer}>
-      <div style={avatarContainer}>
-        <div>
-          <Avatar src={AvatarPic} size={100} />
-        </div>
-        {user.role === "admin" ? (
-          <div>
-            <Title>{user.role}</Title>
-          </div>
-        ) : (
-          <div>
-            <Title>{user.userName}</Title>
-          </div>
-        )}
-      </div>
-      <div style={infoContainer}>
-        <div style={customerContainer}></div>
-        {user.role === "admin" ? (
-          <div style={adminComponentContainer}>
-            <GetAdminList />
-          </div>
-        ) : (
-          <div style={customerContainer}>
-            <div style={customerInfo}>
-              <div>
-                <Title level={3}>My information</Title>
-              </div>
-              <div>
-                <Paragraph>Full name: {user.fullName}</Paragraph>
-                <Paragraph>Phone Number: {user.phoneNumber}</Paragraph>
-                <Paragraph>Email: {user.email}</Paragraph>
-                <Paragraph>Street: {user.address.street}</Paragraph>
-                <Paragraph>Zip Code: {user.address.zipCode}</Paragraph>
-                <Paragraph>City: {user.address.city}</Paragraph>
-                <Paragraph>Country: {user.address.country}</Paragraph>
-              </div>
-              <Button type="primary" onClick={showModal}>
-                Edit Information
-              </Button>
-              <Modal
-                title="Edit your profile"
-                visible={isModalVisible}
-                onCancel={handleCancel}
-                footer={[
-                  <Button key="back" onClick={handleCancel}>
-                    Cancel
-                  </Button>,
-                ]}
-              >
-                <div style={modalStyle}>
-                  <Form
-                    {...layout}
-                    name="userEditor"
-                    onFinish={onFinish}
-                    validateMessages={validateMessages}
-                  >
-                    <Form.Item
-                      initialValue={user.fullName}
-                      name={"fullName"}
-                      label="Name"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.phoneNumber}
-                      name={"phoneNumber"}
-                      label="Phone Number"
-                    >
-                      <Input />
-                    </Form.Item>
-
-                    <Form.Item
-                      initialValue={user.email}
-                      name={"email"}
-                      rules={[{ type: "email" }]}
-                      label="Email"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.street}
-                      name={["address", "street"]}
-                      label="Street"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.zipCode}
-                      name={["address", "zipCode"]}
-                      label="Zip Code"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.city}
-                      name={["address", "city"]}
-                      label="City"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.country}
-                      name={["address", "country"]}
-                      label="Country"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.fullName}
-                      wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Submit
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                </div>
-              </Modal>
+      {activeUser ? (
+        <>
+          <div style={avatarContainer}>
+            <div>
+              <Avatar src={AvatarPic} size={100} />
             </div>
-            <div style={customerInfo}>
-              {/* Here we can map out orders that match the session.username with links to that order */}
-              <div style={orderContainer}>
-                <div>
-                  <Title level={3}>My Orders</Title>
-                </div>
-                {!orders ? (
+            {activeUser.role === "admin" ? (
+              <div>
+                <Title>{activeUser.role}</Title>
+              </div>
+            ) : (
+              <div>
+                <Title>{activeUser.userName}</Title>
+              </div>
+            )}
+          </div>
+          <div style={infoContainer}>
+            <div style={customerContainer}></div>
+            {activeUser.role === "admin" ? (
+              <div style={adminComponentContainer}>
+                <GetAdminList />
+              </div>
+            ) : (
+              <div style={customerContainer}>
+                <div style={customerInfo}>
                   <div>
-                    <h4>You have no orders at this moment.</h4>
+                    <Title level={3}>My information</Title>
                   </div>
-                ) : (
-                  <Collapse style={collapseStyle} accordion>
-                    {orders.map((order: any, i: string) => (
-                      <Panel header={order._id} key={i}>
-                        <Collapse ghost accordion>
-                          <Panel header="Products" key="1">
-                            {order.cart.map((product: any, key: string) => (
-                              <div>
-                                <p>Item: {product.product.title}</p>
-                                <p>Price: {product.product.price}kr </p>
-                                <p>Quantity: {product.quantity} </p>
-                              </div>
-                            ))}
+                  <div>
+                    <Paragraph>Full name: {activeUser.fullName}</Paragraph>
+                    <Paragraph>
+                      Phone Number: {activeUser.phoneNumber}
+                    </Paragraph>
+                    <Paragraph>Email: {activeUser.email}</Paragraph>
+                    <Paragraph>Street: {activeUser.address.street}</Paragraph>
+                    <Paragraph>
+                      Zip Code: {activeUser.address.zipCode}
+                    </Paragraph>
+                    <Paragraph>City: {activeUser.address.city}</Paragraph>
+                    <Paragraph>Country: {activeUser.address.country}</Paragraph>
+                  </div>
+                  <Button type="primary" onClick={showModal}>
+                    Edit Information
+                  </Button>
+                  <Modal
+                    title="Edit your profile"
+                    visible={isModalVisible}
+                    onCancel={handleCancel}
+                    footer={[
+                      <Button key="back" onClick={handleCancel}>
+                        Cancel
+                      </Button>,
+                    ]}
+                  >
+                    <div style={modalStyle}>
+                      <Form
+                        {...layout}
+                        name="userEditor"
+                        onFinish={onFinish}
+                        validateMessages={validateMessages}
+                      >
+                        <Form.Item
+                          initialValue={activeUser.fullName}
+                          name={"fullName"}
+                          label="Name"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.phoneNumber}
+                          name={"phoneNumber"}
+                          label="Phone Number"
+                        >
+                          <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                          initialValue={activeUser.email}
+                          name={"email"}
+                          rules={[{ type: "email" }]}
+                          label="Email"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.street}
+                          name={["address", "street"]}
+                          label="Street"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.zipCode}
+                          name={["address", "zipCode"]}
+                          label="Zip Code"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.city}
+                          name={["address", "city"]}
+                          label="City"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.country}
+                          name={["address", "country"]}
+                          label="Country"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.fullName}
+                          wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
+                        >
+                          <Button type="primary" htmlType="submit">
+                            Submit
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    </div>
+                  </Modal>
+                </div>
+                <div style={customerInfo}>
+                  {/* Here we can map out orders that match the session.username with links to that order */}
+                  <div style={orderContainer}>
+                    <div>
+                      <Title level={3}>My Orders</Title>
+                    </div>
+                    {!orders ? (
+                      <div>
+                        <h4>You have no orders at this moment.</h4>
+                      </div>
+                    ) : (
+                      <Collapse style={collapseStyle} accordion>
+                        {orders.map((order: any, i: string) => (
+                          <Panel header={order._id} key={i}>
+                            <Collapse ghost accordion>
+                              <Panel header="Products" key="1">
+                                {order.cart.map((product: any, key: string) => (
+                                  <div>
+                                    <p>Item: {product.product.title}</p>
+                                    <p>Price: {product.product.price}kr </p>
+                                    <p>Quantity: {product.quantity} </p>
+                                  </div>
+                                ))}
+                              </Panel>
+                              <Panel header="Billing info" key="2">
+                                <div>
+                                  <p>{order.userInfo.name}</p>
+                                  <p>{order.userInfo.email}</p>
+                                  <p>{order.userInfo.phone}</p>
+                                  <p>
+                                    {order.userInfo.street +
+                                      ", " +
+                                      order.userInfo.zipcode +
+                                      ", " +
+                                      order.userInfo.city +
+                                      ", " +
+                                      order.userInfo.country}
+                                  </p>
+                                </div>
+                              </Panel>
+                              <Panel header="Shipping" key="3">
+                                <div>
+                                  <p>{order.userInfo.name}</p>
+                                  <p>{order.userInfo.email}</p>
+                                  <p>{order.userInfo.phone}</p>
+                                  <p>
+                                    {order.userInfo.street +
+                                      ", " +
+                                      order.userInfo.zipcode +
+                                      ", " +
+                                      order.userInfo.city +
+                                      ", " +
+                                      order.userInfo.country}
+                                  </p>
+                                </div>
+                              </Panel>
+                            </Collapse>
+                            <h5>Total price: {order.totalPrice}</h5>
+                            <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
                           </Panel>
-                          <Panel header="Billing info" key="2">
-                            <div>
-                              <p>{order.userInfo.name}</p>
-                              <p>{order.userInfo.email}</p>
-                              <p>{order.userInfo.phone}</p>
-                              <p>
-                                {order.userInfo.street +
-                                  ", " +
-                                  order.userInfo.zipcode +
-                                  ", " +
-                                  order.userInfo.city +
-                                  ", " +
-                                  order.userInfo.country}
-                              </p>
-                            </div>
-                          </Panel>
-                          <Panel header="Shipping" key="3">
-                            <div>
-                              <p>{order.userInfo.name}</p>
-                              <p>{order.userInfo.email}</p>
-                              <p>{order.userInfo.phone}</p>
-                              <p>
-                                {order.userInfo.street +
-                                  ", " +
-                                  order.userInfo.zipcode +
-                                  ", " +
-                                  order.userInfo.city +
-                                  ", " +
-                                  order.userInfo.country}
-                              </p>
-                            </div>
-                          </Panel>
-                        </Collapse>
-                        <h5>Total price: {order.totalPrice}</h5>
-                        <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
-                      </Panel>
-                    ))}
-                  </Collapse>
-                )}
+                        ))}
+                      </Collapse>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <LoadingPage />
+      )}
+      ;
     </div>
   );
 }
