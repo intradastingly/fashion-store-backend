@@ -34,8 +34,14 @@ const { Title } = Typography;
 const { Panel } = Collapse;
 
 function UserProfile() {
-  const { session, activeUser, getUserSpecificOrders, orders, getUser, updateUser } =
-    useContext(ApiContext);
+  const {
+    session,
+    activeUser,
+    getUserSpecificOrders,
+    orders,
+    getUser,
+    updateUser,
+  } = useContext(ApiContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   //useeffect for getting the correct account information
@@ -49,15 +55,17 @@ function UserProfile() {
     } else {
       return;
     }
-  });
+  }, []);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
   const onFinish = (values: any) => {
     updateUser(session.id, values);
+    getUser(session.id);
     setIsModalVisible(false);
   };
+
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -69,9 +77,9 @@ function UserProfile() {
       email: "${label} is not a valid email!",
       number: "${label} is not a valid number!",
     },
-    number: {
-      range: "${label} must be between ${min} and ${max}",
-    },
+    // number: {
+    //   range: "${label} must be between ${min} and ${max}",
+    // },
   };
   /* eslint-enable no-template-curly-in-string */
 
@@ -143,6 +151,7 @@ function UserProfile() {
                         <Form.Item
                           initialValue={activeUser.fullName}
                           name={"fullName"}
+                          rules={[{ required: true }]}
                           label="Name"
                         >
                           <Input />
@@ -150,6 +159,7 @@ function UserProfile() {
                         <Form.Item
                           initialValue={activeUser.phoneNumber}
                           name={"phoneNumber"}
+                          rules={[{ required: true}]}
                           label="Phone Number"
                         >
                           <Input />
@@ -157,8 +167,8 @@ function UserProfile() {
 
                         <Form.Item
                           initialValue={activeUser.email}
+                          rules={[{ required: true, type: "email" }]}
                           name={"email"}
-                          rules={[{ type: "email" }]}
                           label="Email"
                         >
                           <Input />
@@ -166,6 +176,7 @@ function UserProfile() {
                         <Form.Item
                           initialValue={activeUser.address.street}
                           name={["address", "street"]}
+                          rules={[{ required: true }]}
                           label="Street"
                         >
                           <Input />
@@ -173,6 +184,7 @@ function UserProfile() {
                         <Form.Item
                           initialValue={activeUser.address.zipCode}
                           name={["address", "zipCode"]}
+                          rules={[{ required: true }]}
                           label="Zip Code"
                         >
                           <Input />
@@ -180,6 +192,7 @@ function UserProfile() {
                         <Form.Item
                           initialValue={activeUser.address.city}
                           name={["address", "city"]}
+                          rules={[{ required: true }]}
                           label="City"
                         >
                           <Input />
@@ -187,6 +200,7 @@ function UserProfile() {
                         <Form.Item
                           initialValue={activeUser.address.country}
                           name={["address", "country"]}
+                          rules={[{ required: true }]}
                           label="Country"
                         >
                           <Input />
