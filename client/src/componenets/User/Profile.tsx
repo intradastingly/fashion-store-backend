@@ -45,7 +45,6 @@ function UserProfile() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
-
   //useeffect for getting the correct account information
   useEffect(() => {
     getUser(session.id);
@@ -85,11 +84,10 @@ function UserProfile() {
   };
   /* eslint-enable no-template-curly-in-string */
 
-  // if (!currentUser) return <LoadingPage />;
+  if (!activeUser) return <LoadingPage />;
 
   return (
     <div style={profileContainer}>
-
       <div style={infoContainer}>
         <div style={customerContainer}></div>
         {activeUser.role === "admin" ? (
@@ -110,7 +108,6 @@ function UserProfile() {
                   </div>
                 )}
               </div>
-            ) : (
               <div>
                 {activeUser.role === "admin" ? (
                   <div>
@@ -168,152 +165,140 @@ function UserProfile() {
                     onFinish={onFinish}
                     validateMessages={validateMessages}
                   >
-                    <div style={modalStyle}>
-                      <Form
-                        {...layout}
-                        name="userEditor"
-                        onFinish={onFinish}
-                        validateMessages={validateMessages}
-                      >
-                        <Form.Item
-                          initialValue={activeUser.fullName}
-                          name={"fullName"}
-                          rules={[{ required: true }]}
-                          label="Name"
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          initialValue={activeUser.phoneNumber}
-                          name={"phoneNumber"}
-                          rules={[{ required: true}]}
-                          label="Phone Number"
-                        >
-                          <Input />
-                        </Form.Item>
+                    <Form.Item
+                      initialValue={activeUser.fullName}
+                      name={"fullName"}
+                      rules={[{ required: true }]}
+                      label="Name"
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      initialValue={activeUser.phoneNumber}
+                      name={"phoneNumber"}
+                      rules={[{ required: true }]}
+                      label="Phone Number"
+                    >
+                      <Input />
+                    </Form.Item>
 
-                        <Form.Item
-                          initialValue={activeUser.email}
-                          rules={[{ required: true, type: "email" }]}
-                          name={"email"}
-                          label="Email"
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          initialValue={activeUser.address.street}
-                          name={["address", "street"]}
-                          rules={[{ required: true }]}
-                          label="Street"
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          initialValue={activeUser.address.zipCode}
-                          name={["address", "zipCode"]}
-                          rules={[{ required: true }]}
-                          label="Zip Code"
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          initialValue={activeUser.address.city}
-                          name={["address", "city"]}
-                          rules={[{ required: true }]}
-                          label="City"
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          initialValue={activeUser.address.country}
-                          name={["address", "country"]}
-                          rules={[{ required: true }]}
-                          label="Country"
-                        >
-                          <Input />
-                        </Form.Item>
-                        <Form.Item
-                          initialValue={activeUser.fullName}
-                          wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
-                        >
-                          <Button type="primary" htmlType="submit">
-                            Submit
-                          </Button>
-                        </Form.Item>
-                      </Form>
-                    </div>
-                  </Modal>
+                    <Form.Item
+                      initialValue={activeUser.email}
+                      rules={[{ required: true, type: "email" }]}
+                      name={"email"}
+                      label="Email"
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      initialValue={activeUser.address.street}
+                      name={["address", "street"]}
+                      rules={[{ required: true }]}
+                      label="Street"
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      initialValue={activeUser.address.zipCode}
+                      name={["address", "zipCode"]}
+                      rules={[{ required: true }]}
+                      label="Zip Code"
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      initialValue={activeUser.address.city}
+                      name={["address", "city"]}
+                      rules={[{ required: true }]}
+                      label="City"
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      initialValue={activeUser.address.country}
+                      name={["address", "country"]}
+                      rules={[{ required: true }]}
+                      label="Country"
+                    >
+                      <Input />
+                    </Form.Item>
+                    <Form.Item
+                      initialValue={activeUser.fullName}
+                      wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
+                    >
+                      <Button type="primary" htmlType="submit">
+                        Submit
+                      </Button>
+                    </Form.Item>
+                  </Form>
                 </div>
-                {!orders ? (
-                  <div>
-                    <h4>You have no orders at this moment.</h4>
-                  </div>
-                ) : (
-                  <Collapse
-                    style={
-                      isTabletOrMobile ? collapseStyleMobile : collapseStyle
-                    }
-                    accordion
-                  >
-                    {orders.map((order: any, i: string) => (
-                      <Panel header={order._id} key={i}>
-                        <Collapse ghost accordion>
-                          <Panel header="Products" key="1">
-                            {order.cart.map((product: any, key: string) => (
-                              <div style={accordionBorder}>
-                                <p>Item: {product.product.title}</p>
-                                <p>Price: {product.product.price}kr </p>
-                                <p>Quantity: {product.quantity} </p>
-                              </div>
-                            ))}
-                          </Panel>
-                          <Panel header="Billing info" key="2">
-                            <div>
-                              <p>{order.userInfo.name}</p>
-                              <p>{order.userInfo.email}</p>
-                              <p>{order.userInfo.phone}</p>
-                              <p>
-                                {order.userInfo.street +
-                                  ", " +
-                                  order.userInfo.zipcode +
-                                  ", " +
-                                  order.userInfo.city +
-                                  ", " +
-                                  order.userInfo.country}
-                              </p>
+              </Modal>
+            </div>
+            <div style={orderContainer}>
+              {!orders ? (
+                <div>
+                  <h4>You have no orders at this moment.</h4>
+                </div>
+              ) : (
+                <Collapse
+                  style={isTabletOrMobile ? collapseStyleMobile : collapseStyle}
+                  accordion
+                >
+                  {orders.map((order: any, i: string) => (
+                    <Panel header={order._id} key={i}>
+                      <Collapse ghost accordion>
+                        <Panel header="Products" key="1">
+                          {order.cart.map((product: any, key: string) => (
+                            <div style={accordionBorder}>
+                              <p>Item: {product.product.title}</p>
+                              <p>Price: {product.product.price}kr </p>
+                              <p>Quantity: {product.quantity} </p>
                             </div>
-                          </Panel>
-                          <Panel header="Shipping" key="3">
-                            <div>
-                              <p>{order.userInfo.name}</p>
-                              <p>{order.userInfo.email}</p>
-                              <p>{order.userInfo.phone}</p>
-                              <p>
-                                {order.userInfo.street +
-                                  ", " +
-                                  order.userInfo.zipcode +
-                                  ", " +
-                                  order.userInfo.city +
-                                  ", " +
-                                  order.userInfo.country}
-                              </p>
-                            </div>
-                          </Panel>
-                        </Collapse>
-                        <h5>Total price: {order.totalPrice}kr</h5>
-                        <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
-                      </Panel>
-                    ))}
-                  </Collapse>
-                )}
-              </div>
-            )}
+                          ))}
+                        </Panel>
+                        <Panel header="Billing info" key="2">
+                          <div>
+                            <p>{order.userInfo.name}</p>
+                            <p>{order.userInfo.email}</p>
+                            <p>{order.userInfo.phone}</p>
+                            <p>
+                              {order.userInfo.street +
+                                ", " +
+                                order.userInfo.zipcode +
+                                ", " +
+                                order.userInfo.city +
+                                ", " +
+                                order.userInfo.country}
+                            </p>
+                          </div>
+                        </Panel>
+                        <Panel header="Shipping" key="3">
+                          <div>
+                            <p>{order.userInfo.name}</p>
+                            <p>{order.userInfo.email}</p>
+                            <p>{order.userInfo.phone}</p>
+                            <p>
+                              {order.userInfo.street +
+                                ", " +
+                                order.userInfo.zipcode +
+                                ", " +
+                                order.userInfo.city +
+                                ", " +
+                                order.userInfo.country}
+                            </p>
+                          </div>
+                        </Panel>
+                      </Collapse>
+                      <h5>Total price: {order.totalPrice}kr</h5>
+                      <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
+                    </Panel>
+                  ))}
+                </Collapse>
+              )}
+            </div>
           </div>
-        </>
-      ) : (
-        <LoadingPage />
-      )}
-      ;
+        )}
+      </div>
     </div>
   );
 }
@@ -334,6 +319,9 @@ const modalStyle: CSSProperties = {
 
 const collapseStyle: CSSProperties = {
   width: "30rem",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
 };
 
 const collapseStyleMobile: CSSProperties = {
