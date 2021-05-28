@@ -40,9 +40,5 @@ const iconStyle: CSSProperties = {
   fontSize: "2.3rem",
 };
 
-const cartContainer: CSSProperties = {
-  width: "50%",
-  display: "flex",
-};
 
 export default AddToBadge;

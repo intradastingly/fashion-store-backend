@@ -1,3 +1,4 @@
+import { message } from "antd";
 import React, { createContext, useEffect, useState } from "react";
 import { CartItem } from "../componenets/Cart/CartItemsList";
 
@@ -106,6 +107,8 @@ interface State {
   users: AccountInfo[];
   activeUser: AccountInfo;
   orders: any;
+  categoryField: any;
+  buttonSaveLoading: boolean;
 }
 
 interface ContextValue extends State {
@@ -119,6 +122,14 @@ interface ContextValue extends State {
   updateUserCreated: () => void;
   loadAllUsers: () => void;
   getUser: (id: string) => void;
+  saveNewProduct: () => void;
+  titleFieldChange: (e: any) => void;
+  descriptionFieldChange: (e: any) => void;
+  priceFieldChange: (e: any) => void;
+  imageFieldChange: (e: any) => void;
+  quantityFieldChange: (e: any) => void;
+  handleChange: (categoryField: any) => void;
+
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -133,6 +144,8 @@ export const ApiContext = createContext<ContextValue>({
   userCreated: false,
   activeUser: {} as AccountInfo,
   orders: {},
+  categoryField: "",
+  buttonSaveLoading: false,
   getOrder: () => {},
   loginHandler: () => {},
   logOutHandler: () => {},
@@ -143,6 +156,14 @@ export const ApiContext = createContext<ContextValue>({
   loadAllUsers: () => {},
   getUser: () => {},
   getUserSpecificOrders: (id: string) => {},
+  saveNewProduct: () => {},
+  titleFieldChange: () => {},
+  descriptionFieldChange: () => {},
+  imageFieldChange: () => {},
+  priceFieldChange: () => {},
+  quantityFieldChange: () => {},
+  handleChange: () => {}
+
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -163,6 +184,14 @@ function ApiProvider(props: Props) {
   const [users, setAllUsers] = useState<AccountInfo[]>([]);
   const [activeUser, setActiveUser] = useState<AccountInfo>();
   const [orders, setOrders] = useState();
+
+  const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
+  const [titleField, setTitleField] = useState("");
+  const [descriptionField, setDescriptionField] = useState("");
+  const [priceField, setPriceField] = useState("");
+  const [imageField, setImageField] = useState("");
+  const [quantityField, setQuantityField] = useState("");
+  const [categoryField, setCategoryField] = useState<any[]>([]);
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -209,6 +238,16 @@ function ApiProvider(props: Props) {
     const products = await result;
 
     setAllProducts(products);
+  };
+
+  const success = () => {
+    message.success("The product has been published", 3);
+  };
+
+
+
+  const handleChange = (categoryField: any) => {
+    setCategoryField(categoryField);
   };
 
   // maps out all categories
@@ -303,6 +342,50 @@ function ApiProvider(props: Props) {
     setActiveUser(incomingUser);
   };
 
+  // add new product logic
+  const saveNewProduct = async () => {
+
+    let body = {
+      title: titleField,
+      description: descriptionField,
+      quantity: quantityField,
+      category: categoryField,
+      price: priceField,
+      img: imageField,
+    };
+    const result = await fetchRequest('api/products', "POST", body)
+    setButtonSaveLoading(true);
+
+    setTitleField("");
+    setDescriptionField("");
+    setQuantityField("");
+    setPriceField("");
+    setImageField("");
+    setButtonSaveLoading(false);
+    success();
+    return result;
+  };
+  // function for setState when add new product
+  const titleFieldChange = (e: any) => {
+    setTitleField(e.target.value)
+  }
+  // function for setState when add new product
+  const descriptionFieldChange = (e: any) => {
+    setDescriptionField(e.target.value)
+  }
+  // function for setState when add new product
+  const quantityFieldChange = (e: any) => {
+    setQuantityField(e.target.value)
+  }
+  // function for setState when add new product
+  const priceFieldChange = (e: any) => {
+    setPriceField(e.target.value)
+  }
+  // function for setState when add new product
+  const imageFieldChange = (e: any) => {
+    setImageField(e.target.value)
+  }
+
   const fetchRequest = async (url: string, method: string, body?: any) => {
     const response = await fetch(url, {
       method: method,
@@ -339,9 +422,21 @@ function ApiProvider(props: Props) {
         users: users,
         activeUser: activeUser!,
         orders: orders,
+        categoryField: categoryField,
         loadAllUsers: loadAllUsers,
         getUser: getUser,
         getUserSpecificOrders: getUserSpecificOrders,
+        saveNewProduct: saveNewProduct,
+
+        titleFieldChange: titleFieldChange,
+        descriptionFieldChange: descriptionFieldChange,
+        imageFieldChange: imageFieldChange,
+        priceFieldChange: priceFieldChange,
+        quantityFieldChange: quantityFieldChange,
+        handleChange: handleChange,
+        buttonSaveLoading: buttonSaveLoading
+  
+        
       }}
     >
       {props.children}
