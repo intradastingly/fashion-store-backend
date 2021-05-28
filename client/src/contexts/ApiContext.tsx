@@ -108,6 +108,7 @@ interface State {
   orders: any;
   categoryField: any;
   buttonSaveLoading: boolean;
+  currentUser: any;
 }
 
 interface ContextValue extends State {
@@ -148,6 +149,7 @@ export const ApiContext = createContext<ContextValue>({
   orders: {},
   categoryField: "",
   buttonSaveLoading: false,
+  currentUser: {},
   getOrder: () => {},
   loginHandler: () => {},
   logOutHandler: () => {},
@@ -165,7 +167,7 @@ export const ApiContext = createContext<ContextValue>({
   imageFieldChange: () => {},
   priceFieldChange: () => {},
   quantityFieldChange: () => {},
-  handleChange: () => {}
+  handleChange: () => {},
 
 
   updateUser: () => {},
@@ -189,7 +191,7 @@ function ApiProvider(props: Props) {
   const [users, setAllUsers] = useState<AccountInfo[]>([]);
   const [activeUser, setActiveUser] = useState<AccountInfo>();
   const [orders, setOrders] = useState();
-
+  const [currentUser, setCurrentUser] = useState<Object>();
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [titleField, setTitleField] = useState("");
   const [descriptionField, setDescriptionField] = useState("");
@@ -424,36 +426,28 @@ function ApiProvider(props: Props) {
         allProducts: allProducts,
         session: session,
         shippingMethods: shippingMethods,
-
+        currentUser: currentUser,
+        users: users,
+        categoryField: categoryField,
+        buttonSaveLoading: buttonSaveLoading,
         getOrder: getOrder,
         loginHandler: loginHandler,
         logOutHandler: logOutHandler,
         loadProducts: loadProducts,
         mapCategories: mapCategories,
         registerHandler: registerHandler,
-        updateUserCreated: updateUserCreated,
-
-        currentUser: currentUser,
-        users: users,
-        categoryField: categoryField,
+        updateUserCreated: updateUserCreated,   
         loadAllUsers: loadAllUsers,
         getUser: getUser,
         getUserSpecificOrders: getUserSpecificOrders,
         saveNewProduct: saveNewProduct,
-
         titleFieldChange: titleFieldChange,
         descriptionFieldChange: descriptionFieldChange,
         imageFieldChange: imageFieldChange,
         priceFieldChange: priceFieldChange,
         quantityFieldChange: quantityFieldChange,
         handleChange: handleChange,
-        buttonSaveLoading: buttonSaveLoading
-  
-        loadAllUsers: loadAllUsers,
-        getUser: getUser,
-        getUserSpecificOrders: getUserSpecificOrders,
         updateUser: updateUser,
-
       }}
     >
       {props.children}
