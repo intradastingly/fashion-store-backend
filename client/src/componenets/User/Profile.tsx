@@ -34,12 +34,17 @@ const { Title } = Typography;
 const { Panel } = Collapse;
 
 function UserProfile() {
-  const { session, currentUser, getUserSpecificOrders, orders } =
-    useContext(ApiContext);
-  const [user, setUser] = useState<any>();
+  const {
+    session,
+    activeUser,
+    getUserSpecificOrders,
+    orders,
+    getUser,
+    updateUser,
+  } = useContext(ApiContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+
 
   //useeffect for getting the correct account information
   useEffect(() => {
@@ -52,38 +57,17 @@ function UserProfile() {
     } else {
       return;
     }
-  });
-
-  const getUser = async (id: string) => {
-    const response = await fetch(`api/accounts/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const incomingUser = await response.json();
-    setUser(incomingUser);
-  };
-
-  const updateUser = async (id: string, data: any) => {
-    const response = await fetch(`api/accounts/${id}`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
-    const result = await response.json();
-    return result;
-  };
+  }, []);
 
   const showModal = () => {
     setIsModalVisible(true);
   };
   const onFinish = (values: any) => {
     updateUser(session.id, values);
+    getUser(session.id);
     setIsModalVisible(false);
   };
+
   const handleCancel = () => {
     setIsModalVisible(false);
   };
@@ -95,19 +79,20 @@ function UserProfile() {
       email: "${label} is not a valid email!",
       number: "${label} is not a valid number!",
     },
-    number: {
-      range: "${label} must be between ${min} and ${max}",
-    },
+    // number: {
+    //   range: "${label} must be between ${min} and ${max}",
+    // },
   };
   /* eslint-enable no-template-curly-in-string */
 
-  if (!user) return <LoadingPage />;
+  // if (!currentUser) return <LoadingPage />;
 
   return (
     <div style={profileContainer}>
+
       <div style={infoContainer}>
         <div style={customerContainer}></div>
-        {user.role === "admin" ? (
+        {activeUser.role === "admin" ? (
           <div style={adminComponentContainer}>
             <GetAdminList />
           </div>
@@ -125,14 +110,15 @@ function UserProfile() {
                   </div>
                 )}
               </div>
+            ) : (
               <div>
-                {user.role === "admin" ? (
+                {activeUser.role === "admin" ? (
                   <div>
-                    <Title level={2}>{user.role}</Title>
+                    <Title level={2}>{activeUser.role}</Title>
                   </div>
                 ) : (
                   <div>
-                    <Title level={2}>{user.userName}</Title>
+                    <Title level={2}>{activeUser.userName}</Title>
                   </div>
                 )}
               </div>
@@ -149,15 +135,15 @@ function UserProfile() {
                 }
               >
                 <div style={contactContainer}>
-                  <Paragraph>Full name: {user.fullName}</Paragraph>
-                  <Paragraph>Phone Number: {user.phoneNumber}</Paragraph>
-                  <Paragraph>Email: {user.email}</Paragraph>
+                  <Paragraph>Full name: {activeUser.fullName}</Paragraph>
+                  <Paragraph>Phone Number: {activeUser.phoneNumber}</Paragraph>
+                  <Paragraph>Email: {activeUser.email}</Paragraph>
                 </div>
                 <div style={addressContainer}>
-                  <Paragraph>Street: {user.address.street}</Paragraph>
-                  <Paragraph>Zip Code: {user.address.zipCode}</Paragraph>
-                  <Paragraph>City: {user.address.city}</Paragraph>
-                  <Paragraph>Country: {user.address.country}</Paragraph>
+                  <Paragraph>Street: {activeUser.address.street}</Paragraph>
+                  <Paragraph>Zip Code: {activeUser.address.zipCode}</Paragraph>
+                  <Paragraph>City: {activeUser.address.city}</Paragraph>
+                  <Paragraph>Country: {activeUser.address.country}</Paragraph>
                 </div>
               </div>
               <div style={editButtonContainer}>
@@ -182,74 +168,81 @@ function UserProfile() {
                     onFinish={onFinish}
                     validateMessages={validateMessages}
                   >
-                    <Form.Item
-                      initialValue={user.fullName}
-                      name={"fullName"}
-                      label="Name"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.phoneNumber}
-                      name={"phoneNumber"}
-                      label="Phone Number"
-                    >
-                      <Input />
-                    </Form.Item>
+                    <div style={modalStyle}>
+                      <Form
+                        {...layout}
+                        name="userEditor"
+                        onFinish={onFinish}
+                        validateMessages={validateMessages}
+                      >
+                        <Form.Item
+                          initialValue={activeUser.fullName}
+                          name={"fullName"}
+                          rules={[{ required: true }]}
+                          label="Name"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.phoneNumber}
+                          name={"phoneNumber"}
+                          rules={[{ required: true}]}
+                          label="Phone Number"
+                        >
+                          <Input />
+                        </Form.Item>
 
-                    <Form.Item
-                      initialValue={user.email}
-                      name={"email"}
-                      rules={[{ type: "email" }]}
-                      label="Email"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.street}
-                      name={["address", "street"]}
-                      label="Street"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.zipCode}
-                      name={["address", "zipCode"]}
-                      label="Zip Code"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.city}
-                      name={["address", "city"]}
-                      label="City"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.address.country}
-                      name={["address", "country"]}
-                      label="Country"
-                    >
-                      <Input />
-                    </Form.Item>
-                    <Form.Item
-                      initialValue={user.fullName}
-                      wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
-                    >
-                      <Button type="primary" htmlType="submit">
-                        Submit
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                </div>
-              </Modal>
-            </div>
-            <div style={customerInfo}>
-              {/* Here we can map out orders that match the session.username with links to that order */}
-              <div style={orderContainer}>
-                <div>
-                  <Title level={3}>My Orders</Title>
+                        <Form.Item
+                          initialValue={activeUser.email}
+                          rules={[{ required: true, type: "email" }]}
+                          name={"email"}
+                          label="Email"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.street}
+                          name={["address", "street"]}
+                          rules={[{ required: true }]}
+                          label="Street"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.zipCode}
+                          name={["address", "zipCode"]}
+                          rules={[{ required: true }]}
+                          label="Zip Code"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.city}
+                          name={["address", "city"]}
+                          rules={[{ required: true }]}
+                          label="City"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.address.country}
+                          name={["address", "country"]}
+                          rules={[{ required: true }]}
+                          label="Country"
+                        >
+                          <Input />
+                        </Form.Item>
+                        <Form.Item
+                          initialValue={activeUser.fullName}
+                          wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
+                        >
+                          <Button type="primary" htmlType="submit">
+                            Submit
+                          </Button>
+                        </Form.Item>
+                      </Form>
+                    </div>
+                  </Modal>
                 </div>
                 {!orders ? (
                   <div>
@@ -314,10 +307,13 @@ function UserProfile() {
                   </Collapse>
                 )}
               </div>
-            </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      ) : (
+        <LoadingPage />
+      )}
+      ;
     </div>
   );
 }
