@@ -2,8 +2,8 @@ import express from "express";
 const File = require("../fileUpload/model")
 
 exports.upload = (req: any, res: express.Response) => {
-    console.log(req.files)
-    res.status(200).send()
+    console.log(req.file)
+    
     /* if(req.files?.image) {
         const fileName = Date.now() + '-' + req.files.image.name;
         req.files.image.mv(`uploads/${fileName}`, () => {

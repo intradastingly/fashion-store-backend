@@ -2,7 +2,7 @@ POST http://localhost:6969/api/upload
 Content-Type: multipart/form-data; boundary=Row
 
 --Row
-Content-Disposition: form-data; name="image"; filename="chillDog.jpg"
+Content-Disposition: form-data; name="img"; filename="chillDog.jpg"
 Content-Type: image/jpeg
 
 ./chillDog.jpg
