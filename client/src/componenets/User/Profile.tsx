@@ -23,7 +23,7 @@ import React, {
   useRef,
   useContext,
 } from "react";
-import { Link } from "react-router-dom";
+import { useMediaQuery } from "react-responsive";
 import AvatarPic from "../../assets/Avatar2.png";
 import { ApiContext } from "../../contexts/ApiContext";
 import LoadingPage from "../LoadingPage";
@@ -43,6 +43,8 @@ function UserProfile() {
     updateUser,
   } = useContext(ApiContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
+
 
   //useeffect for getting the correct account information
   useEffect(() => {
@@ -87,59 +89,84 @@ function UserProfile() {
 
   return (
     <div style={profileContainer}>
-      {activeUser ? (
-        <>
-          <div style={avatarContainer}>
-            <div>
-              <Avatar src={AvatarPic} size={100} />
-            </div>
-            {activeUser.role === "admin" ? (
-              <div>
-                <Title>{activeUser.role}</Title>
-              </div>
-            ) : (
-              <div>
-                <Title>{activeUser.userName}</Title>
-              </div>
-            )}
+
+      <div style={infoContainer}>
+        <div style={customerContainer}></div>
+        {activeUser.role === "admin" ? (
+          <div style={adminComponentContainer}>
+            <GetAdminList />
           </div>
-          <div style={infoContainer}>
-            <div style={customerContainer}></div>
-            {activeUser.role === "admin" ? (
-              <div style={adminComponentContainer}>
-                <GetAdminList />
+        ) : (
+          <div style={customerContainer}>
+            <div style={avatarContainer}>
+              <div>
+                {isTabletOrMobile ? (
+                  <div>
+                    <Avatar src={AvatarPic} size={60} />
+                  </div>
+                ) : (
+                  <div>
+                    <Avatar src={AvatarPic} size={100} />
+                  </div>
+                )}
               </div>
             ) : (
-              <div style={customerContainer}>
-                <div style={customerInfo}>
+              <div>
+                {activeUser.role === "admin" ? (
                   <div>
-                    <Title level={3}>My information</Title>
+                    <Title level={2}>{activeUser.role}</Title>
                   </div>
+                ) : (
                   <div>
-                    <Paragraph>Full name: {activeUser.fullName}</Paragraph>
-                    <Paragraph>
-                      Phone Number: {activeUser.phoneNumber}
-                    </Paragraph>
-                    <Paragraph>Email: {activeUser.email}</Paragraph>
-                    <Paragraph>Street: {activeUser.address.street}</Paragraph>
-                    <Paragraph>
-                      Zip Code: {activeUser.address.zipCode}
-                    </Paragraph>
-                    <Paragraph>City: {activeUser.address.city}</Paragraph>
-                    <Paragraph>Country: {activeUser.address.country}</Paragraph>
+                    <Title level={2}>{activeUser.userName}</Title>
                   </div>
-                  <Button type="primary" onClick={showModal}>
-                    Edit Information
-                  </Button>
-                  <Modal
-                    title="Edit your profile"
-                    visible={isModalVisible}
-                    onCancel={handleCancel}
-                    footer={[
-                      <Button key="back" onClick={handleCancel}>
-                        Cancel
-                      </Button>,
-                    ]}
+                )}
+              </div>
+            </div>
+            <div style={titleContainer}>
+              <Title level={3}>My information</Title>
+            </div>
+            <div style={customerInfo}>
+              <div
+                style={
+                  isTabletOrMobile
+                    ? contactInfoContainerMobile
+                    : contactInfoContainer
+                }
+              >
+                <div style={contactContainer}>
+                  <Paragraph>Full name: {activeUser.fullName}</Paragraph>
+                  <Paragraph>Phone Number: {activeUser.phoneNumber}</Paragraph>
+                  <Paragraph>Email: {activeUser.email}</Paragraph>
+                </div>
+                <div style={addressContainer}>
+                  <Paragraph>Street: {activeUser.address.street}</Paragraph>
+                  <Paragraph>Zip Code: {activeUser.address.zipCode}</Paragraph>
+                  <Paragraph>City: {activeUser.address.city}</Paragraph>
+                  <Paragraph>Country: {activeUser.address.country}</Paragraph>
+                </div>
+              </div>
+              <div style={editButtonContainer}>
+                <Button type="primary" onClick={showModal}>
+                  Edit Information
+                </Button>
+              </div>
+              <Modal
+                title="Edit your profile"
+                visible={isModalVisible}
+                onCancel={handleCancel}
+                footer={[
+                  <Button key="back" onClick={handleCancel}>
+                    Cancel
+                  </Button>,
+                ]}
+              >
+                <div style={modalStyle}>
+                  <Form
+                    {...layout}
+                    name="userEditor"
+                    onFinish={onFinish}
+                    validateMessages={validateMessages}
                   >
                     <div style={modalStyle}>
                       <Form
@@ -217,71 +244,68 @@ function UserProfile() {
                     </div>
                   </Modal>
                 </div>
-                <div style={customerInfo}>
-                  {/* Here we can map out orders that match the session.username with links to that order */}
-                  <div style={orderContainer}>
-                    <div>
-                      <Title level={3}>My Orders</Title>
-                    </div>
-                    {!orders ? (
-                      <div>
-                        <h4>You have no orders at this moment.</h4>
-                      </div>
-                    ) : (
-                      <Collapse style={collapseStyle} accordion>
-                        {orders.map((order: any, i: string) => (
-                          <Panel header={order._id} key={i}>
-                            <Collapse ghost accordion>
-                              <Panel header="Products" key="1">
-                                {order.cart.map((product: any, key: string) => (
-                                  <div>
-                                    <p>Item: {product.product.title}</p>
-                                    <p>Price: {product.product.price}kr </p>
-                                    <p>Quantity: {product.quantity} </p>
-                                  </div>
-                                ))}
-                              </Panel>
-                              <Panel header="Billing info" key="2">
-                                <div>
-                                  <p>{order.userInfo.name}</p>
-                                  <p>{order.userInfo.email}</p>
-                                  <p>{order.userInfo.phone}</p>
-                                  <p>
-                                    {order.userInfo.street +
-                                      ", " +
-                                      order.userInfo.zipcode +
-                                      ", " +
-                                      order.userInfo.city +
-                                      ", " +
-                                      order.userInfo.country}
-                                  </p>
-                                </div>
-                              </Panel>
-                              <Panel header="Shipping" key="3">
-                                <div>
-                                  <p>{order.userInfo.name}</p>
-                                  <p>{order.userInfo.email}</p>
-                                  <p>{order.userInfo.phone}</p>
-                                  <p>
-                                    {order.userInfo.street +
-                                      ", " +
-                                      order.userInfo.zipcode +
-                                      ", " +
-                                      order.userInfo.city +
-                                      ", " +
-                                      order.userInfo.country}
-                                  </p>
-                                </div>
-                              </Panel>
-                            </Collapse>
-                            <h5>Total price: {order.totalPrice}</h5>
-                            <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
-                          </Panel>
-                        ))}
-                      </Collapse>
-                    )}
+                {!orders ? (
+                  <div>
+                    <h4>You have no orders at this moment.</h4>
                   </div>
-                </div>
+                ) : (
+                  <Collapse
+                    style={
+                      isTabletOrMobile ? collapseStyleMobile : collapseStyle
+                    }
+                    accordion
+                  >
+                    {orders.map((order: any, i: string) => (
+                      <Panel header={order._id} key={i}>
+                        <Collapse ghost accordion>
+                          <Panel header="Products" key="1">
+                            {order.cart.map((product: any, key: string) => (
+                              <div style={accordionBorder}>
+                                <p>Item: {product.product.title}</p>
+                                <p>Price: {product.product.price}kr </p>
+                                <p>Quantity: {product.quantity} </p>
+                              </div>
+                            ))}
+                          </Panel>
+                          <Panel header="Billing info" key="2">
+                            <div>
+                              <p>{order.userInfo.name}</p>
+                              <p>{order.userInfo.email}</p>
+                              <p>{order.userInfo.phone}</p>
+                              <p>
+                                {order.userInfo.street +
+                                  ", " +
+                                  order.userInfo.zipcode +
+                                  ", " +
+                                  order.userInfo.city +
+                                  ", " +
+                                  order.userInfo.country}
+                              </p>
+                            </div>
+                          </Panel>
+                          <Panel header="Shipping" key="3">
+                            <div>
+                              <p>{order.userInfo.name}</p>
+                              <p>{order.userInfo.email}</p>
+                              <p>{order.userInfo.phone}</p>
+                              <p>
+                                {order.userInfo.street +
+                                  ", " +
+                                  order.userInfo.zipcode +
+                                  ", " +
+                                  order.userInfo.city +
+                                  ", " +
+                                  order.userInfo.country}
+                              </p>
+                            </div>
+                          </Panel>
+                        </Collapse>
+                        <h5>Total price: {order.totalPrice}kr</h5>
+                        <h5>Shipped: {order.isHandled ? "Yes" : "No"}</h5>
+                      </Panel>
+                    ))}
+                  </Collapse>
+                )}
               </div>
             )}
           </div>
@@ -301,11 +325,21 @@ const layout = {
 };
 
 const modalStyle: CSSProperties = {
-  height: "26rem",
+  height: "50vh",
+  display: "flex",
+  flexDirection: "row",
+  width: "100%",
+  overflow: "auto",
 };
 
 const collapseStyle: CSSProperties = {
   width: "30rem",
+};
+
+const collapseStyleMobile: CSSProperties = {
+  width: "100%",
+  marginBottom: "10rem",
+  marginTop: "2rem",
 };
 
 const profileContainer: CSSProperties = {
@@ -314,6 +348,7 @@ const profileContainer: CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "flex-start",
+  marginTop: "5rem",
 };
 
 const avatarContainer: CSSProperties = {
@@ -323,19 +358,13 @@ const avatarContainer: CSSProperties = {
   justifyContent: "space-around",
   flexDirection: "column",
   alignItems: "center",
-  borderBottom: "1px solid black",
-  paddingBottom: "2rem",
-  marginTop: "10rem",
+  marginTop: "2rem",
 };
 
 const infoContainer: CSSProperties = {
-  background: "#f5f5f5",
+  background: "#fff",
   height: "100vh",
   width: "100%",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
   overflow: "auto",
 };
 
@@ -343,6 +372,7 @@ const customerInfo: CSSProperties = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
+  alignItems: "center",
 };
 
 const adminComponentContainer: CSSProperties = {
@@ -352,16 +382,9 @@ const adminComponentContainer: CSSProperties = {
 
 const customerContainer: CSSProperties = {
   display: "flex",
-  width: "100%",
-  flexDirection: window.innerWidth < 700 ? "column" : "row",
-  justifyContent: "space-evenly",
-};
-
-const headerContainer: CSSProperties = {
-  display: "flex",
+  flexDirection: "column",
   width: "100%",
   justifyContent: "space-evenly",
-  alignItems: "center",
 };
 
 const orderContainer: CSSProperties = {
@@ -369,13 +392,51 @@ const orderContainer: CSSProperties = {
   flexDirection: "column",
   alignItems: "center",
   minWidth: "20rem",
+  marginTop: "5rem",
 };
 
-const flexCenterColumn: CSSProperties = {
+const contactContainer: CSSProperties = {
   display: "flex",
-  flexDirection: "column",
   alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  width: "100%",
+};
+
+const addressContainer: CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  flexDirection: "column",
+  width: "100%",
+};
+
+const contactInfoContainer: CSSProperties = {
+  display: "flex",
+  width: "50%",
+  alignItems: "center",
+};
+
+const contactInfoContainerMobile: CSSProperties = {
+  display: "flex",
+  width: "100%",
+  alignItems: "center",
+  flexDirection: "column",
+};
+
+const titleContainer: CSSProperties = {
+  display: "flex",
+  alignItems: "flex-start",
   justifyContent: "center",
 };
 
+const editButtonContainer: CSSProperties = {
+  display: "flex",
+  justifyContent: "center",
+};
+
+const accordionBorder: CSSProperties = {
+  borderBottom: "1px solid black",
+  padding: ".5rem",
+};
 export default UserProfile;

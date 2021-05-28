@@ -12,7 +12,6 @@ import AdminLogIn from "./componenets/Admin/AdminLogIn";
 import userLogIn from "./componenets/User/LogIn";
 import UserProfile from "./componenets/User/Profile";
 import CartView from "./componenets/Cart/CartView";
-import Footer2 from "./componenets/Footer";
 import Navbar from "./componenets/Navbar";
 import OrderSuccessMessage from "./componenets/OrderSuccess/OrderSuccessMessage";
 import ProductDetails from "./componenets/ProductDetails/ProductDetails";
@@ -94,7 +93,6 @@ function App() {
                 </Route>
               </Switch>
             </div>
-            <Footer2 />
           </div>
         </Router>
       </CartProvider>

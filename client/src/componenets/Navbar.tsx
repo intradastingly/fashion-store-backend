@@ -8,10 +8,11 @@ import AddToBadge from "./Badge";
 import ApiProvider from "../contexts/ApiContext";
 import { ApiContext } from "../contexts/ApiContext";
 import LoadingPage from "./LoadingPage";
+import { useMediaQuery } from "react-responsive";
 
 function Navbar() {
   const { loggedIn, logOutHandler, session } = useContext(ApiContext);
-
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
   const reloadPage = () => {
     setTimeout(reload, 300);
     function reload() {
@@ -21,14 +22,20 @@ function Navbar() {
 
 
   return (
-    <div style={layoutStyle}>
-      <div style={logoContainer}>
+    <div style={isTabletOrMobile ? layoutStyleMobile : layoutStyle}>
+      <div style={isTabletOrMobile ? logoContainerMobile : logoContainer}>
         <Link to="/">
-          <img src={logo} alt="logo" style={logoStyle} />
+          <img
+            src={logo}
+            alt="logo"
+            style={isTabletOrMobile ? logoStyleMobile : logoStyle}
+          />
         </Link>
       </div>
-      <div style={actionContainer}>
-        <div style={navRightContainer}>
+      <div style={isTabletOrMobile ? actionContainerMobile : actionContainer}>
+        <div
+          style={isTabletOrMobile ? navRightContainerMobile : navRightContainer}
+        >
           {!loggedIn ? (
             <Button href="/login" type="primary" size="small">
               Log in
@@ -49,13 +56,17 @@ function Navbar() {
             <AddToBadge />
           </Link>
           {!session ? null : session.role === "admin" ? (
-            <Link to="/profile">
-              <h3 style={{ color: "white" }}>Panel</h3>
-            </Link>
+            <div style={profileLink}>
+              <Link to="/profile">
+                <h3 style={{ color: "white" }}>Panel</h3>
+              </Link>
+            </div>
           ) : (
-            <Link to="/profile">
-              <h3 style={{ color: "white" }}>Profile</h3>
-            </Link>
+            <div style={profileLink}>
+              <Link to="/profile">
+                <h3 style={{ color: "white" }}>Profile</h3>
+              </Link>
+            </div>
           )}
         </div>
       </div>
@@ -66,7 +77,7 @@ function Navbar() {
 const layoutStyle: CSSProperties = {
   width: "100%",
   background: "black",
-  height: window.innerWidth > 768 ? "6rem" : "5rem",
+  height: "6rem",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
@@ -76,10 +87,30 @@ const layoutStyle: CSSProperties = {
   position: "fixed",
 };
 
+const layoutStyleMobile: CSSProperties = {
+  width: "100%",
+  background: "black",
+  height: "4rem",
+  display: "flex",
+  alignItems: "center",
+  textDecoration: "none",
+  zIndex: 100,
+  borderBottom: "none",
+  position: "fixed",
+};
+
 const logoStyle: CSSProperties = {
-  marginLeft: window.innerWidth > 768 ? "-1rem" : "-3rem",
   padding: "2rem",
-  width: window.innerWidth > 768 ? "11.5rem" : "8rem",
+  width: "12rem",
+};
+
+const profileLink: CSSProperties = {
+  marginLeft: "2rem",
+};
+
+const logoStyleMobile: CSSProperties = {
+  padding: "2rem",
+  width: "8rem",
 };
 
 const navRightContainer: CSSProperties = {
@@ -90,14 +121,32 @@ const navRightContainer: CSSProperties = {
   width: "80%",
 };
 
+const navRightContainerMobile: CSSProperties = {
+  display: "flex",
+  justifyContent: "space-evenly",
+  alignItems: "center",
+  height: "100%",
+  width: "70%",
+};
+
 const logoContainer: CSSProperties = {
   width: "100%",
+};
+
+const logoContainerMobile: CSSProperties = {
+  width: "25%",
 };
 
 const actionContainer: CSSProperties = {
   width: "50%",
   display: "flex",
   justifyContent: "center",
+};
+
+const actionContainerMobile: CSSProperties = {
+  width: "60%",
+  display: "flex",
+  justifyContent: "flex-end",
 };
 
 export default Navbar;
