@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const fileUpload = require('express-fileupload');
 const port = process.env.PORT || 6969;
 const app = express();
 const cookieSession = require("cookie-session");
@@ -9,6 +10,7 @@ const orderRouter = require("./resources/order/router");
 const loginRouter = require("./resources/login/router");
 /* const cookieRouter = require("./cookies") */
 const shippingRouter = require("./resources/shipping/router");
+const uploadRouter = require("./resources/fileUpload/router")
 
 const uri =
   "mongodb+srv://admin:admin@cluster0.4v0hr.mongodb.net/yousef?retryWrites=true&w=majority";
@@ -22,7 +24,6 @@ mongoose
   .then(() => {
     console.log("You're now connected to the database.");
     app.use(express.json());
-
     app.use(cookieSession({
       name: "session",
       secret: "SuperSecretKey",
@@ -31,6 +32,10 @@ mongoose
       httpOnly: false,
       path: "/",
     }));
+    app.use(fileUpload({
+      createParentPath: true
+    }));
+    app.use("/api", uploadRouter)
     app.use("/api", loginRouter);
     app.use("/api", productRouter);
     app.use("/api", accountRouter);
