@@ -19,9 +19,6 @@ function Navbar() {
     }
   };
 
-  if (loggedIn) {
-    console.log(session);
-  }
 
   return (
     <div style={layoutStyle}>

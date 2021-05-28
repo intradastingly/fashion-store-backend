@@ -96,7 +96,6 @@ const userSession: Credentials = {
 };
 interface State {
   session: any;
-  currentUser: any;
   allProducts: ProductInfo[];
   shippingMethods: ShippingInfo[];
   loggedIn: boolean;
@@ -119,12 +118,12 @@ interface ContextValue extends State {
   updateUserCreated: () => void;
   loadAllUsers: () => void;
   getUser: (id: string) => void;
+  updateUser: (id: string, data: AccountInfo) => void;
 }
 
 export const ApiContext = createContext<ContextValue>({
   loggedIn: false,
   session: {},
-  currentUser: {},
   allProducts: [],
   users: [],
   shippingMethods: [],
@@ -143,6 +142,7 @@ export const ApiContext = createContext<ContextValue>({
   loadAllUsers: () => {},
   getUser: () => {},
   getUserSpecificOrders: (id: string) => {},
+  updateUser: () => {},
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -157,7 +157,6 @@ function ApiProvider(props: Props) {
   const [session, setSession] = useState<any>(null);
   const [order, setOrder] = useState<any>();
   const [userIsLoggedIn, setuserIsLoggedIn] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<Object>();
   const [categories, setCategories] = useState<Category[]>([]);
   const [userCreated, setUserCreated] = useState<boolean>(false);
   const [users, setAllUsers] = useState<AccountInfo[]>([]);
@@ -296,11 +295,16 @@ function ApiProvider(props: Props) {
     setOrder(result);
   }
 
-  // get one user logic [CURRENTLY UNUSED!!]
+  // get one user logic
   const getUser = async (id: string) => {
     const result = await fetchRequest(`api/accounts/${id}`, "GET");
     const incomingUser = await result;
     setActiveUser(incomingUser);
+  };
+
+  const updateUser = async (id: string, data: any) => {
+    const result = await fetchRequest(`api/accounts/${id}`, "PUT", data);
+    return result;
   };
 
   const fetchRequest = async (url: string, method: string, body?: any) => {
@@ -322,11 +326,15 @@ function ApiProvider(props: Props) {
       value={{
         userCreated: userCreated,
         order: order,
-
+        categories: categories,
+        users: users,
+        activeUser: activeUser!,
+        orders: orders,
         loggedIn: userIsLoggedIn,
         allProducts: allProducts,
         session: session,
         shippingMethods: shippingMethods,
+
         getOrder: getOrder,
         loginHandler: loginHandler,
         logOutHandler: logOutHandler,
@@ -334,14 +342,10 @@ function ApiProvider(props: Props) {
         mapCategories: mapCategories,
         registerHandler: registerHandler,
         updateUserCreated: updateUserCreated,
-        categories: categories,
-        currentUser: currentUser,
-        users: users,
-        activeUser: activeUser!,
-        orders: orders,
         loadAllUsers: loadAllUsers,
         getUser: getUser,
         getUserSpecificOrders: getUserSpecificOrders,
+        updateUser: updateUser,
       }}
     >
       {props.children}
