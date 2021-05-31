@@ -240,6 +240,8 @@ function UserProfile() {
                   <h4>You have no orders at this moment.</h4>
                 </div>
               ) : (
+                <>
+                <h4>Your Orders</h4>
                 <Collapse
                   style={isTabletOrMobile ? collapseStyleMobile : collapseStyle}
                   accordion
@@ -294,6 +296,7 @@ function UserProfile() {
                     </Panel>
                   ))}
                 </Collapse>
+                </>
               )}
             </div>
           </div>
