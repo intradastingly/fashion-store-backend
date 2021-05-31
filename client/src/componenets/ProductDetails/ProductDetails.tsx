@@ -47,7 +47,7 @@ function ProductDetails(props: Props) {
         <h2 style={titleStyle}>{product?.title}</h2>
         <h4>{product?.description} </h4>
         <h2 style={price}>{product?.price + "kr"} </h2>
-        <h2>Products in stock: {product.quantity}</h2>
+        {product.quantity < 1 ? <h2>This product is out of stock.</h2> : null}
 
         <Button
           type="primary"
