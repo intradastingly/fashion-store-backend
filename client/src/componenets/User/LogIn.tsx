@@ -138,7 +138,7 @@ function UserLogIn() {
                 </div>
               </div>
               <div style={buttonContainer}>
-                <Button onClick={(e: any) => onFinish(e)}>Log In</Button>
+                <Button onClick={(e: any) => onFinish(e)}  htmlType="submit">Log In</Button>
                 <Button onClick={(e: any) => openModal(e)}>Register</Button>
               </div>
             </form>
