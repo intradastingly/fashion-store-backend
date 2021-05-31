@@ -2,11 +2,10 @@ export {};
 const express = require("express");
 const fileUploadRouter = express.Router();
 const controller = require("./controller");
-const multer = require("multer")
-const upload = multer({dest: '../client/src/assets/uploads'})
+const upload = require("./multer")
 
 fileUploadRouter
-    .post("/upload", upload.single('img'), controller.upload)
+    .post("/upload", upload.uploadImg, controller.upload)
     .get("/upload", controller.allImages)
 
 module.exports = fileUploadRouter;
