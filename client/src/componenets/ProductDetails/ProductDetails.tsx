@@ -1,7 +1,7 @@
 import { Row, Col, message, Button } from "antd";
-import { CSSProperties, useState, useContext, useEffect } from "react";
+import React, { CSSProperties, useState, useContext, useEffect } from "react";
 import { Image } from "antd";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { Redirect, RouteComponentProps, withRouter } from "react-router-dom";
 import { Product } from "../ProductItemsList";
 import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import { CartContext } from "../../contexts/CartContext";
@@ -19,46 +19,62 @@ const success = () => {
 function ProductDetails(props: Props) {
   const { allProducts } = useContext(ApiContext);
   const { addProductToCart } = useContext(CartContext);
-  const [product, setProduct] = useState<any>(undefined);
+  const [product, setProduct] = useState<any>();
 
-  useEffect(() => {
-    const productId = String((props.match.params as any).id);
-    const product = allProducts.find((p: ProductInfo) => p._id === productId);
-    setProduct(product);
-    console.log(product?.quantity);
+
+  useEffect( () => {
+
+    if(!allProducts) {
+      return
+    }
+
+    const test = () => {
+      const productId = String((props.match.params as any).id);
+      const product = allProducts.find((p: ProductInfo) => p._id === productId);
+      setProduct(product);
+    }
+    test()
+
+    
+
   }, []);
 
   function handleAddClick() {
     success();
     addProductToCart(product!, undefined);
-  }
-
-  if (!product) {
-    return <LoadingPage />;
-  }
-
+  } 
+  
   return (
-    <Row style={detailContainer}>
-      <Col lg={{ span: 10 }} style={columnStyle}>
-        <Image src={product?.img} />
-      </Col>
+    <>
+    { !product || !allProducts? (
+      <LoadingPage />
+    ) : (
+      <Row style={detailContainer}>
+        <Col lg={{ span: 10 }} style={columnStyle}>
+          <Image src={product?.img} />
+        </Col>
+  
+        <Col lg={{ span: 10 }} style={columnStyle}>
+          <h2 style={titleStyle}>{product?.title}</h2>
+          <h4>{product?.description} </h4>
+          <h2 style={price}>{product?.price + "kr"} </h2>
+          <h2>Products in stock: {product?.quantity}</h2>
+  
+          <Button
+            type="primary"
+            disabled={product?.quantity <= 0 ? true : false}
+            style={{ marginTop: "1rem", width: "8rem", marginBottom: "6rem" }}
+            onClick={handleAddClick}
+          >
+            Add to cart
+          </Button>
+        </Col>
+      </Row>
+      
+    )
 
-      <Col lg={{ span: 10 }} style={columnStyle}>
-        <h2 style={titleStyle}>{product?.title}</h2>
-        <h4>{product?.description} </h4>
-        <h2 style={price}>{product?.price + "kr"} </h2>
-        <h2>Products in stock: {product.quantity}</h2>
-
-        <Button
-          type="primary"
-          disabled={product.quantity <= 0 ? true : false}
-          style={{ marginTop: "1rem", width: "8rem", marginBottom: "6rem" }}
-          onClick={handleAddClick}
-        >
-          Add to cart
-        </Button>
-      </Col>
-    </Row>
+    }
+    </>
   );
 }
 
