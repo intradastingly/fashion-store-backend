@@ -11,11 +11,6 @@ class LoadingPage extends Component<Props, State> {
     hasError: false,
   };
 
-  componentDidMount() {
-    const navigateBack = () => this.props.history.goBack();
-    setTimeout(navigateBack, 2000)
-
-  }
   render() {
     return (
       <div style={ErrorPageStyle}>
