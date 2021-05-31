@@ -28,14 +28,12 @@ function ProductDetails(props: Props) {
       return
     }
 
-    const test = () => {
+    const findAndSetProduct = () => {
       const productId = String((props.match.params as any).id);
       const product = allProducts.find((p: ProductInfo) => p._id === productId);
       setProduct(product);
     }
-    test()
-
-    
+    findAndSetProduct()
 
   }, []);
 
@@ -47,7 +45,7 @@ function ProductDetails(props: Props) {
   return (
     <>
     { !product || !allProducts? (
-      <LoadingPage />
+      <ErrorPage/>
     ) : (
       <Row style={detailContainer}>
         <Col lg={{ span: 10 }} style={columnStyle}>
