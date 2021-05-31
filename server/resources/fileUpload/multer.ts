@@ -1,12 +1,14 @@
 const multer = require("multer")
+const path = require("path")
 
 const multerStorage = multer.diskStorage({
     destination: (req: any, file: any, cb: (arg0: null, arg1: string) => void) => {
         cb(null, "../client/src/assets/");
     },
-    filename: (req: any, file: { mimetype: string; fieldname: any; }, cb: (arg0: null, arg1: string) => void) => {
+    filename: (req: any, file: any, cb: (arg0: null, arg1: string) => void) => {
         const ext = file.mimetype.split("/")[1];
-        cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
+        console.log()
+        cb(null, `${file.fieldname}-${Date.now()}` + path.extname(file.originalname));
     },
     });
 
@@ -20,6 +22,7 @@ const multerStorage = multer.diskStorage({
 
 const upload = multer({
     storage: multerStorage,
+    limits:{fileSize: 1000000},
     fileFilter: multerFilter,
 })
 

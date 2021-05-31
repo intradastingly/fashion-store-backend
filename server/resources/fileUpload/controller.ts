@@ -1,6 +1,7 @@
 import express from "express";
 const File = require("../fileUpload/model")
 
+
 exports.upload = (req: any, res: express.Response) => {
     console.log(req.file)
     
