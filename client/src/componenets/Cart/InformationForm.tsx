@@ -44,8 +44,6 @@ function InformationForm(props: Props) {
 
   useEffect(() => {
     getUser(session.id);
-    console.log(activeUser);
-    
   }, []);
 
   const onValuesChange = (values: any, allValues: any) => {

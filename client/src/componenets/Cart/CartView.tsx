@@ -56,17 +56,17 @@ function CartView() {
     return getTotalPriceProducts();
   }
 
-  if(cart.length === 0){
+  if (cart.length === 0) {
     return (
       <Row style={cartViewContainerStyle}>
-         <CartItemsList />
+        <CartItemsList />
         <div>
           <h3 style={priceTextStyle}>
-            Nothing in cart. <a href="/"> Go back</a> 
+            Nothing in cart. <a href="/"> Go back</a>
           </h3>
         </div>
-    </Row>
-    )
+      </Row>
+    );
   }
 
   return (
