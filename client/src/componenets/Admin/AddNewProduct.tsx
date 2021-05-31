@@ -79,13 +79,11 @@ function AddNewProduct(props: Props, state: State) {
   };
 
   const saveNewImage = async () => {
-    const body = {
-      file: imageField
-    }
-    console.log(body)
+    const formData = new FormData()
+    formData.append('img', imageField)
     await fetch("/api/upload", {
       method: "POST",
-      body: JSON.stringify(body),
+      body: formData,
       headers:{
         "Content-Type": "multipart/form-data; boundary=Row"
       }
