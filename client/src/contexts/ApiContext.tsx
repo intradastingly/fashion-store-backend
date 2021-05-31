@@ -295,7 +295,7 @@ function ApiProvider(props: Props) {
     } else if (result.message === "Login successful") {
       setSession(result.session);
       setuserIsLoggedIn(true);
-      getUser(session.id);
+      getUser(result.session.id);
     }
     return result;
   }

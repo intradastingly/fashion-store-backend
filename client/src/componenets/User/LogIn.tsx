@@ -56,11 +56,9 @@ function UserLogIn() {
 
   const onFinish = (value: Credentials) => {
     console.log(value);
-
     renderLoading();
     loginHandler(value);
     console.log(loggedIn, "logged in bool");
-
     reloadPage();
   };
 
