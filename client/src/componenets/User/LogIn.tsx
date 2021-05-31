@@ -19,14 +19,15 @@ import {
   useEffect,
 } from "react";
 import { Link, Route } from "react-router-dom";
-import { ApiContext } from "../../contexts/ApiContext";
+
+import { ApiContext, Credentials } from "../../contexts/ApiContext";
 import LoadingPage from "../LoadingPage";
 import RegisterForm from "./Register";
 
-interface Credentials {
-  userName: string;
-  password: string;
-}
+// interface Credentials {
+//   userName: string;
+//   password: string;
+// }
 function UserLogIn() {
   const {
     loginHandler,
@@ -42,17 +43,7 @@ function UserLogIn() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [newUsername, setNewUsername] = useState<string>("");
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [fullName, setFullName] = useState<string>("");
-  const [street, setStreet] = useState<string>("");
-  const [zipCode, setZipCode] = useState<string>("");
-  const [city, setCity] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
-
-  const loginCredentials = { userName: username, password: password };
+  // const loginCredentials = { userName: username, password: password };
   const { Title } = Typography;
 
   const success = () => {
@@ -63,12 +54,11 @@ function UserLogIn() {
     onRegister();
   }, [userCreated]);
 
-  const onFinish = (e: any) => {
-    e.preventDefault();
+  const onFinish = (value: Credentials) => {
+    console.log(value);
     renderLoading();
-    loginHandler(loginCredentials);
+    loginHandler(value);
     console.log(loggedIn, "logged in bool");
-
     reloadPage();
   };
 
@@ -100,6 +90,7 @@ function UserLogIn() {
     setLoading(true);
     setTimeout(() => setLoading(false), 5000);
   }
+
   if (loading) return <LoadingPage />;
 
   return (
@@ -116,44 +107,44 @@ function UserLogIn() {
             LOG IN{" "}
           </h1>
           <div style={fullContainer}>
-            <form name="basic">
-              <div style={formContainer}>
-                <div>
-                  <input
-                    style={inputField}
-                    name="username"
-                    placeholder="username"
-                    onChange={(e: any) => setUsername(e.target.value)}
-                    type="text"
-                  />
-                </div>
-                <div>
-                  <input
-                    style={inputField}
-                    name="username"
-                    placeholder="password"
-                    onChange={(e: any) => setPassword(e.target.value)}
-                    type="password"
-                  />
-                </div>
-              </div>
-              <div style={buttonContainer}>
-                <Button onClick={(e: any) => onFinish(e)}>Log In</Button>
+            <Form
+              {...layout}
+              name="basic"
+              initialValues={{ remember: true }}
+              onFinish={onFinish}
+            >
+              <Form.Item
+                label="Username"
+                name="userName"
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[
+                  { required: true, message: "Please input your password!" },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item {...tailLayout}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  onClick={(e: any) => onFinish}
+                >
+                  Submit
+                </Button>
                 <Button onClick={(e: any) => openModal(e)}>Register</Button>
-              </div>
-            </form>
+              </Form.Item>
+            </Form>
             <div>
-              {/* {userCreated ? (
-                <message/>
-                <div style={successTitle}>
-                  <div>
-                    <Title level={4}>User created! ✔</Title>
-                    <Title level={5}>
-                      You can now log in and spend your hard earned cash.
-                    </Title>
-                  </div>
-                </div>
-              ): null} */}
               <Modal
                 visible={isModalVisible}
                 footer={[
@@ -181,6 +172,15 @@ function UserLogIn() {
     </div>
   );
 }
+
+//formlayout
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
+const tailLayout = {
+  wrapperCol: { offset: 8, span: 16 },
+};
 
 const ContainerStyle: CSSProperties = {
   display: "flex",
