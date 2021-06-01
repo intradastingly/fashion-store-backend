@@ -6,7 +6,7 @@ exports.upload = async (req: any, res: express.Response) => {
     console.log(req.file)
     try {
         const newFile = await File.create({
-          name: "../../assets/" + req.file.filename,
+          name: req.file.filename,
         });
         res.status(200).json(newFile.name);
       } catch (error) {
