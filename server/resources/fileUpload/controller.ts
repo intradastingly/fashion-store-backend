@@ -2,17 +2,21 @@ import express from "express";
 const File = require("../fileUpload/model")
 
 
-exports.upload = (req: any, res: express.Response) => {
+exports.upload = async (req: any, res: express.Response) => {
     console.log(req.file)
-    console.log('test')
-    /* if(req.files?.image) {
-        const fileName = Date.now() + '-' + req.files.image.name;
-        req.files.image.mv(`uploads/${fileName}`, () => {
-            res.status(200).send(fileName)
-        })
-    } else {
-        res.status(500).send()
-    } */
+    try {
+        const newFile = await File.create({
+          name: req.file.filename,
+        });
+        res.status(200).json({
+          status: "success",
+          message: "File created successfully!!",
+        });
+      } catch (error) {
+        res.json({
+          error,
+        });
+      }
 }
 
 exports.allImages = (req: any, res: express.Response) => {
