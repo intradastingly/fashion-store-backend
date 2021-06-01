@@ -366,6 +366,13 @@ function ApiProvider(props: Props) {
   // add new product logic
   const saveNewProduct = async () => {
 
+    if(titleField === "" || 
+      descriptionField === "" || 
+      quantityField === null || 
+      priceField === null) {
+      return
+    }
+
     let body = {
       title: titleField,
       description: descriptionField,

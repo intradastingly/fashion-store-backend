@@ -14,6 +14,8 @@ interface State {
 
 
 function AddNewProduct(props: Props, state: State) {
+
+
   const [imageField, setImageField] = useState<any>({});
   const { mapCategories, 
           loadProducts, 
@@ -85,29 +87,13 @@ function AddNewProduct(props: Props, state: State) {
       <form style={layoutStyle}>
         <h2>Add New Product</h2>
         <label>Title: </label>
-        <input
-          name="title"
-          onChange={titleFieldChange}
-          required
-        />
+        <input name="title" onChange={titleFieldChange} required />
         <label>Description: </label>
-        <input
-          name="description"
-          onChange={descriptionFieldChange}
-          required
-        />
+        <input name="description" onChange={descriptionFieldChange} required />
         <label>Price: </label>
-        <input
-          name="price"
-          onChange={priceFieldChange}
-          required
-        />
+        <input name="price" onChange={priceFieldChange} required />
         <label>Quantity: </label>
-        <input
-          name="quantity"
-          onChange={quantityFieldChange}
-          required
-        />
+        <input name="quantity" onChange={quantityFieldChange} required />
         <label>Category: </label>
         <Select
           onChange={handleChange}
@@ -125,16 +111,17 @@ function AddNewProduct(props: Props, state: State) {
           ))}
         </Select>
         <label>Image: </label>
-        <input 
-          type="file" 
-          name="img" 
+        <input
+          required
+          type="file"
+          name="img"
           onChange={(e: any) => setImageField(e.target.files[0])}
         />
         <Button
           type="primary"
           onClick={() => {
-            saveNewImage()
-            saveNewProduct()
+            saveNewImage();
+            saveNewProduct();
           }}
           htmlType="submit"
           loading={buttonSaveLoading}
