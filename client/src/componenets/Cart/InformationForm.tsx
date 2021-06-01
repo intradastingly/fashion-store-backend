@@ -139,6 +139,14 @@ function InformationForm(props: Props) {
             >
               <Input />
             </Form.Item>
+            <Form.Item
+              name={["user", "country"]}
+              initialValue={activeUser.address.country}
+              label="Country"
+              rules={[{ required: true }]}
+            >
+              <Input />
+            </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 5 }}>
               <Button disabled={maxQuantity} type="primary" htmlType="submit">
                 Next
