@@ -4,6 +4,8 @@ import {
   ContextType,
   CSSProperties,
   useContext,
+  useEffect,
+  useReducer,
   useState,
 } from "react";
 import { ApiContext } from "../../contexts/ApiContext";

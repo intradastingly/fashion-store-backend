@@ -1,19 +1,20 @@
-import { Avatar, Col, List, Row, InputNumber, message } from "antd";
-import { useContext, CSSProperties, useState, useEffect } from "react";
+import { Avatar, Col, List, Row, InputNumber } from "antd";
+import { useContext, CSSProperties, useState, useReducer } from "react";
 import { Product } from "../ProductItemsList";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
 import { ApiContext } from "../../contexts/ApiContext";
-import Item from "antd/lib/list/Item";
 
 export interface CartItem {
   product: Product;
   quantity: number;
 }
+
 function CartItemsList() {
   const { deleteProductFromCart, addProductToCart } = useContext(CartContext);
   const { allProducts } = useContext(ApiContext);
   const [maxQuantity, setMaxQuantity] = useState<boolean>(false);
+  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
 
   function handleDelete(id: number) {
     deleteProductFromCart(id as number);
@@ -25,10 +26,10 @@ function CartItemsList() {
     } else if (quantity <= product.quantity) {
       setMaxQuantity(false);
     }
-
+    forceUpdate();
     addProductToCart(product, quantity);
   }
-  console.log(maxQuantity);
+  // console.log(maxQuantity);
 
   return (
     <CartContext.Consumer>
@@ -65,7 +66,12 @@ function CartItemsList() {
                         <InputNumber
                           min={1}
                           max={item.product.quantity}
-                          defaultValue={item.quantity}
+                          defaultValue={
+                            item.quantity
+                            //  > item.product.quantity
+                            //   ? item.product.quantity
+                            //   : item.quantity
+                          }
                           onChange={(value) => {
                             onChangeQuantity(value, item.product);
                           }}
