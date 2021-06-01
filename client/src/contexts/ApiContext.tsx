@@ -390,8 +390,8 @@ function ApiProvider(props: Props) {
     setPriceField(e.target.value)
   }
   // function for setState when add new product
-  const imageFieldChange = (e: any) => {
-    setImageField(e.target.value)
+  const imageFieldChange = (value: string) => {
+    setImageField(value)
   }
 
   const updateUser = async (id: string, data: any) => {

@@ -12,7 +12,6 @@ interface State {
 }
 
 
-
 function AddNewProduct(props: Props, state: State) {
   const [imageField, setImageField] = useState<any>({});
   const { mapCategories, 
@@ -49,8 +48,7 @@ function AddNewProduct(props: Props, state: State) {
   const saveNewImage = async () => {
     const formData = new FormData()
     formData.append('img', imageField)
-
-    await fetch("/api/upload", {
+    const response = await fetch("/api/upload", {
       method: "POST",
       body: formData,
       credentials: 'include',
@@ -58,6 +56,9 @@ function AddNewProduct(props: Props, state: State) {
         "Accept": "multipart/form-data; boundary=Row"
       }
     })
+    const imgPath = await response.json();
+    console.log(imgPath)
+    imageFieldChange(imgPath)
   }
 
 
