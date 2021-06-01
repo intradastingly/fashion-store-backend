@@ -11,20 +11,22 @@ interface State {
   buttonSaveLoading: boolean;
 }
 
-const success = () => {
-  message.success("The product has been published", 3);
-};
+
 
 function AddNewProduct(props: Props, state: State) {
-  const { mapCategories, loadProducts } = useContext(ApiContext);
-  const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
-  const [titleField, setTitleField] = useState("");
-  const [descriptionField, setDescriptionField] = useState("");
-  const [priceField, setPriceField] = useState("");
   const [imageField, setImageField] = useState<any>({});
-  const [quantityField, setQuantityField] = useState("");
-  const [categoryField, setCategoryField] = useState<any[]>([]);
-  console.log(imageField)
+  const { mapCategories, 
+          loadProducts, 
+          saveNewProduct, 
+          titleFieldChange,
+          quantityFieldChange,
+          priceFieldChange,
+          imageFieldChange,
+          descriptionFieldChange,
+          handleChange,
+          categoryField,
+          buttonSaveLoading } = useContext(ApiContext);
+
   const options = [
     { value: "All" },
     { value: "Jumpsuits" },
@@ -36,48 +38,14 @@ function AddNewProduct(props: Props, state: State) {
     { value: "Skirts" },
     { value: "T-shirts" },
   ];
-  const filteredOptions = options.filter((o) => !categoryField.includes(o));
 
-  const handleChange = (categoryField: any) => {
-    setCategoryField(categoryField);
-  };
+  const filteredOptions = options.filter((o) => !categoryField.includes(o));
 
   useEffect(() => {
     loadProducts();
     mapCategories();
   }, []);
-
-  const saveNewProduct = async () => {
-    setButtonSaveLoading(true);
-    saveNewImage()
-    let body = {
-      title: titleField,
-      description: descriptionField,
-      quantity: quantityField,
-      category: categoryField,
-      price: priceField,
-      /* img: imageField, */
-    };
-
-    const response = await fetch("/api/products", {
-      method: "POST",
-      body: JSON.stringify(body),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = response.json();
-    setTitleField("");
-    setDescriptionField("");
-    setQuantityField("");
-    setPriceField("");
-    setImageField("");
-    setButtonSaveLoading(false);
-    success();
-    return result;
-  };
-
+  
   const saveNewImage = async () => {
     const formData = new FormData()
     formData.append('img', imageField)
@@ -119,32 +87,27 @@ function AddNewProduct(props: Props, state: State) {
         <label>Title: </label>
         <input
           name="title"
-          onChange={(e: any) => setTitleField(e.target.value)}
+          onChange={titleFieldChange}
+          required
         />
         <label>Description: </label>
         <input
           name="description"
-          onChange={(e: any) => setDescriptionField(e.target.value)}
+          onChange={descriptionFieldChange}
+          required
         />
         <label>Price: </label>
         <input
           name="price"
-          onChange={(e: any) => setPriceField(e.target.value)}
+          onChange={priceFieldChange}
+          required
         />
-        
-        {/* <input
-          name="img"
-          onChange={(e: any) => setImageField(e.target.value)}
-        /> */}
-       
-        
         <label>Quantity: </label>
         <input
           name="quantity"
-          onChange={(e: any) => setQuantityField(e.target.value)}
+          onChange={quantityFieldChange}
+          required
         />
-        
-        
         <label>Category: </label>
         <Select
           onChange={handleChange}
@@ -156,7 +119,7 @@ function AddNewProduct(props: Props, state: State) {
           options={options}
         >
           {filteredOptions.map((item: any) => (
-            <Select.Option key={item} value={item}>
+            <Select.Option key={item} value={item} required>
               {item}
             </Select.Option>
           ))}
@@ -169,7 +132,10 @@ function AddNewProduct(props: Props, state: State) {
         />
         <Button
           type="primary"
-          onClick={saveNewProduct}
+          onClick={() => {
+            saveNewImage
+            saveNewProduct
+          }}
           htmlType="submit"
           loading={buttonSaveLoading}
           style={{ marginTop: "1rem" }}

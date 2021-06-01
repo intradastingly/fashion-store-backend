@@ -1,84 +1,101 @@
-import { Row, Col, message, Button } from 'antd';
-import {  CSSProperties, useState, useContext, useEffect } from 'react'; 
-import { Image } from 'antd';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Row, Col, message, Button } from "antd";
+import React, { CSSProperties, useState, useContext, useEffect } from "react";
+import { Image } from "antd";
+import { Redirect, RouteComponentProps, withRouter } from "react-router-dom";
 import { Product } from "../ProductItemsList";
-import { ApiContext, ProductInfo } from '../../contexts/ApiContext';
-import { CartContext } from '../../contexts/CartContext';
-import ErrorPage from '../ErrorPage';
+import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
+import { CartContext } from "../../contexts/CartContext";
+import ErrorPage from "../ErrorPage";
+import LoadingPage from "../LoadingPage";
 interface State {
-    product?: ProductInfo;
+  product?: ProductInfo;
 }
 interface Props extends RouteComponentProps {
-    id: number
+  id: number;
 }
 const success = () => {
-    message.success('The product was added to the cart', 5);
+  message.success("The product was added to the cart", 5);
 };
-function ProductDetails(props: Props){
-    const {allProducts} = useContext(ApiContext);
-    const {addProductToCart} = useContext(CartContext);
-    const [product, setProduct] = useState<any>(undefined)
-    
+function ProductDetails(props: Props) {
+  const { allProducts } = useContext(ApiContext);
+  const { addProductToCart } = useContext(CartContext);
+  const [product, setProduct] = useState<any>();
 
-    useEffect(() => {
-        const productId = String((props.match.params as any).id)
-        const product = allProducts.find((p: ProductInfo) => p._id === productId);
-        setProduct(product)
-    }, []) 
 
-    function handleAddClick(){
-        success();
-        addProductToCart(product!, undefined)
+  useEffect( () => {
+
+    if(!allProducts) {
+      return
     }
 
-    
-    if (!product) {
-            return <ErrorPage />
+    const findAndSetProduct = () => {
+      const productId = String((props.match.params as any).id);
+      const product = allProducts.find((p: ProductInfo) => p._id === productId);
+      setProduct(product);
     }
-    
-    return (
-        <Row style={detailContainer}>
-            <Col lg={{span: 10}} style={columnStyle}>
-                <Image src={product?.img} />          
-            </Col>
+    findAndSetProduct()
 
-            <Col lg={{span: 10}} style={columnStyle}>
-                <h2 style={titleStyle}>{product?.title}</h2>
-                <h4>{product?.description} </h4>
-                <h2 style={price}>{product?.price + "kr"} </h2>
-                <Button 
-                    type="primary" 
-                    style={{ marginTop: '1rem', width: '8rem', marginBottom: '6rem' }} 
-                    onClick={handleAddClick}
-                >
-                    Add to cart 
-                </Button>
-            </Col>
-        </Row>
-    );  
+  }, []);
+
+  function handleAddClick() {
+    success();
+    addProductToCart(product!, undefined);
+  } 
+  
+  return (
+    <>
+    { !product || !allProducts? (
+      <ErrorPage/>
+    ) : (
+      <Row style={detailContainer}>
+        <Col lg={{ span: 10 }} style={columnStyle}>
+          <Image src={product?.img} />
+        </Col>
+  
+        <Col lg={{ span: 10 }} style={columnStyle}>
+          <h2 style={titleStyle}>{product?.title}</h2>
+          <h4>{product?.description} </h4>
+          <h2 style={price}>{product?.price + "kr"} </h2>
+          <h2>Products in stock: {product?.quantity}</h2>
+  
+          <Button
+            type="primary"
+            disabled={product?.quantity <= 0 ? true : false}
+            style={{ marginTop: "1rem", width: "8rem", marginBottom: "6rem" }}
+            onClick={handleAddClick}
+          >
+            Add to cart
+          </Button>
+        </Col>
+      </Row>
+      
+    )
+
+    }
+    </>
+  );
 }
 
-export default withRouter(ProductDetails as any); 
+export default withRouter(ProductDetails as any);
 
 const detailContainer: CSSProperties = {
-    display: 'flex',
-    justifyContent: 'space-around',
-    width: '80%',
-    margin: 'auto',
-}
+  display: "flex",
+  justifyContent: "space-around",
+  width: "80%",
+  margin: "auto",
+};
 
 const columnStyle: CSSProperties = {
-    display: 'flex',
-    flexDirection: 'column',
-    marginTop: '10rem',
-    marginBottom: '5rem',
-}
+  display: "flex",
+  flexDirection: "column",
+  marginTop: "10rem",
+  marginBottom: "5rem",
+};
 
 const titleStyle: CSSProperties = {
-   fontSize: '2rem'
-}
+  fontSize: "2rem",
+};
 
 const price: CSSProperties = {
-    fontWeight: 'bold'
-}
+  fontWeight: "bold",
+};

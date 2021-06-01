@@ -1,5 +1,15 @@
 import React, { useContext, CSSProperties, useState, useEffect } from "react";
-import { Card, Col, List, Row, message, Menu, Dropdown, Button, Space  } from "antd";
+import {
+  Card,
+  Col,
+  List,
+  Row,
+  message,
+  Menu,
+  Dropdown,
+  Button,
+  Space,
+} from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
@@ -10,6 +20,10 @@ import useWindowDimensions from "../../windowSize";
 const { Meta } = Card;
 const success = () => {
   message.success("The product was added to the cart", 5);
+};
+
+const error = () => {
+  message.error("The product is out of stock", 5);
 };
 
 const tagsData = [
@@ -31,22 +45,19 @@ function ProductCardGrid() {
   const [selectedTags, setSelectedTags] = useState(["All"]);
   const [filteredCategories, setFilteredCategories] = useState<any>();
   const { height, width } = useWindowDimensions();
-  
+
   const menu = (
     <Menu>
-      {tagsData.map(item => (
+      {tagsData.map((item) => (
         <Menu.Item>
-          <a 
-            target="_blank" 
-            rel="noopener noreferrer"
-            onClick={handleClick}
-          >{item}</a>
+          <a target="_blank" rel="noopener noreferrer" onClick={handleClick}>
+            {item}
+          </a>
         </Menu.Item>
-        )
-      )}
+      ))}
     </Menu>
-  )
-  
+  );
+
   function filterArray(array: any[], filters: any) {
     const filterKeys = Object.keys(filters);
     return array.filter((item) => {
@@ -98,33 +109,33 @@ function ProductCardGrid() {
     }
   }
 
-  function handleClick(event: any){
-    setSelectedTags([event.target.innerHTML])
+  function handleClick(event: any) {
+    setSelectedTags([event.target.innerHTML]);
   }
 
   return (
     <Row style={cardContainer}>
       <Row style={categoriesContainer}>
-        { (width >= 900) ? tagsData.map((tag) => (
-          <CheckableTag
-            key={tag}
-            style={tagStyle}
-            checked={selectedTags.indexOf(tag) > -1}
-            onChange={(checked) => handleChange(tag, checked)}
-          >
-            {tag}
-          </CheckableTag>
-        )) : 
-        <Space direction="vertical">
-          <Space wrap>
-            <Dropdown 
-              overlay={menu}
-              placement='bottomRight'
+        {width >= 900 ? (
+          tagsData.map((tag) => (
+            <CheckableTag
+              key={tag}
+              style={tagStyle}
+              checked={selectedTags.indexOf(tag) > -1}
+              onChange={(checked) => handleChange(tag, checked)}
             >
-              <Button>Categories</Button>
-            </Dropdown>
+              {tag}
+            </CheckableTag>
+          ))
+        ) : (
+          <Space direction="vertical">
+            <Space wrap>
+              <Dropdown overlay={menu} placement="bottomRight">
+                <Button>Categories</Button>
+              </Dropdown>
+            </Space>
           </Space>
-        </Space>}
+        )}
       </Row>
       <Col span={24} style={columnStyle}>
         {
@@ -149,14 +160,24 @@ function ProductCardGrid() {
                       <ShoppingCartOutlined
                         style={{ fontSize: "2rem" }}
                         onClick={(e) => {
-                          success();
-                          e.preventDefault();
-                          addProductToCart(item, undefined);
+                          {
+                            if (item.quantity < 1) {
+                              error();
+                              e.preventDefault();
+                            } else {
+                              e.preventDefault();
+                              success();
+                              addProductToCart(item, undefined);
+                            }
+                          }
                         }}
                       />,
                     ]}
                   >
-                    <Meta title={item.title} description={item.price + "kr"} />
+                    <Meta
+                      title={item.title}
+                      description={`Price: ${item.price}kr, in stock: ${item.quantity}`}
+                    />
                   </Card>
                 </Link>
               </List.Item>
@@ -199,4 +220,3 @@ const columnStyle: CSSProperties = {
   alignItems: "center",
   marginTop: "1rem",
 };
-
