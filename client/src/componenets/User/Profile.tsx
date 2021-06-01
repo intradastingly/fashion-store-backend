@@ -43,6 +43,7 @@ function UserProfile() {
     orders,
     getUser,
     updateUser,
+    updatePassword,
   } = useContext(ApiContext);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
   const [isPasswordModalVisible, setIsPasswordModalVisible] =
@@ -75,8 +76,14 @@ function UserProfile() {
     getUser(session.id);
     setIsEditModalVisible(false);
   };
-  const onFinishPassword = (values: any) => {
-    console.log("123");
+  const onFinishPassword = (value: any) => {
+    if (value.password === value.password2) {
+      console.log(value);
+      const body = {password: value.password}
+      console.log(body);
+      
+      updatePassword(session.id, body);
+    }
   };
 
   const handleCancel = () => {
@@ -147,7 +154,11 @@ function UserProfile() {
                 <Button type="primary" style={editBtns} onClick={showEditModal}>
                   Edit Information
                 </Button>
-                <Button type="primary" style={editBtns} onClick={showPasswordModal}>
+                <Button
+                  type="primary"
+                  style={editBtns}
+                  onClick={showPasswordModal}
+                >
                   Change password
                 </Button>
               </div>

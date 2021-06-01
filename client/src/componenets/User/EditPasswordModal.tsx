@@ -43,7 +43,7 @@ const EditModal = (props: Props) => {
             validateMessages={validateMessages}
           >
             <Form.Item
-              name={"password1"}
+              name={"password"}
               rules={[{ required: true }]}
               label="Password"
             >
