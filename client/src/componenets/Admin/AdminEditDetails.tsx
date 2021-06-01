@@ -40,6 +40,7 @@ function AdminEditDetails(props: Props, state: State) {
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
+  const [upload, setUpload] = useState<any>()
 
   const options = [
     { value: "All" },
@@ -77,17 +78,19 @@ function AdminEditDetails(props: Props, state: State) {
     );
   };
 
-  const saveProduct = async () => {
+  const saveProduct = async (img: string) => {
     setButtonSaveLoading(true);
-
+   
     const body = {
       title: titleField,
       description: descriptionField,
       quantity: quantityField,
       price: priceField,
-      img: imageField,
+      img: img,
       category: categoryField,
     };
+
+    console.log(body)
 
     const response = await fetch("/api/products/" + props.match.params.id, {
       method: "PUT",
@@ -153,6 +156,22 @@ function AdminEditDetails(props: Props, state: State) {
     return <ErrorPage />;
   }
 
+  const saveNewImage = async () => {
+    const formData = new FormData()
+    formData.append('img', imageField)
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+      credentials: 'include',
+      headers:{
+        "Accept": "multipart/form-data; boundary=Row"
+      }
+    })
+    const imgPath = await response.json();
+    console.log(imgPath)
+    saveProduct(imgPath)
+  }
+
 
   return (
     <div style={rootStyle}>
@@ -175,12 +194,6 @@ function AdminEditDetails(props: Props, state: State) {
           name="price"
           onChange={(e: any) => setPriceField(e.target.value)}
           defaultValue={editProduct.price}
-        />
-        <label>Image: </label>
-        <input
-          name="img"
-          onChange={(e: any) => setImageField(e.target.value)}
-          defaultValue={editProduct.img}
         />
         <label>Quantity: </label>
         <input
@@ -205,11 +218,19 @@ function AdminEditDetails(props: Props, state: State) {
               </Select.Option>
             ))}
           </Select>
+        <label>Image: </label>
+          <input
+            required
+            type="file"
+            name="img"
+            onChange={(e: any) => setImageField(e.target.files[0])}
+          />
         <Button
           type="primary"
-          onClick={saveProduct}
-          htmlType="submit"
-          loading={buttonSaveLoading}
+          onClick={() => {
+              saveNewImage()
+            }
+          }
         >
           Save
         </Button>
