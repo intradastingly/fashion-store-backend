@@ -3,22 +3,12 @@ import { AutoComplete, Avatar, Button, Col, List, Row } from "antd";
 import { CSSProperties, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
-import image from "%PUBLIC_URL%/logo192.png"
+
 
 interface Props {}
 
 function GetAdminList(props: Props) {
   const { allProducts } = useContext(ApiContext);
-
-  console.log(allProducts)
-
-  const stuff = () => {
-    for(const p of allProducts){
-      console.log(p.img)
-    }
-  }
-
-  stuff()
 
   return (
     <Row style={containerStyle}>

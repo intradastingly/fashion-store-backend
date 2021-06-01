@@ -59,11 +59,9 @@ function AddNewProduct(props: Props, state: State) {
       }
     })
     const imgPath = await response.json();
-    /* console.log(imgPath) */
+    console.log('test')
     saveNewProduct(imgPath)
-    /* setImageField(imgPath) */
   }
-
 
   const tagRender = (props: any) => {
     const { label, closable, onClose } = props;
@@ -124,8 +122,8 @@ function AddNewProduct(props: Props, state: State) {
           onClick={() => {
             saveNewImage()
           }}
-          htmlType="submit"
-          loading={buttonSaveLoading}
+          /* htmlType="submit"
+          loading={buttonSaveLoading} */
           style={{ marginTop: "1rem" }}
         >
           Save

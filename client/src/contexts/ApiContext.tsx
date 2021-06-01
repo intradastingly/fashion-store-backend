@@ -179,7 +179,6 @@ export const ApiContext = createContext<ContextValue>({
   quantityFieldChange: () => {},
   handleChange: () => {},
   saveNewUser: () => {},
-
   updateUser: () => {},
 });
 export interface shippingMethods extends ShippingInfo {
@@ -364,6 +363,7 @@ function ApiProvider(props: Props) {
   // add new product logic
 
   const saveNewProduct = async (image: string) => {
+    console.log(image)
 
     if(titleField === "" || 
       descriptionField === "" || 

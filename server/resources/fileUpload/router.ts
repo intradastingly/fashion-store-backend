@@ -6,6 +6,6 @@ const upload = require("./multer")
 
 fileUploadRouter
     .post("/upload", upload.uploadImg, controller.upload)
-    .get("/upload", controller.allImages)
+    .delete("/upload", controller.delete)
 
 module.exports = fileUploadRouter;
