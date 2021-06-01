@@ -9,10 +9,8 @@ import {
 import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import ErrorPage from "../ErrorPage";
 import { Product } from "../ProductItemsList";
-import fs from "fs";
 
 interface Props extends RouteComponentProps<{ id: string }> {}
-
 interface State {
   products: Product[];
   product: Product | undefined;
