@@ -44,6 +44,19 @@ exports.getSpecificAccount = async (
   }
 };
 
+//patch request for password updating
+exports.updatePassword = async (
+  req: Request,
+  res: Response
+) => {
+  const oldAccount = await Account.findOne({ _id: req.params.id });
+  if (req.body.password !== null && oldAccount){
+    oldAccount.password = req.body.password
+  }
+  const updatedAccount = await oldAccount.save();
+  res.status(201).json('Password updated ✔')
+}
+
 
 // Delete
 exports.deleteAccount = async (req: Request, res: Response) => {

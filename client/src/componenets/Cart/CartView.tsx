@@ -1,11 +1,7 @@
 import { Row, Steps } from "antd";
 import {
-  Component,
-  ContextType,
   CSSProperties,
   useContext,
-  useEffect,
-  useReducer,
   useState,
 } from "react";
 import { ApiContext } from "../../contexts/ApiContext";
@@ -15,6 +11,9 @@ import InformationForm from "./InformationForm";
 import PaymentMethod from "./PaymentMethod";
 import { CartContext } from "../../contexts/CartContext";
 import CompleteOrder from "./CompleteOrder";
+import { useMediaQuery } from "react-responsive";
+import useWindowDimensions from "../../windowSize";
+
 
 const { Step } = Steps;
 
@@ -34,9 +33,12 @@ const steps = [
 ];
 
 function CartView() {
-  const { loggedIn, logOutHandler, session } = useContext(ApiContext);
+  const { loggedIn} = useContext(ApiContext);
   const { getTotalPriceProducts, cart } = useContext(CartContext);
   const [current, setCurrent] = useState<number>(0);
+  const { width } = useWindowDimensions();
+
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 740px)" });
 
   const next = () => {
     setCurrent(current + 1);
@@ -77,12 +79,23 @@ function CartView() {
       <h3 style={priceTextStyle}>Total Price: {totalPrice() + " kr "}</h3>
       {loggedIn ? (
         <>
-          <Steps current={current} style={{ marginTop: "7rem" }}>
-            {steps.map((item) => (
-              <Step key={item.title} title={item.title} />
-            ))}
-          </Steps>
-          <StepsComponent next={next} />
+          <div style={stepperContainer}>
+            <Steps
+              direction={isTabletOrMobile ? "vertical" : "horizontal"}
+              size={isTabletOrMobile ? "small" : "default"}
+              current={current}
+              style={
+                isTabletOrMobile ? stepperContainerMobile : stepperContainer
+              }
+            >
+              {steps.map((item) => (
+                <Step key={item.title} title={item.title} />
+              ))}
+            </Steps>
+            <div>
+              <StepsComponent next={next} />
+            </div>
+          </div>
         </>
       ) : (
         <div>
@@ -110,4 +123,16 @@ const cartViewContainerStyle: CSSProperties = {
 const priceTextStyle: CSSProperties = {
   textAlign: "center",
   marginTop: "1rem",
+};
+
+const stepperContainerMobile: CSSProperties = {
+  display: "flex",
+  justifyContent: "flex-start",
+  flexDirection: "column",
+  textAlign: "center",
+  width: "100%",
+};
+
+const stepperContainer: CSSProperties = {
+  marginTop: "2rem",
 };

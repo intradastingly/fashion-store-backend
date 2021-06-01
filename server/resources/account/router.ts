@@ -8,6 +8,7 @@ accountRouter
   .get("/accounts", controller.getAllAccounts)
   .delete("/accounts/:id", controller.deleteAccount)
   .put("/accounts/:id", controller.editAccount)
-  .get("/accounts/:id", controller.getSpecificAccount);
+  .get("/accounts/:id", controller.getSpecificAccount)
+  .patch('/accounts/:id', controller.updatePassword);
 
 module.exports = accountRouter;
