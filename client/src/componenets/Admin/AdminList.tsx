@@ -66,7 +66,7 @@ function GetAdminList(props: Props) {
             <List.Item>
               <Link to={"/edit-product/" + item._id}>
                 <List.Item.Meta
-                  avatar={<Avatar size={64} src={process.env.PUBLIC_URL + "/" + item.img}
+                  avatar={<Avatar size={64} src={item.img}
                   />}
                   title={
                     <Link to={"/edit-product/" + item._id}>{item.title}</Link>
