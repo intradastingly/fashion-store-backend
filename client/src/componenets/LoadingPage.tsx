@@ -1,5 +1,5 @@
 import { Component, CSSProperties } from "react";
-import { Result, Button, Col, Row, Spin } from "antd";
+import { Spin } from "antd";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
 interface Props extends RouteComponentProps {}
@@ -11,7 +11,6 @@ class LoadingPage extends Component<Props, State> {
     hasError: false,
   };
 
-  navigateBack = () => this.props.history.goBack();
   render() {
     return (
       <div style={ErrorPageStyle}>
@@ -36,4 +35,5 @@ const columnStyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  flexDirection: "column"
 };
