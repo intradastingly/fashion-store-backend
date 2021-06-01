@@ -3,6 +3,7 @@ import { Avatar, Button, Col, List, Row, Switch } from "antd";
 import { CSSProperties, useContext, useEffect, useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
 import { ApiContext, Order } from "../../contexts/ApiContext";
+import { CartContext } from "../../contexts/CartContext";
 import LoadingPage from "../LoadingPage";
 
 interface Props{}
@@ -49,7 +50,7 @@ function AdminOrders(props: Props) {
 
     if(!allOrders) return <LoadingPage />
 
-
+  console.log(allOrders)
     return (
       <Row style={containerStyle}>
         <Col style={columnStyle}>
@@ -69,7 +70,7 @@ function AdminOrders(props: Props) {
             </div>
             <div style={{ display: "flex" }}>
               <Link to={"/profile"}>
-                <Button type="primary">Back</Button>
+                <Button type="primary">Back/Save</Button>
               </Link>
             </div>
           </div>
@@ -97,11 +98,36 @@ function AdminOrders(props: Props) {
                         <span style={{ marginRight: "1rem" }}>
                           Order id: {order._id}
                         </span>
+                        <div>
+                          <span style={{ marginRight: "1rem" }}>
+                            Email: {order.userInfo.email}
+                          </span>
+                          <span style={{ marginRight: "1rem" }}>
+                            Address: {order.userInfo.street}, {order.userInfo.city}
+                          </span>
+                        </div>
+                          <span style={{ marginRight: "1rem" }}>
+                            Date: {order.date}
+                          </span>
+                        <div>
+                          <span style={{ marginRight: "1rem" }}>
+                            Products:
+                          {order.cart.map((p: any, index: any) => (
+                            <>
+                               {" " + p.product.title + ", "}
+                            </>
+                              ))}
+                          </span>
+                          </div>
+                        <span style={{ marginRight: "1rem" }}>
+                          Shipment: {order.deliveryMethod.shipmentCompany}
+                        </span>
+
                         <span style={{ marginRight: "1rem" }}>Shipped: {JSON.stringify(order.isHandled)}</span>
                         
                         { !order.isHandled && (
                           <>
-                            <Switch onChange={(checked) => changeIsShippedSwitch(checked, order._id)} />
+                            <Switch size="small" onChange={(checked) => changeIsShippedSwitch(checked, order._id)} />
                           </>
                         )}
                       </div>
