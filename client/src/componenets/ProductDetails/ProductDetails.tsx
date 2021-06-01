@@ -41,16 +41,15 @@ function ProductDetails(props: Props) {
     success();
     addProductToCart(product!, undefined);
   } 
-  
-  return (
 
+  return (
     <>
     { !product || !allProducts? (
       <ErrorPage/>
     ) : (
       <Row style={detailContainer}>
         <Col lg={{ span: 10 }} style={columnStyle}>
-          <Image src={product?.img} />
+          <Image src={process.env.PUBLIC_URL + "/" + product?.img} />
         </Col>
   
         <Col lg={{ span: 10 }} style={columnStyle}>
