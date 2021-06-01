@@ -133,7 +133,7 @@ interface ContextValue extends State {
   loadAllUsers: () => void;
   getUser: (id: string) => void;
 
-  saveNewProduct: () => void;
+  saveNewProduct: (image: string) => void;
   titleFieldChange: (e: any) => void;
   descriptionFieldChange: (e: any) => void;
   priceFieldChange: (e: any) => void;
@@ -364,7 +364,7 @@ function ApiProvider(props: Props) {
 
 
   // add new product logic
-  const saveNewProduct = async () => {
+  const saveNewProduct = async (image: string) => {
 
     if(titleField === "" || 
       descriptionField === "" || 
@@ -379,8 +379,10 @@ function ApiProvider(props: Props) {
       quantity: quantityField,
       category: categoryField,
       price: priceField,
-      img: imageField,
+      img: image,
     };
+    console.log(body)
+    
     const result = await fetchRequest('api/products', "POST", body)
     setButtonSaveLoading(true);
 
@@ -410,8 +412,9 @@ function ApiProvider(props: Props) {
     setPriceField(e.target.value)
   }
   // function for setState when add new product
-  const imageFieldChange = (e: any) => {
-    setImageField(e.target.value)
+  const imageFieldChange = (value: string) => {
+    console.log(value)
+    setImageField(value)
   }
 
   

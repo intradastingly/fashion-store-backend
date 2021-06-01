@@ -8,10 +8,7 @@ exports.upload = async (req: any, res: express.Response) => {
         const newFile = await File.create({
           name: req.file.filename,
         });
-        res.status(200).json({
-          status: "success",
-          message: "File created successfully!!",
-        });
+        res.status(200).json(newFile.name);
       } catch (error) {
         res.json({
           error,
