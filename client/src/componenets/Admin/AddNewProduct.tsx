@@ -59,6 +59,7 @@ function AddNewProduct(props: Props, state: State) {
       }
     })
     const imgPath = await response.json();
+    console.log('test')
     saveNewProduct(imgPath)
   }
 

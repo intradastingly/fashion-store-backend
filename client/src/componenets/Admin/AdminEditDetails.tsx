@@ -9,6 +9,7 @@ import {
 import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import ErrorPage from "../ErrorPage";
 import { Product } from "../ProductItemsList";
+import fs from "fs";
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
@@ -90,8 +91,6 @@ function AdminEditDetails(props: Props, state: State) {
       category: categoryField,
     };
 
-    console.log(body)
-
     const response = await fetch("/api/products/" + props.match.params.id, {
       method: "PUT",
       body: JSON.stringify(body),
@@ -168,8 +167,14 @@ function AdminEditDetails(props: Props, state: State) {
       }
     })
     const imgPath = await response.json();
-    console.log(imgPath)
     saveProduct(imgPath)
+  }
+
+  const deleteOldImage = async (img: string) => {
+    await fetch("/api/upload", {
+      method: "DELETE",
+      body: JSON.stringify(img),
+    })
   }
 
 
@@ -219,6 +224,7 @@ function AdminEditDetails(props: Props, state: State) {
             ))}
           </Select>
         <label>Image: </label>
+        <label>{editProduct.img}</label>
           <input
             required
             type="file"
@@ -229,12 +235,12 @@ function AdminEditDetails(props: Props, state: State) {
           type="primary"
           onClick={() => {
               saveNewImage()
+              deleteOldImage(editProduct.img)
             }
           }
         >
           Save
         </Button>
-
         <Popconfirm
           title="Are you sure？"
           okText="Yes"
@@ -250,7 +256,6 @@ function AdminEditDetails(props: Props, state: State) {
     </div>
   );
 }
-
 
 const rootStyle: CSSProperties = {
   display: "flex",

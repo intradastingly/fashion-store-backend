@@ -16,6 +16,8 @@ exports.upload = async (req: any, res: express.Response) => {
       }
 }
 
-exports.allImages = (req: any, res: express.Response) => {
-   
+exports.delete = async(req: any, res: express.Response) => {
+    const deletedImage = await File.findOneAndDelete({ name: req.body.name });
+    res.status(200).json(deletedImage);
 }
+

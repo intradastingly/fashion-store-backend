@@ -171,7 +171,6 @@ export const ApiContext = createContext<ContextValue>({
   loadAllUsers: () => {},
   getUser: () => {},
   getUserSpecificOrders: (id: string) => {},
-
   saveNewProduct: () => {},
   titleFieldChange: () => {},
   descriptionFieldChange: () => {},
@@ -180,8 +179,6 @@ export const ApiContext = createContext<ContextValue>({
   quantityFieldChange: () => {},
   handleChange: () => {},
   saveNewUser: () => {},
-
-
   updateUser: () => {},
 
 });
@@ -365,6 +362,7 @@ function ApiProvider(props: Props) {
 
   // add new product logic
   const saveNewProduct = async (image: string) => {
+    console.log(image)
 
     if(titleField === "" || 
       descriptionField === "" || 
