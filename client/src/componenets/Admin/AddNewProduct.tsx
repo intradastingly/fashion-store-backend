@@ -57,8 +57,9 @@ function AddNewProduct(props: Props, state: State) {
       }
     })
     const imgPath = await response.json();
-    console.log(imgPath)
-    imageFieldChange(imgPath)
+    /* console.log(imgPath) */
+    saveNewProduct(imgPath)
+    /* setImageField(imgPath) */
   }
 
 
@@ -135,7 +136,6 @@ function AddNewProduct(props: Props, state: State) {
           type="primary"
           onClick={() => {
             saveNewImage()
-            saveNewProduct()
           }}
           htmlType="submit"
           loading={buttonSaveLoading}

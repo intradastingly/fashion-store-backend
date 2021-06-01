@@ -9,6 +9,8 @@ interface Props {}
 function GetAdminList(props: Props) {
   const { allProducts } = useContext(ApiContext);
 
+  console.log(allProducts)
+
   return (
     <Row style={containerStyle}>
       <Col style={col}>
