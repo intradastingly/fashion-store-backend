@@ -1,0 +1,14 @@
+POST http://localhost:6969/api/upload
+Content-Type: multipart/form-data; boundary=Row
+
+--Row
+Content-Disposition: form-data; name="img"; filename="b.png"
+Content-Type: image/jpeg
+
+./b.png
+--Row--
+
+
+###
+
+GET http://localhost:6969/uploads/1621842021641-dance.jpg

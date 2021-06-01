@@ -14,6 +14,7 @@ interface State {
 
 
 function AddNewProduct(props: Props, state: State) {
+  const [imageField, setImageField] = useState<any>({});
   const { mapCategories, 
           loadProducts, 
           saveNewProduct, 
@@ -25,8 +26,6 @@ function AddNewProduct(props: Props, state: State) {
           handleChange,
           categoryField,
           buttonSaveLoading } = useContext(ApiContext);
-
-
 
   const options = [
     { value: "All" },
@@ -46,7 +45,20 @@ function AddNewProduct(props: Props, state: State) {
     loadProducts();
     mapCategories();
   }, []);
+  
+  const saveNewImage = async () => {
+    const formData = new FormData()
+    formData.append('img', imageField)
 
+    await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+      credentials: 'include',
+      headers:{
+        "Accept": "multipart/form-data; boundary=Row"
+      }
+    })
+  }
 
 
   const tagRender = (props: any) => {
@@ -90,12 +102,6 @@ function AddNewProduct(props: Props, state: State) {
           onChange={priceFieldChange}
           required
         />
-        <label>Image: </label>
-        <input
-          name="img"
-          onChange={imageFieldChange}
-          required
-        />
         <label>Quantity: </label>
         <input
           name="quantity"
@@ -118,10 +124,18 @@ function AddNewProduct(props: Props, state: State) {
             </Select.Option>
           ))}
         </Select>
-
+        <label>Image: </label>
+        <input 
+          type="file" 
+          name="img" 
+          onChange={(e: any) => setImageField(e.target.files[0])}
+        />
         <Button
           type="primary"
-          onClick={saveNewProduct}
+          onClick={() => {
+            saveNewImage
+            saveNewProduct
+          }}
           htmlType="submit"
           loading={buttonSaveLoading}
           style={{ marginTop: "1rem" }}
