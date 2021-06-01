@@ -133,8 +133,8 @@ function AddNewProduct(props: Props, state: State) {
         <Button
           type="primary"
           onClick={() => {
-            saveNewImage
-            saveNewProduct
+            saveNewImage()
+            saveNewProduct()
           }}
           htmlType="submit"
           loading={buttonSaveLoading}
