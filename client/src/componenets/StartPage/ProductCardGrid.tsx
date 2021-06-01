@@ -129,10 +129,19 @@ function ProductCardGrid() {
           ))
         ) : (
           <Space direction="vertical">
-            <Space wrap>
-              <Dropdown overlay={menu} placement="bottomRight">
+            <Space wrap style={tagStyleMobile}>
+              {tagsData.map((tag) => (
+                <CheckableTag
+                  key={tag}
+                  checked={selectedTags.indexOf(tag) > -1}
+                  onChange={(checked) => handleChange(tag, checked)}
+                >
+                  {tag}
+                </CheckableTag>
+              ))}
+              {/* <Dropdown overlay={menu} placement="bottomRight">
                 <Button>Categories</Button>
-              </Dropdown>
+              </Dropdown> */}
             </Space>
           </Space>
         )}
@@ -212,6 +221,12 @@ const categoriesContainer: CSSProperties = {
 
 const tagStyle: CSSProperties = {
   fontSize: "1rem",
+};
+
+const tagStyleMobile: CSSProperties = {
+  fontSize: "1rem",
+  display: "flex",
+  justifyContent: "center",
 };
 
 const columnStyle: CSSProperties = {
