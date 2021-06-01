@@ -3,11 +3,22 @@ import { AutoComplete, Avatar, Button, Col, List, Row } from "antd";
 import { CSSProperties, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
+import image from "%PUBLIC_URL%/logo192.png"
 
 interface Props {}
 
 function GetAdminList(props: Props) {
   const { allProducts } = useContext(ApiContext);
+
+  console.log(allProducts)
+
+  const stuff = () => {
+    for(const p of allProducts){
+      console.log(p.img)
+    }
+  }
+
+  stuff()
 
   return (
     <Row style={containerStyle}>
@@ -39,8 +50,7 @@ function GetAdminList(props: Props) {
             </Link>
           </div>
         </div>
-        </div>
-
+        </div>         
         <List
           grid={{
             gutter: 12,
@@ -56,7 +66,8 @@ function GetAdminList(props: Props) {
             <List.Item>
               <Link to={"/edit-product/" + item._id}>
                 <List.Item.Meta
-                  avatar={<Avatar size={64} src={item.img} />}
+                  avatar={<Avatar size={64} src={item.img}
+                  />}
                   title={
                     <Link to={"/edit-product/" + item._id}>{item.title}</Link>
                   }

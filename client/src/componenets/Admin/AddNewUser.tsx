@@ -234,7 +234,7 @@ const rootStyle: CSSProperties = {
   const layoutStyle: CSSProperties = {
     display: "flex",
     flexDirection: "column",
-    width: "20rem",
+    width: "18rem",
   };
   
 
