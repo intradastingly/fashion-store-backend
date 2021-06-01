@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import { CSSProperties, useContext, useState, useEffect } from "react";
 import "./App.css";
+import { ConfigProvider } from "antd";
 import AdminEditDetails from "./componenets/Admin/AdminEditDetails";
 import AdminList from "./componenets/Admin/AdminList";
 import AdminLogIn from "./componenets/Admin/AdminLogIn";
@@ -24,6 +25,7 @@ import { ApiContext } from "./contexts/ApiContext";
 import AdminUsers from "./componenets/Admin/AdminUsers";
 import EditUsers from "./componenets/Admin/EditUsers";
 import AdminOrders from "./componenets/Admin/AdminOrders";
+import AddNewUser from "./componenets/Admin/AddNewUser";
 
 function App() {
   const { loggedIn, session } = useContext(ApiContext);
@@ -89,6 +91,10 @@ function App() {
                 </Route>
 
                 <Route path="/admin-orders" component={AdminOrders}>
+                  {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
+                </Route>
+
+                <Route path="/add-user" component={AddNewUser}>
                   {!loggedInAsAdmin ? <Redirect to="/login" /> : null}
                 </Route>
               </Switch>

@@ -53,6 +53,16 @@ export interface registerData {
   address: Object;
 }
 
+export interface adminRegisterData {
+  userName: String;
+  fullName: String;
+  phoneNumber: String;
+  password: String;
+  email: String;
+  address: Object;
+  role: []
+}
+
 export interface ProductInfo {
   category: [];
   description: String;
@@ -130,6 +140,7 @@ interface ContextValue extends State {
   imageFieldChange: (e: any) => void;
   quantityFieldChange: (e: any) => void;
   handleChange: (categoryField: any) => void;
+  saveNewUser: (adminRegisterData: adminRegisterData) => void;
 
 
   updateUser: (id: string, data: AccountInfo) => void;
@@ -168,6 +179,7 @@ export const ApiContext = createContext<ContextValue>({
   priceFieldChange: () => {},
   quantityFieldChange: () => {},
   handleChange: () => {},
+  saveNewUser: () => {},
 
 
   updateUser: () => {},
@@ -199,6 +211,7 @@ function ApiProvider(props: Props) {
   const [imageField, setImageField] = useState("");
   const [quantityField, setQuantityField] = useState("");
   const [categoryField, setCategoryField] = useState<any[]>([]);
+
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -353,6 +366,13 @@ function ApiProvider(props: Props) {
   // add new product logic
   const saveNewProduct = async (image: string) => {
 
+    if(titleField === "" || 
+      descriptionField === "" || 
+      quantityField === null || 
+      priceField === null) {
+      return
+    }
+
     let body = {
       title: titleField,
       description: descriptionField,
@@ -396,6 +416,14 @@ function ApiProvider(props: Props) {
     console.log(value)
     setImageField(value)
   }
+
+  
+  // add new user logic
+  const saveNewUser = async (adminRegisterData: adminRegisterData) => {
+    const result = await fetchRequest('api/accounts', "POST", adminRegisterData)
+
+    return result;
+  };
 
   const updateUser = async (id: string, data: any) => {
     const result = await fetchRequest(`api/accounts/${id}`, "PUT", data);
@@ -451,6 +479,7 @@ function ApiProvider(props: Props) {
         quantityFieldChange: quantityFieldChange,
         handleChange: handleChange,
         updateUser: updateUser,
+        saveNewUser: saveNewUser
       }}
     >
       {props.children}

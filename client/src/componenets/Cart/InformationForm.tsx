@@ -5,6 +5,7 @@ import {
   CSSProperties,
   useContext,
   useEffect,
+  useState,
 } from "react";
 import { ApiContext } from "../../contexts/ApiContext";
 import { CartContext } from "../../contexts/CartContext";
@@ -39,18 +40,39 @@ interface Props {
 }
 
 function InformationForm(props: Props) {
-  const { session, getUser, activeUser } = useContext(ApiContext);
+  const { session, getUser, activeUser, allProducts } = useContext(ApiContext);
   const { updateUserInfo } = useContext(CartContext);
+  const [maxQuantity, setMaxQuantity] = useState<boolean>(false);
 
   useEffect(() => {
     getUser(session.id);
-    console.log(activeUser);
-    
+    checkQuantityInLS();
   }, []);
+
+  useEffect(() => {
+    checkQuantityInLS();
+  });
 
   const onValuesChange = (values: any, allValues: any) => {
     updateUserInfo(allValues.user);
   };
+
+  function checkQuantityInLS() {
+    const itemsInLS = JSON.parse(localStorage.getItem("cartItems")!);
+    for (let i = 0; i < allProducts.length; i++) {
+      // console.log(allProducts[i], "Allt på lager");
+
+      for (let j = 0; j < itemsInLS.length; j++) {
+        // console.log(itemsInLS[j], "Allt i cart");
+
+        if (itemsInLS[j].product._id === allProducts[i]._id) {
+          if (itemsInLS[j].quantity > allProducts[i].quantity) {
+            setMaxQuantity(true);
+          }
+        }
+      }
+    }
+  }
 
   const onFinish = (values: UserInfo) => {
     console.log("Success:", values);
@@ -118,9 +140,16 @@ function InformationForm(props: Props) {
               <Input />
             </Form.Item>
             <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 5 }}>
-              <Button type="primary" htmlType="submit">
+              <Button disabled={maxQuantity} type="primary" htmlType="submit">
                 Next
               </Button>
+              {maxQuantity ? (
+                <h3>
+                  One or more products in your cart exceeds the current stock.
+                  Please adjust your cart and <a href="/cart">reload</a> the
+                  page. Also, how did you even get here? 🤔
+                </h3>
+              ) : null}
             </Form.Item>
           </Form>
         ) : null}
