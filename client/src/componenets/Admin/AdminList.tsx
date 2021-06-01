@@ -50,9 +50,7 @@ function GetAdminList(props: Props) {
             </Link>
           </div>
         </div>
-        </div>
-          <img src={process.env.PUBLIC_URL + "/logo192.png"}/>
-         
+        </div>         
         <List
           grid={{
             gutter: 12,
@@ -65,7 +63,6 @@ function GetAdminList(props: Props) {
           }}
           dataSource={allProducts}
           renderItem={(item) => (
-            
             <List.Item>
               <Link to={"/edit-product/" + item._id}>
                 <List.Item.Meta
@@ -79,7 +76,6 @@ function GetAdminList(props: Props) {
                 <p style={editStyle}>edit</p>
               </Link>
             </List.Item>
-            
           )}
         />
       </Col>
