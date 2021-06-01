@@ -29,6 +29,7 @@ import { ApiContext } from "../../contexts/ApiContext";
 import LoadingPage from "../LoadingPage";
 import GetAdminList from "../Admin/AdminList";
 import EditModal from "./EditModal";
+import EditPasswordModal from "./EditPasswordModal";
 
 const { Paragraph } = Typography;
 const { Title } = Typography;
@@ -44,6 +45,8 @@ function UserProfile() {
     updateUser,
   } = useContext(ApiContext);
   const [isEditModalVisible, setIsEditModalVisible] = useState<boolean>(false);
+  const [isPasswordModalVisible, setIsPasswordModalVisible] =
+    useState<boolean>(false);
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1224px)" });
 
   //useeffect for getting the correct account information
@@ -62,14 +65,23 @@ function UserProfile() {
   const showEditModal = () => {
     setIsEditModalVisible(true);
   };
-  const onFinish = (values: any) => {
+
+  const showPasswordModal = () => {
+    setIsPasswordModalVisible(true);
+  };
+
+  const onFinishEdit = (values: any) => {
     updateUser(session.id, values);
     getUser(session.id);
     setIsEditModalVisible(false);
   };
+  const onFinishPassword = (values: any) => {
+    console.log("123");
+  };
 
   const handleCancel = () => {
     setIsEditModalVisible(false);
+    setIsPasswordModalVisible(false);
   };
 
   if (!activeUser) return <LoadingPage />;
@@ -135,15 +147,20 @@ function UserProfile() {
                 <Button type="primary" style={editBtns} onClick={showEditModal}>
                   Edit Information
                 </Button>
-                <Button type="primary" style={editBtns} onClick={showEditModal}>
+                <Button type="primary" style={editBtns} onClick={showPasswordModal}>
                   Change password
                 </Button>
               </div>
               <EditModal
                 isVisible={isEditModalVisible}
                 onCancel={handleCancel}
-                onFinish={onFinish}
+                onFinish={onFinishEdit}
                 activeUser={activeUser}
+              />
+              <EditPasswordModal
+                isVisible={isPasswordModalVisible}
+                onCancel={handleCancel}
+                onFinish={onFinishPassword}
               />
             </div>
             <div style={orderContainer}>
