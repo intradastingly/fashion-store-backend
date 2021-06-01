@@ -21,7 +21,7 @@ function AddNewProduct(props: Props, state: State) {
   const [titleField, setTitleField] = useState("");
   const [descriptionField, setDescriptionField] = useState("");
   const [priceField, setPriceField] = useState("");
-  const [imageField, setImageField] = useState("");
+  const [imageField, setImageField] = useState<any>({});
   const [quantityField, setQuantityField] = useState("");
   const [categoryField, setCategoryField] = useState<any[]>([]);
   console.log(imageField)
@@ -81,11 +81,13 @@ function AddNewProduct(props: Props, state: State) {
   const saveNewImage = async () => {
     const formData = new FormData()
     formData.append('img', imageField)
+
     await fetch("/api/upload", {
       method: "POST",
       body: formData,
+      credentials: 'include',
       headers:{
-        "Content-Type": "multipart/form-data; boundary=Row"
+        "Accept": "multipart/form-data; boundary=Row"
       }
     })
   }
@@ -141,7 +143,7 @@ function AddNewProduct(props: Props, state: State) {
           name="quantity"
           onChange={(e: any) => setQuantityField(e.target.value)}
         />
-        <label>Image: </label>
+        
         
         <label>Category: </label>
         <Select
@@ -159,6 +161,7 @@ function AddNewProduct(props: Props, state: State) {
             </Select.Option>
           ))}
         </Select>
+        <label>Image: </label>
         <input 
           type="file" 
           name="img" 
