@@ -8,7 +8,7 @@ exports.newAccount = async (req: Request, res: Response) => {
   const account = new Account({
     userName: req.body.userName,
     fullName: req.body.fullName,
-    role: "plebian",
+    role: req.body.role ? req.body.role : "plebian",
     password: req.body.password,
     email: req.body.email,
     address: req.body.address,

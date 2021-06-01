@@ -1,36 +1,50 @@
-import { Button, Col, List, Row } from "antd";
-import React, { CSSProperties, useContext, useEffect } from "react";
+import { PlusOutlined } from "@ant-design/icons";
+import { Button, Col, List, message, Modal, Row } from "antd";
+import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
+import AddNewUser from "./AddNewUser";
 
 function AdminUsers() {
-  const { loadAllUsers, users } = useContext(ApiContext);
+  const { loadAllUsers, users, userCreated } = useContext(ApiContext);
+ 
+
+ 
+
 
   useEffect(() => {
     loadAllUsers();
+ 
   }, []);
+
+
 
   return (
     <Row style={containerStyle}>
       <Col style={columnStyle}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: "2rem",
-            marginBottom: "3rem",
-          }}
-        >
         <div>
             <h1 style={{ fontWeight: "bold", fontSize: "1rem" }}>All Users</h1>
         </div>
-        <div style={{display: "flex"}}>
+        <div style={{display: "flex", marginBottom: "1rem"}}>
+          <div style={btnContainer}>
+          <div>
+       <Link to="/add-user">
+       
+                  <Button type="primary" icon={<PlusOutlined />}>
+                    Add user
+                  </Button>
+       </Link>
+
+          </div>
             <Link to={"/profile"}>
                 <Button type="primary">Back</Button>
             </Link>
+
         </div>
-        </div>
+
+
+          </div>
+ 
 
         <List
           grid={{
@@ -75,6 +89,13 @@ function AdminUsers() {
   );
 }
 
+const btnContainer : CSSProperties = {
+  width: "100%",
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center"
+}
+
 const containerStyle: CSSProperties = {
   display: "flex",
   justifyContent: "center",
@@ -103,5 +124,6 @@ const editStyle: CSSProperties = {
   borderBottom: "1px solid lightgrey",
   alignItems: "center",
 };
+
 
 export default AdminUsers;
