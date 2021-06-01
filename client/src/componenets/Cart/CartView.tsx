@@ -1,11 +1,7 @@
 import { Row, Steps } from "antd";
 import {
-  Component,
-  ContextType,
   CSSProperties,
   useContext,
-  useEffect,
-  useReducer,
   useState,
 } from "react";
 import { ApiContext } from "../../contexts/ApiContext";
@@ -15,6 +11,7 @@ import InformationForm from "./InformationForm";
 import PaymentMethod from "./PaymentMethod";
 import { CartContext } from "../../contexts/CartContext";
 import CompleteOrder from "./CompleteOrder";
+import useWindowDimensions from "../../windowSize";
 
 const { Step } = Steps;
 
@@ -34,9 +31,10 @@ const steps = [
 ];
 
 function CartView() {
-  const { loggedIn, logOutHandler, session } = useContext(ApiContext);
+  const { loggedIn} = useContext(ApiContext);
   const { getTotalPriceProducts, cart } = useContext(CartContext);
   const [current, setCurrent] = useState<number>(0);
+  const { width } = useWindowDimensions();
 
   const next = () => {
     setCurrent(current + 1);
@@ -77,7 +75,7 @@ function CartView() {
       <h3 style={priceTextStyle}>Total Price: {totalPrice() + " kr "}</h3>
       {loggedIn ? (
         <>
-          <Steps current={current} style={{ marginTop: "7rem" }}>
+          <Steps direction={width >= 900 ? "horizontal" : "vertical"} current={current} style={{ marginTop: "2rem" }}>
             {steps.map((item) => (
               <Step key={item.title} title={item.title} />
             ))}
