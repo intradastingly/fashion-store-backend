@@ -11,4 +11,4 @@ Content-Type: image/jpeg
 
 ###
 
-GET http://localhost:6969/uploads/1621842021641-dance.jpg
+DELETE http://localhost:6969/api/uploads/
