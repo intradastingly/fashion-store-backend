@@ -176,7 +176,7 @@ function ProductCardGrid() {
                   >
                     <Meta
                       title={item.title}
-                      description={`Price: ${item.price}kr, in stock: ${item.quantity}`}
+                      description={`Price: ${item.price}kr`}
                     />
                   </Card>
                 </Link>
