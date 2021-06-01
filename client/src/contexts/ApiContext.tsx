@@ -60,7 +60,7 @@ export interface adminRegisterData {
   password: String;
   email: String;
   address: Object;
-  role: []
+  role: [];
 }
 
 export interface ProductInfo {
@@ -141,10 +141,9 @@ interface ContextValue extends State {
   quantityFieldChange: (e: any) => void;
   handleChange: (categoryField: any) => void;
   saveNewUser: (adminRegisterData: adminRegisterData) => void;
-
+  updatePassword: (id: string, body: object) => void;
 
   updateUser: (id: string, data: AccountInfo) => void;
-
 }
 
 export const ApiContext = createContext<ContextValue>({
@@ -171,7 +170,7 @@ export const ApiContext = createContext<ContextValue>({
   loadAllUsers: () => {},
   getUser: () => {},
   getUserSpecificOrders: (id: string) => {},
-
+  updatePassword: (id: string, body: object) => {},
   saveNewProduct: () => {},
   titleFieldChange: () => {},
   descriptionFieldChange: () => {},
@@ -181,9 +180,7 @@ export const ApiContext = createContext<ContextValue>({
   handleChange: () => {},
   saveNewUser: () => {},
 
-
   updateUser: () => {},
-
 });
 export interface shippingMethods extends ShippingInfo {
   shippingMethods: shippingMethods;
@@ -211,7 +208,6 @@ function ApiProvider(props: Props) {
   const [imageField, setImageField] = useState("");
   const [quantityField, setQuantityField] = useState("");
   const [categoryField, setCategoryField] = useState<any[]>([]);
-
 
   useEffect(() => {
     const loadShippingMethods = async () => {
@@ -263,8 +259,6 @@ function ApiProvider(props: Props) {
   const success = () => {
     message.success("The product has been published", 3);
   };
-
-
 
   const handleChange = (categoryField: any) => {
     setCategoryField(categoryField);
@@ -362,8 +356,13 @@ function ApiProvider(props: Props) {
     setActiveUser(incomingUser);
   };
 
+  const updatePassword = async (id: string, body: object) => {
+    const result = await fetchRequest(`api/accounts/${id}`, "PATCH", body);
+    console.log(result);
+  };
 
   // add new product logic
+
   const saveNewProduct = async (image: string) => {
 
     if(titleField === "" || 
@@ -372,7 +371,6 @@ function ApiProvider(props: Props) {
       priceField === null) {
       return
     }
-
     let body = {
       title: titleField,
       description: descriptionField,
@@ -381,8 +379,8 @@ function ApiProvider(props: Props) {
       price: priceField,
       img: image,
     };
+
     console.log(body)
-    
     const result = await fetchRequest('api/products', "POST", body)
     setButtonSaveLoading(true);
 
@@ -395,32 +393,38 @@ function ApiProvider(props: Props) {
     success();
     return result;
   };
+
   // function for setState when add new product
   const titleFieldChange = (e: any) => {
-    setTitleField(e.target.value)
-  }
+    setTitleField(e.target.value);
+  };
   // function for setState when add new product
   const descriptionFieldChange = (e: any) => {
-    setDescriptionField(e.target.value)
-  }
+    setDescriptionField(e.target.value);
+  };
   // function for setState when add new product
   const quantityFieldChange = (e: any) => {
-    setQuantityField(e.target.value)
-  }
+    setQuantityField(e.target.value);
+  };
   // function for setState when add new product
   const priceFieldChange = (e: any) => {
-    setPriceField(e.target.value)
-  }
+    setPriceField(e.target.value);
+  };
   // function for setState when add new product
+
   const imageFieldChange = (value: string) => {
     console.log(value)
     setImageField(value)
   }
 
-  
+
   // add new user logic
   const saveNewUser = async (adminRegisterData: adminRegisterData) => {
-    const result = await fetchRequest('api/accounts', "POST", adminRegisterData)
+    const result = await fetchRequest(
+      "api/accounts",
+      "POST",
+      adminRegisterData
+    );
 
     return result;
   };
@@ -429,7 +433,6 @@ function ApiProvider(props: Props) {
     const result = await fetchRequest(`api/accounts/${id}`, "PUT", data);
     return result;
   };
-
 
   const fetchRequest = async (url: string, method: string, body?: any) => {
     const response = await fetch(url, {
@@ -467,7 +470,7 @@ function ApiProvider(props: Props) {
         loadProducts: loadProducts,
         mapCategories: mapCategories,
         registerHandler: registerHandler,
-        updateUserCreated: updateUserCreated,   
+        updateUserCreated: updateUserCreated,
         loadAllUsers: loadAllUsers,
         getUser: getUser,
         getUserSpecificOrders: getUserSpecificOrders,
@@ -479,7 +482,8 @@ function ApiProvider(props: Props) {
         quantityFieldChange: quantityFieldChange,
         handleChange: handleChange,
         updateUser: updateUser,
-        saveNewUser: saveNewUser
+        saveNewUser: saveNewUser,
+        updatePassword: updatePassword,
       }}
     >
       {props.children}
