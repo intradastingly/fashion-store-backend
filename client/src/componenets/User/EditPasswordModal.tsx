@@ -8,21 +8,6 @@ interface Props {
 }
 
 const EditModal = (props: Props) => {
-
-
-  /* eslint-disable no-template-curly-in-string */
-  const validateMessages = {
-    required: "${label} is required!",
-    types: {
-      email: "${label} is not a valid email!",
-      number: "${label} is not a valid number!",
-    },
-    // number: {
-    //   range: "${label} must be between ${min} and ${max}",
-    // },
-  };
-  /* eslint-enable no-template-curly-in-string */
-
   return (
     <div>
       <Modal
@@ -36,29 +21,22 @@ const EditModal = (props: Props) => {
         ]}
       >
         <div style={modalStyle}>
-          <Form
-            {...layout}
-            name="userEditor"
-            onFinish={props.onFinish}
-            validateMessages={validateMessages}
-          >
+          <Form {...layout} name="userEditor" onFinish={props.onFinish}>
             <Form.Item
               name={"password"}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: "Password is required" }]}
               label="Password"
             >
-              <Input />
+              <Input.Password type="password" />
             </Form.Item>
             <Form.Item
               name={"password2"}
-              rules={[{ required: true }]}
+              rules={[{ required: true, message: "Password is required" }]}
               label="Repeat Password"
             >
-              <Input />
+              <Input.Password type="password" />
             </Form.Item>
-            <Form.Item
-              wrapperCol={{ ...layout.wrapperCol, offset: 8 }}
-            >
+            <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
               <Button type="primary" htmlType="submit">
                 Submit
               </Button>
