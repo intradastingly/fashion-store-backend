@@ -29,7 +29,6 @@ function CartItemsList() {
     forceUpdate();
     addProductToCart(product, quantity);
   }
-  // console.log(maxQuantity);
 
   return (
     <CartContext.Consumer>

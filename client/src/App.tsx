@@ -34,7 +34,6 @@ function App() {
   function checkIfAdmin() {
     if (loggedIn && session.role === "admin") {
       setLoggedInAsAdmin(true);
-      console.log(loggedInAsAdmin);
     }
   }
 
