@@ -326,7 +326,6 @@ function ApiProvider(props: Props) {
     if (result) {
       setUserCreated(true);
     }
-    console.log(result);
     return result;
   }
 
@@ -357,19 +356,18 @@ function ApiProvider(props: Props) {
 
   const updatePassword = async (id: string, body: object) => {
     const result = await fetchRequest(`api/accounts/${id}`, "PATCH", body);
-    console.log(result);
   };
 
   // add new product logic
 
   const saveNewProduct = async (image: string) => {
-    console.log(image)
-
-    if(titleField === "" || 
-      descriptionField === "" || 
-      quantityField === null || 
-      priceField === null) {
-      return
+    if (
+      titleField === "" ||
+      descriptionField === "" ||
+      quantityField === null ||
+      priceField === null
+    ) {
+      return;
     }
     let body = {
       title: titleField,
@@ -380,8 +378,7 @@ function ApiProvider(props: Props) {
       img: image,
     };
 
-    console.log(body)
-    const result = await fetchRequest('api/products', "POST", body)
+    const result = await fetchRequest("api/products", "POST", body);
     setButtonSaveLoading(true);
 
     setTitleField("");
@@ -413,10 +410,8 @@ function ApiProvider(props: Props) {
   // function for setState when add new product
 
   const imageFieldChange = (value: string) => {
-    console.log(value)
-    setImageField(value)
-  }
-
+    setImageField(value);
+  };
 
   // add new user logic
   const saveNewUser = async (adminRegisterData: adminRegisterData) => {

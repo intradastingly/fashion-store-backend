@@ -10,7 +10,7 @@ const accountRouter = require("./resources/account/router");
 const orderRouter = require("./resources/order/router");
 const loginRouter = require("./resources/login/router");
 const shippingRouter = require("./resources/shipping/router");
-const uploadRouter = require("./resources/fileUpload/router")
+const uploadRouter = require("./resources/fileUpload/router");
 
 const uri =
   "mongodb+srv://admin:admin@cluster0.4v0hr.mongodb.net/yousef?retryWrites=true&w=majority";
@@ -22,22 +22,23 @@ mongoose
     useFindAndModify: false,
   })
   .then(() => {
-    console.log("You're now connected to the database.");
     app.use(express.json());
-    app.use(cookieSession({
-      name: "session",
-      secret: "SuperSecretKey",
-      secure: false,
-      maxAge: 100000 * 10,
-      httpOnly: false,
-      path: "/",
-    }));
+    app.use(
+      cookieSession({
+        name: "session",
+        secret: "SuperSecretKey",
+        secure: false,
+        maxAge: 100000 * 10,
+        httpOnly: false,
+        path: "/",
+      })
+    );
     app.use(
       bodyParser.urlencoded({
         extended: true,
       })
     );
-    app.use("/api", uploadRouter)
+    app.use("/api", uploadRouter);
     app.use("/api", loginRouter);
     app.use("/api", productRouter);
     app.use("/api", accountRouter);

@@ -55,10 +55,8 @@ function UserLogIn() {
   }, [userCreated]);
 
   const onFinish = (value: Credentials) => {
-    console.log(value);
     renderLoading();
     loginHandler(value);
-    console.log(loggedIn, "logged in bool");
     reloadPage();
   };
 
@@ -74,7 +72,6 @@ function UserLogIn() {
       setIsModalVisible(false);
       success();
     }
-    console.log(userCreated);
   };
 
   function openModal(e: any) {

@@ -1,6 +1,5 @@
 import express from "express";
-const fs = require('fs')
-
+const fs = require("fs");
 
 
 exports.upload = async (req: any, res: express.Response) => {
@@ -16,4 +15,5 @@ exports.delete = async(req: any, res: express.Response) => {
     } 
     res.status(200).json();
 } 
+
 

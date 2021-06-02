@@ -78,10 +78,8 @@ function UserProfile() {
   };
   const onFinishPassword = (value: any) => {
     if (value.password === value.password2) {
-      console.log(value);
-      const body = {password: value.password}
-      console.log(body);
-      
+      const body = { password: value.password };
+
       updatePassword(session.id, body);
     }
   };
