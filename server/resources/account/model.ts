@@ -1,4 +1,4 @@
-export {};
+export { };
 import { MongooseDocument, model, Schema } from "mongoose";
 import bcrypt from "bcrypt";
 const saltRounds = 10;
@@ -21,7 +21,7 @@ export interface AccountDocument extends MongooseDocument {
 
 const AddressSchema = new Schema<Address>({
   street: { type: String },
-  zipCode: { type: Number },
+  zipCode: { type: String },
   city: { type: String },
   country: { type: String },
 });
