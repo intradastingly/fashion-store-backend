@@ -9,8 +9,6 @@ interface Props {
 }
 
 const EditModal = (props: Props) => {
-
-
   /* eslint-disable no-template-curly-in-string */
   const validateMessages = {
     required: "${label} is required!",
@@ -18,9 +16,6 @@ const EditModal = (props: Props) => {
       email: "${label} is not a valid email!",
       number: "${label} is not a valid number!",
     },
-    // number: {
-    //   range: "${label} must be between ${min} and ${max}",
-    // },
   };
   /* eslint-enable no-template-curly-in-string */
 
@@ -54,7 +49,13 @@ const EditModal = (props: Props) => {
             <Form.Item
               initialValue={props.activeUser.phoneNumber}
               name={"phoneNumber"}
-              rules={[{ required: true }]}
+              rules={[
+                { required: true },
+                {
+                  pattern: new RegExp(/^(0)\s*(7[0236])\s*(\d{4})\s*(\d{3})$/),
+                  message: "Please enter a valid phone number",
+                },
+              ]}
               label="Phone Number"
             >
               <Input />
@@ -79,7 +80,13 @@ const EditModal = (props: Props) => {
             <Form.Item
               initialValue={props.activeUser.address.zipCode}
               name={["address", "zipCode"]}
-              rules={[{ required: true }]}
+              rules={[
+                { required: true },
+                {
+                  pattern: new RegExp(/^(s-|S-){0,1}[0-9]{3}\s?[0-9]{2}$/),
+                  message: "Please enter a valid zip code",
+                },
+              ]}
               label="Zip Code"
             >
               <Input />
