@@ -104,8 +104,8 @@ function AdminOrders(props: Props) {
                     <div>
                       <span style={{ marginRight: "1rem" }}>
                         Products:
-                        {order.cart.map((p: any, index: any) => (
-                          <>{" " + p.product.title + ", "}</>
+                        {order.cart.map((p: any, index: number) => (
+                          <div key={index}>{" " + p.product.title + ", "}</div>
                         ))}
                       </span>
                     </div>
