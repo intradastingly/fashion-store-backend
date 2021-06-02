@@ -24,6 +24,8 @@ function errorHandler(err: Error, req: Request, res: Response, next: NextFunctio
   }
 }
 
+
+
 mongoose
   .connect(uri, {
     useNewUrlParser: true,
