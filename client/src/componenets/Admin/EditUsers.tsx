@@ -1,12 +1,16 @@
-import { Button, message, Popconfirm } from "antd";
+import { Button, message, Modal, Popconfirm } from "antd";
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
 import { Link, Redirect, RouteComponentProps } from "react-router-dom";
 import { ApiContext, AccountInfo } from "../../contexts/ApiContext";
+
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 
 const successSave = () => {
   message.success("The user has been updated", 3);
+};
+const successPassword = () => {
+  message.success("The password has been updated", 3);
 };
 
 const successDelete = () => {
@@ -17,36 +21,59 @@ function EditUsers(props: Props) {
   const { loadAllUsers, users } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [buttonDeleteLoading, setButtonDeleteLoading] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  
   const [editUser, setEditUser] = useState<any>({});
 
-  const [userField, setUserField] = useState(editUser.userName);
-  const [fullNameField, setfullNameField] = useState(editUser.fullName);
-  const [phoneNumberField, setPhoneNumberField] = useState(
-    editUser.phoneNumber
-  );
-  const [roleField, setRoleField] = useState(editUser.role);
-  const [emailField, setEmailField] = useState(editUser.email);
-  const [userAdress, setUserAdress] = useState({
+  const [userField, setUserField] = useState<any>(editUser.userName);
+  const [fullNameField, setfullNameField] = useState<any>(editUser.fullName);
+  const [phoneNumberField, setPhoneNumberField] = useState<any>(editUser.phoneNumber);
+  const [password, setPassword] = useState<any>()
+  const [roleField, setRoleField] = useState<any>(editUser.role);
+  const [emailField, setEmailField] = useState<any>(editUser.email);
+  const [userAdress, setUserAdress] = useState<any>({
     city: editUser?.address?.city,
     country: editUser?.address?.country,
     street: editUser?.address?.street,
     zipCode: editUser?.address?.zipCode,
   });
-
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+  
+  const handleOk = () => {
+    setIsModalVisible(false);
+    updatePassword()
+  };
+  
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+  
   useEffect(() => {
-    const loadUsers = async () => {
-      if (!users) {
-        return;
-      }
-      const user = await users.find(
-        (u: AccountInfo) => u._id === props.match.params.id
-      );
+    loadUsers();
+  }, []);
 
+
+  const loadUsers = () => {
+    if (!users) {
+      return;
+    }
+    const user = users.find(
+      (u: AccountInfo) => u._id === props.match.params.id
+      );
+      
       setEditUser(user);
     };
 
-    loadUsers();
-  }, []);
+    useEffect(() => {
+      setUserAdress({
+        city: editUser?.address?.city,
+        country: editUser?.address?.country,
+        street: editUser?.address?.street,
+        zipCode: editUser?.address?.zipCode, 
+      })
+    }, [editUser]);
 
   const handleDelete = async () => {
     setButtonDeleteLoading(true);
@@ -71,7 +98,8 @@ function EditUsers(props: Props) {
   const saveUser = async (values: any) => {
     setButtonSaveLoading(true);
 
-    const body = {
+
+    let body = {
       userName: userField,
       fullName: fullNameField,
       phoneNumber: phoneNumberField,
@@ -110,10 +138,30 @@ function EditUsers(props: Props) {
     return result;
   };
 
+  const updatePassword = async () => {
+    const body = {
+      password: password,
+    };
+
+    const response = await fetch("/api/accounts/" + props.match.params.id, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = await response.json();
+    
+    setButtonSaveLoading(true)
+    successPassword();
+    return result;
+  };  
+
   if (buttonDeleteLoading || buttonSaveLoading) {
     return <Redirect to="/admin-users" />;
   }
-  
+
   return (
     <div style={rootStyle}>
       <form style={layoutStyle}>
@@ -121,35 +169,27 @@ function EditUsers(props: Props) {
         <label>City: </label>
         <input
           name="City"
-          onChange={(e: any) =>
-            setUserAdress({ ...userAdress, city: e.target.value })
-          }
+          onChange={(e: any) => setUserAdress({...userAdress, city: e.target.value })}
           defaultValue={editUser?.address?.city}
         />
         <label>Country: </label>
         <input
           name="Country"
-          onChange={(e: any) =>
-            setUserAdress({ ...userAdress, country: e.target.value })
-          }
+          onChange={(e: any) => setUserAdress({ ...userAdress, country: e.target.value })}
           defaultValue={editUser?.address?.country}
         />
         <label>Street: </label>
         <input
           name="Street"
-          onChange={(e: any) =>
-            setUserAdress({ ...userAdress, street: e.target.value })
-          }
+          onChange={(e: any) => setUserAdress({ ...userAdress, street: e.target.value })}
           defaultValue={editUser?.address?.street}
         />
         <label>Zip Code: </label>
         <input
           name="ZipCode"
-          onChange={(e: any) =>
-            setUserAdress({ ...userAdress, zipCode: e.target.value })
-          }
+          onChange={(e: any) => setUserAdress({ ...userAdress, zipCode: e.target.value })}
           defaultValue={editUser?.address?.zipCode}
-        />
+        />  
         <label>Username: </label>
         <input
           name="username"
@@ -180,12 +220,31 @@ function EditUsers(props: Props) {
           onChange={(e: any) => setEmailField(e.target.value)}
           defaultValue={editUser.email}
         />
-
+        <Button
+          style={{ marginTop: "1rem" }}
+          type="primary"
+          onClick={showModal}
+        >
+          Edit Password
+        </Button>
+        <Modal
+          title="Edit password"
+          visible={isModalVisible}
+          onOk={handleOk}
+          onCancel={handleCancel}
+        >
+ 
+          <input
+            type="password"
+            onChange={(e: any) => setPassword(e.target.value)}
+          />
+        </Modal>
         <Button
           type="primary"
           onClick={saveUser}
           htmlType="submit"
           loading={buttonSaveLoading}
+          style={{ margin: "1rem 0" }}
         >
           Save
         </Button>
