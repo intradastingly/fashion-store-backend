@@ -81,6 +81,12 @@ function AddNewProduct(props: Props, state: State) {
     );
   };
 
+  function loadProfile(){
+    setTimeout(()=>{
+      window.location.href = "/profile"
+    }, 1000)
+  }
+
   return (
     <div style={rootStyle}>
       <form style={layoutStyle}>
@@ -120,9 +126,12 @@ function AddNewProduct(props: Props, state: State) {
           type="primary"
           onClick={() => {
             saveNewImage();
+            loadProfile();
           }}
-          htmlType="submit"
+          /* htmlType="submit"
+           */
           loading={buttonSaveLoading}
+          /* href="/profile" */
           style={{ marginTop: "1rem" }}
         >
           Save
