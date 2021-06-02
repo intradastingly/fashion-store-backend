@@ -11,4 +11,4 @@ Content-Type: image/jpeg
 
 ###
 
-DELETE http://localhost:6969/api/uploads/
+DELETE http://localhost:6969/api/upload/

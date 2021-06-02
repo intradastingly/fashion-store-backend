@@ -168,13 +168,12 @@ function AdminEditDetails(props: Props, state: State) {
     saveProduct(imgPath)
   }
 
-  const deleteOldImage = async (img: string) => {
+  const deleteOldImage = async (img: string) => {  
     await fetch("/api/upload", {
       method: "DELETE",
-      body: JSON.stringify(img),
+      body: img,
     })
   }
-
 
   return (
     <div style={rootStyle}>
