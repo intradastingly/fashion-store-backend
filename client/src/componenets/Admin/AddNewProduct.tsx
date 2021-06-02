@@ -121,8 +121,8 @@ function AddNewProduct(props: Props, state: State) {
           onClick={() => {
             saveNewImage()
           }}
-          /* htmlType="submit"
-          loading={buttonSaveLoading} */
+          htmlType="submit"
+          loading={buttonSaveLoading}
           style={{ marginTop: "1rem" }}
         >
           Save
