@@ -1,4 +1,4 @@
-const express = require("express");
+import express, { NextFunction, Request, Response } from "express";
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 /* const fileUpload = require('express-fileupload'); */
@@ -14,6 +14,15 @@ const uploadRouter = require("./resources/fileUpload/router")
 
 const uri =
   "mongodb+srv://admin:admin@cluster0.4v0hr.mongodb.net/yousef?retryWrites=true&w=majority";
+
+// error catcher
+function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
+  if (req.xhr) {
+    res.status(500).send({ error: 'Something failed!' })
+  } else {
+    next(err)
+  }
+}
 
 mongoose
   .connect(uri, {
@@ -37,6 +46,7 @@ mongoose
         extended: true,
       })
     );
+    app.use("/api", errorHandler)
     app.use("/api", uploadRouter)
     app.use("/api", loginRouter);
     app.use("/api", productRouter);
