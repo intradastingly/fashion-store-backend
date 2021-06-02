@@ -14,9 +14,6 @@ const validateMessages = {
     email: "${label} is not a valid email!",
     number: "${label} is not a valid number!",
   },
-  number: {
-    range: "${label} must be between ${min} and ${max}",
-  },
 };
 export interface PaymentKlarna {
   ssn: string;
@@ -72,7 +69,15 @@ class PayKlarna extends Component<Props> {
                   <Form.Item
                     name={["klarna", "ssn"]}
                     label="SSN"
-                    rules={[{ min: 10, max: 10, required: true }]}
+                    rules={[
+                      { required: true },
+                      {
+                        pattern: new RegExp(
+                          /^(19|20)?(\d{6}(-|\s)\d{4}|(?!19|20)\d{10})$/
+                        ),
+                        message: "Please enter a valid SSN",
+                      },
+                    ]}
                   >
                     <Input placeholder="YYMMDDXXXX" />
                   </Form.Item>
@@ -93,7 +98,15 @@ class PayKlarna extends Component<Props> {
                   <Form.Item
                     name={["klarna", "phone"]}
                     label="Phone"
-                    rules={[{ min: 10, max: 10, required: true }]}
+                    rules={[
+                      { required: true },
+                      {
+                        pattern: new RegExp(
+                          /^(0)\s*(7[0236])\s*(\d{4})\s*(\d{3})$/
+                        ),
+                        message: "Please enter a valid phone number",
+                      },
+                    ]}
                   >
                     <Input />
                   </Form.Item>
@@ -107,7 +120,15 @@ class PayKlarna extends Component<Props> {
                   <Form.Item
                     name={["klarna", "zipcode"]}
                     label="Zip-code"
-                    rules={[{ required: true }]}
+                    rules={[
+                      { required: true },
+                      {
+                        pattern: new RegExp(
+                          /^(s-|S-){0,1}[0-9]{3}\s?[0-9]{2}$/
+                        ),
+                        message: "Please enter a valid zip code",
+                      },
+                    ]}
                   >
                     <Input />
                   </Form.Item>
