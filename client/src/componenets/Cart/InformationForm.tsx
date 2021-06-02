@@ -34,6 +34,7 @@ export interface UserInfo {
   street: string;
   zipcode: string;
   city: string;
+  country: string;
 }
 interface Props {
   next(): void;
@@ -60,11 +61,7 @@ function InformationForm(props: Props) {
   function checkQuantityInLS() {
     const itemsInLS = JSON.parse(localStorage.getItem("cartItems")!);
     for (let i = 0; i < allProducts.length; i++) {
-      // console.log(allProducts[i], "Allt på lager");
-
       for (let j = 0; j < itemsInLS.length; j++) {
-        // console.log(itemsInLS[j], "Allt i cart");
-
         if (itemsInLS[j].product._id === allProducts[i]._id) {
           if (itemsInLS[j].quantity > allProducts[i].quantity) {
             setMaxQuantity(true);
@@ -75,7 +72,8 @@ function InformationForm(props: Props) {
   }
 
   const onFinish = (values: UserInfo) => {
-    console.log("Success:", values);
+    updateUserInfo(values);
+
     props.next();
   };
 
@@ -92,7 +90,7 @@ function InformationForm(props: Props) {
             onFinish={onFinish}
           >
             <Form.Item
-              name={["user", "name"]}
+              name={"name"}
               initialValue={activeUser.fullName}
               label="Name"
               rules={[{ required: true }]}
@@ -100,7 +98,7 @@ function InformationForm(props: Props) {
               <Input />
             </Form.Item>
             <Form.Item
-              name={["user", "email"]}
+              name={"email"}
               initialValue={activeUser.email}
               label="Email"
               rules={[{ type: "email", required: true }]}
@@ -108,7 +106,7 @@ function InformationForm(props: Props) {
               <Input />
             </Form.Item>
             <Form.Item
-              name={["user", "phone"]}
+              name={"phone"}
               initialValue={activeUser.phoneNumber}
               label="Phone"
               rules={[{ min: 10, max: 10, required: true }]}
@@ -116,7 +114,7 @@ function InformationForm(props: Props) {
               <Input />
             </Form.Item>
             <Form.Item
-              name={["user", "street"]}
+              name={"street"}
               initialValue={activeUser.address.street}
               label="Street"
               rules={[{ required: true }]}
@@ -124,7 +122,7 @@ function InformationForm(props: Props) {
               <Input />
             </Form.Item>
             <Form.Item
-              name={["user", "zipcode"]}
+              name={"zipcode"}
               initialValue={activeUser.address.zipCode}
               label="Zipcode"
               rules={[{ required: true }]}
@@ -132,7 +130,7 @@ function InformationForm(props: Props) {
               <Input />
             </Form.Item>
             <Form.Item
-              name={["user", "city"]}
+              name={"city"}
               initialValue={activeUser.address.city}
               label="City"
               rules={[{ required: true }]}
@@ -140,7 +138,7 @@ function InformationForm(props: Props) {
               <Input />
             </Form.Item>
             <Form.Item
-              name={["user", "country"]}
+              name={"country"}
               initialValue={activeUser.address.country}
               label="Country"
               rules={[{ required: true }]}

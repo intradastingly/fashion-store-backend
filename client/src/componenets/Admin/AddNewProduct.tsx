@@ -11,22 +11,21 @@ interface State {
   buttonSaveLoading: boolean;
 }
 
-
 function AddNewProduct(props: Props, state: State) {
-
-
   const [imageField, setImageField] = useState<any>({});
-  const { mapCategories, 
-          loadProducts, 
-          saveNewProduct, 
-          titleFieldChange,
-          quantityFieldChange,
-          priceFieldChange,
-          imageFieldChange,
-          descriptionFieldChange,
-          handleChange,
-          categoryField,
-          buttonSaveLoading } = useContext(ApiContext);
+  const {
+    mapCategories,
+    loadProducts,
+    saveNewProduct,
+    titleFieldChange,
+    quantityFieldChange,
+    priceFieldChange,
+    imageFieldChange,
+    descriptionFieldChange,
+    handleChange,
+    categoryField,
+    buttonSaveLoading,
+  } = useContext(ApiContext);
 
   const options = [
     { value: "All" },
@@ -46,22 +45,22 @@ function AddNewProduct(props: Props, state: State) {
     loadProducts();
     mapCategories();
   }, []);
-  
+
   const saveNewImage = async () => {
-    const formData = new FormData()
-    formData.append('img', imageField)
+    const formData = new FormData();
+    formData.append("img", imageField);
     const response = await fetch("/api/upload", {
       method: "POST",
       body: formData,
-      credentials: 'include',
-      headers:{
-        "Accept": "multipart/form-data; boundary=Row"
-      }
-    })
+      credentials: "include",
+      headers: {
+        Accept: "multipart/form-data; boundary=Row",
+      },
+    });
     const imgPath = await response.json();
-    console.log('test')
-    saveNewProduct(imgPath)
-  }
+    saveNewProduct(imgPath);
+  };
+
 
   const tagRender = (props: any) => {
     const { label, closable, onClose } = props;
@@ -120,10 +119,10 @@ function AddNewProduct(props: Props, state: State) {
         <Button
           type="primary"
           onClick={() => {
-            saveNewImage()
+            saveNewImage();
           }}
-          /* htmlType="submit"
-          loading={buttonSaveLoading} */
+          htmlType="submit"
+          loading={buttonSaveLoading}
           style={{ marginTop: "1rem" }}
         >
           Save

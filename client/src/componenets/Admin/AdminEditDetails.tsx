@@ -128,7 +128,7 @@ function AdminEditDetails(props: Props, state: State) {
   }, []);
 
 
-  const handleDelete = async () => {
+  const handleDelete = async (img: string) => {
     setButtonDeleteLoading(true);
 
     const response = await fetch("/api/products/" + props.match.params.id, {
@@ -139,6 +139,7 @@ function AdminEditDetails(props: Props, state: State) {
     });
 
     const result = await response.json();
+    deleteOldImage(img)
     loadProducts();
     setButtonDeleteLoading(false);
     successDelete();
@@ -168,13 +169,18 @@ function AdminEditDetails(props: Props, state: State) {
     saveProduct(imgPath)
   }
 
-  const deleteOldImage = async (img: string) => {
+  const deleteOldImage = async (img: string) => {  
+    const body = {
+      img: img
+    }
     await fetch("/api/upload", {
       method: "DELETE",
-      body: JSON.stringify(img),
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
     })
   }
-
 
   return (
     <div style={rootStyle}>
@@ -242,7 +248,9 @@ function AdminEditDetails(props: Props, state: State) {
         <Popconfirm
           title="Are you sure？"
           okText="Yes"
-          onConfirm={handleDelete}
+          onConfirm={() => {
+            handleDelete(editProduct.img)
+          }}
           cancelText="No"
         >
           <Button type="primary" danger loading={buttonDeleteLoading}>
