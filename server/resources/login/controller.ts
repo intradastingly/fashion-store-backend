@@ -10,8 +10,6 @@ exports.login = async (req: any, res: express.Response) => {
   );
 
   if (!account || !(await bcrypt.compare(password, account.password))) {
-    console.log(password, "failed password");
-
     res.status(401).json("Incorrect password or username");
     return;
   }
