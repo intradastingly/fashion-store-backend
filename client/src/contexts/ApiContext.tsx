@@ -369,6 +369,7 @@ function ApiProvider(props: Props) {
     ) {
       return;
     }
+
     let body = {
       title: titleField,
       description: descriptionField,
@@ -377,6 +378,8 @@ function ApiProvider(props: Props) {
       price: priceField,
       img: image,
     };
+
+    console.log(body)
 
     const result = await fetchRequest("api/products", "POST", body);
     setButtonSaveLoading(true);
