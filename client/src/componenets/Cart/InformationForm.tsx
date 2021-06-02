@@ -109,7 +109,13 @@ function InformationForm(props: Props) {
               name={"phone"}
               initialValue={activeUser.phoneNumber}
               label="Phone"
-              rules={[{ min: 10, max: 10, required: true }]}
+              rules={[
+                { required: true },
+                {
+                  pattern: new RegExp(/^(0)\s*(7[0236])\s*(\d{4})\s*(\d{3})$/),
+                  message: "Please enter a valid phone number",
+                },
+              ]}
             >
               <Input />
             </Form.Item>
@@ -125,7 +131,13 @@ function InformationForm(props: Props) {
               name={"zipcode"}
               initialValue={activeUser.address.zipCode}
               label="Zipcode"
-              rules={[{ required: true }]}
+              rules={[
+                { required: true },
+                {
+                  pattern: new RegExp(/^(s-|S-){0,1}[0-9]{3}\s?[0-9]{2}$/),
+                  message: "Please enter a valid zip code",
+                },
+              ]}
             >
               <Input />
             </Form.Item>

@@ -15,7 +15,7 @@ const validateMessages = {
     number: "${label} is not a valid number!",
   },
   number: {
-    range: "${label} must be between ${min} and ${max}",
+    range: "Input must be between ${min} and ${max}",
   },
 };
 export interface PaymentCard {
@@ -55,14 +55,34 @@ class PayCard extends Component<Props> {
             <Form.Item
               name={["card", "cardno"]}
               label="Card number"
-              rules={[{ min: 13, max: 19, required: true }]}
+              rules={[
+                // { min: 13, max: 19 },
+                {
+                  required: true,
+                  message: "Card number is required.",
+                },
+                {
+                  pattern: new RegExp(
+                    /^(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\d{3})\d{11})$/
+                  ),
+                  message: "Please enter a valid credit card number.",
+                },
+              ]}
             >
               <Input placeholder="XXXX XXXX XXXX XXXX" />
             </Form.Item>
             <Form.Item
               name={["card", "expdate"]}
               label="Expiry date"
-              rules={[{ required: true }]}
+              rules={[
+                { required: true },
+                {
+                  pattern: new RegExp(
+                    /^(0[1-9]|1[0-2])\/?(([0-9]{4}|[0-9]{2})$)/
+                  ),
+                  message: "Please enter a valid CVV",
+                },
+              ]}
             >
               <Input placeholder="MM/YY" />
             </Form.Item>
@@ -76,7 +96,13 @@ class PayCard extends Component<Props> {
             <Form.Item
               name={["card", "cvc"]}
               label="CVC/CCV"
-              rules={[{ required: true }]}
+              rules={[
+                { required: true },
+                {
+                  pattern: new RegExp(/^[0-9]{3,4}$/),
+                  message: "Please enter a valid CVV",
+                },
+              ]}
             >
               <Input placeholder="e.g. 123" />
             </Form.Item>

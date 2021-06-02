@@ -52,7 +52,15 @@ class PaySwish extends Component<Props> {
                   <Form.Item
                     name={["swish", "phone"]}
                     label="Phone"
-                    rules={[{ min: 10, max: 10, required: true }]}
+                    rules={[
+                      { required: true },
+                      {
+                        pattern: new RegExp(
+                          /^(0)\s*(7[0236])\s*(\d{4})\s*(\d{3})$/
+                        ),
+                        message: "Please enter a valid phone number",
+                      },
+                    ]}
                   >
                     <Input />
                   </Form.Item>
