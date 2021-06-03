@@ -2,8 +2,6 @@ export {};
 const express = require("express");
 const productRouter = express.Router();
 const controller = require("./controller");
-const multer = require('multer')
-const upload = multer({dest: 'uploads'});
 
 productRouter
   .post("/products", controller.newProduct)
