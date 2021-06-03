@@ -9,7 +9,7 @@ The front end is written in react (TypeScript) with Ant Design as design system.
 ## Back End
 Our backend is built with Typescript in Express.
 
-For developers:
+## For developers:
 Clone the project.
 Install all dependencies from root directory with npm i.
 Run the application from root with npm start.
