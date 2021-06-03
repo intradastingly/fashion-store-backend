@@ -50,6 +50,10 @@ function AddNewProduct(props: Props, state: State) {
     mapCategories();
   }, []);
 
+  const invalidFile = () => {
+    message.error("Invalid file type", 3);
+  }
+
   const saveNewImage = async () => {
     const formData = new FormData();
     formData.append("img", imageField);
@@ -63,7 +67,7 @@ function AddNewProduct(props: Props, state: State) {
     });
     const imgPath = await response.json();
     if(imgPath === "Invalid file type"){
-      setErrorMessage(imgPath)
+      invalidFile();
       return false;
     } else {
       loadProfile();
@@ -136,10 +140,7 @@ function AddNewProduct(props: Props, state: State) {
           onClick={() => {
             saveNewImage();
           }}
-          /* htmlType="submit"
-           */
           loading={buttonSaveLoading}
-          /* href="/profile" */
           style={{ marginTop: "1rem" }}
         >
           Save
