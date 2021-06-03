@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { AutoComplete, Avatar, Button, Col, List, Row } from "antd";
+import { Avatar, Button, Col, List, Row } from "antd";
 import { CSSProperties, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";

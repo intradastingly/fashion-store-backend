@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 import { CSSProperties, useContext, useState, useEffect } from "react";
 import "./App.css";
-import { ConfigProvider } from "antd";
 import AdminEditDetails from "./componenets/Admin/AdminEditDetails";
 import AdminList from "./componenets/Admin/AdminList";
 import AdminLogIn from "./componenets/Admin/AdminLogIn";

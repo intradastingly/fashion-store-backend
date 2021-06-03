@@ -1,20 +1,15 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, List, message, Modal, Row } from "antd";
-import React, { CSSProperties, useContext, useEffect, useState } from "react";
+import { Button, Col, List, Row } from "antd";
+import React, { CSSProperties, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
-import AddNewUser from "./AddNewUser";
 
 function AdminUsers() {
-  const { loadAllUsers, users, userCreated } = useContext(ApiContext);
- 
-
- 
-
+  const { loadAllUsers, users  } = useContext(ApiContext);
 
   useEffect(() => {
     loadAllUsers();
- 
+ // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

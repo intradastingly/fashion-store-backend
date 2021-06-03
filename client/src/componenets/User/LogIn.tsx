@@ -2,23 +2,17 @@ import {
   Form,
   Input,
   Button,
-  Checkbox,
   Row,
   Col,
   Modal,
-  Space,
-  Typography,
   message,
 } from "antd";
 import {
   CSSProperties,
-  Component,
-  ContextType,
   useState,
   useContext,
   useEffect,
 } from "react";
-import { Link, Route } from "react-router-dom";
 
 import { ApiContext, Credentials } from "../../contexts/ApiContext";
 import LoadingPage from "../LoadingPage";
@@ -31,20 +25,11 @@ import RegisterForm from "./Register";
 function UserLogIn() {
   const {
     loginHandler,
-    loggedIn,
-    registerHandler,
     userCreated,
-    getUser,
-    session,
   } = useContext(ApiContext);
 
-  const [password, setPassword] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // const loginCredentials = { userName: username, password: password };
-  const { Title } = Typography;
 
   const success = () => {
     message.success("User created ✔");
@@ -52,6 +37,7 @@ function UserLogIn() {
 
   useEffect(() => {
     onRegister();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userCreated]);
 
   const onFinish = (value: Credentials) => {
@@ -199,39 +185,10 @@ const modalContainer: CSSProperties = {
   overflow: "auto",
 };
 
-const buttonContainer: CSSProperties = {
-  display: "flex",
-  justifyContent: "space-around",
-  marginTop: "2rem",
-  width: "10rem",
-};
-
 const modalTitle: CSSProperties = {
   display: "flex",
   justifyContent: "center",
   width: "100%",
-};
-
-const successTitle: CSSProperties = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  width: "100%",
-  height: "100%",
-};
-
-const form: CSSProperties = {
-  height: "100%",
-  width: "100%",
-};
-
-const formContainer: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "space-between",
-  justifyContent: "space-around",
-  width: "100%",
-  height: "100%",
 };
 
 const fullContainer: CSSProperties = {
@@ -239,24 +196,6 @@ const fullContainer: CSSProperties = {
   height: "100%",
   display: "flex",
   justifyContent: "center",
-};
-
-const inputField: CSSProperties = {
-  borderBottom: "1px solid lightgray",
-  outline: "none",
-  padding: "4px 10px",
-  border: "3px solid #9176f2",
-  borderRadius: "5px",
-};
-
-const modalFormContainer: CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "space-evenly",
-  height: "100%",
-  width: "100%",
-  overflow: "auto",
 };
 
 export default UserLogIn;

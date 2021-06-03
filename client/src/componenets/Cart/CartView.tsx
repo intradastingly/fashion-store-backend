@@ -12,7 +12,6 @@ import PaymentMethod from "./PaymentMethod";
 import { CartContext } from "../../contexts/CartContext";
 import CompleteOrder from "./CompleteOrder";
 import { useMediaQuery } from "react-responsive";
-import useWindowDimensions from "../../windowSize";
 
 
 const { Step } = Steps;
@@ -36,16 +35,11 @@ function CartView() {
   const { loggedIn} = useContext(ApiContext);
   const { getTotalPriceProducts, cart } = useContext(CartContext);
   const [current, setCurrent] = useState<number>(0);
-  const { width } = useWindowDimensions();
 
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 740px)" });
 
   const next = () => {
     setCurrent(current + 1);
-  };
-
-  const prev = () => {
-    setCurrent(current - 1);
   };
 
   const stepsComponents: any = {

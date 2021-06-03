@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 import React, { useContext, CSSProperties, useState, useEffect } from "react";
 import {
   Card,
@@ -5,9 +6,6 @@ import {
   List,
   Row,
   message,
-  Menu,
-  Dropdown,
-  Button,
   Space,
 } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
@@ -44,19 +42,8 @@ function ProductCardGrid() {
   const { allProducts } = useContext(ApiContext);
   const [selectedTags, setSelectedTags] = useState(["All"]);
   const [filteredCategories, setFilteredCategories] = useState<any>();
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
-  const menu = (
-    <Menu>
-      {tagsData.map((item) => (
-        <Menu.Item>
-          <a target="_blank" rel="noopener noreferrer" onClick={handleClick}>
-            {item}
-          </a>
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
 
   function filterArray(array: any[], filters: any) {
     const filterKeys = Object.keys(filters);
@@ -82,6 +69,7 @@ function ProductCardGrid() {
       const filteredObject = filterArray(allProducts, filter);
       setFilteredCategories(filteredObject);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTags]);
 
   function handleChange(tag: string, checked: boolean) {
@@ -107,10 +95,6 @@ function ProductCardGrid() {
     if (nextSelectedTags.indexOf("All") >= 1) {
       setSelectedTags(["All"]);
     }
-  }
-
-  function handleClick(event: any) {
-    setSelectedTags([event.target.innerHTML]);
   }
 
   return (

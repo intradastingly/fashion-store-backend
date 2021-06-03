@@ -43,7 +43,6 @@ function AdminEditDetails(props: Props, state: State) {
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
-  const [error, setErrorMessage] = useState<string>();
 
   const options = [
     { value: "All" },
@@ -130,6 +129,7 @@ function AdminEditDetails(props: Props, state: State) {
 
     loadProducts();
     mapCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 

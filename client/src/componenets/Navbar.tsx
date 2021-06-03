@@ -1,13 +1,9 @@
-import { Row, Col, Menu, Button, Space } from "antd";
-import { Header } from "antd/lib/layout/layout";
-import { CSSProperties, useContext, useState, useEffect } from "react";
+import { Button } from "antd";
+import { CSSProperties, useContext } from "react";
 import logo from "../assets/logga-fs.png";
-import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import AddToBadge from "./Badge";
-import ApiProvider from "../contexts/ApiContext";
 import { ApiContext } from "../contexts/ApiContext";
-import LoadingPage from "./LoadingPage";
 import { useMediaQuery } from "react-responsive";
 
 function Navbar() {

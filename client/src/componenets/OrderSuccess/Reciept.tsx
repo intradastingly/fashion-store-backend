@@ -1,6 +1,6 @@
-import { Component, ContextType, CSSProperties, useContext } from 'react';
+import { CSSProperties, useContext } from 'react';
 import { Card } from 'antd';
-import { CartContext, PaymentMethod } from '../../contexts/CartContext';
+import { PaymentMethod } from '../../contexts/CartContext';
 import { ApiContext } from '../../contexts/ApiContext';
 import { UserInfo } from '../Cart/InformationForm';
 import { CartItem } from '../Cart/CartItemsList';

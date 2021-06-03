@@ -4,11 +4,8 @@ import { UserInfo } from "../componenets/Cart/InformationForm";
 import { PaymentCard } from "../componenets/Cart/PayCard";
 import { PaymentKlarna } from "../componenets/Cart/PayKlarna";
 import { PaymentSwish } from "../componenets/Cart/PaySwish";
-//import { DeliveryMethod, deliveryMethods } from '../componenets/deliveryMethods';
 import { IReceipt } from "../componenets/OrderSuccess/Reciept";
 import { ProductInfo, ApiContext, ShippingInfo } from "../contexts/ApiContext";
-import { shippingMethods } from "../contexts/ApiContext";
-// import { Product } from '../componenets/ProductItemsList';
 
 const emptyUser: UserInfo = {
   name: "",

@@ -1,11 +1,6 @@
-import { Button, Form, Input, Typography, message } from "antd";
+/* eslint-disable no-template-curly-in-string */
+import { Button, Form, Input, Typography } from "antd";
 import React, {
-  CSSProperties,
-  Component,
-  useState,
-  Context,
-  useEffect,
-  useRef,
   useContext,
 } from "react";
 import { ApiContext } from "../../contexts/ApiContext";
@@ -22,7 +17,7 @@ import {
 } from "@ant-design/icons";
 
 function RegisterForm() {
-  const { registerHandler, userCreated } = useContext(ApiContext);
+  const { registerHandler } = useContext(ApiContext);
   const { Title } = Typography;
   const validateMessages = {
     required: "${label} is required!",

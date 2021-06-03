@@ -1,15 +1,11 @@
 import { Row, Col, message, Button } from "antd";
 import React, { CSSProperties, useState, useContext, useEffect } from "react";
 import { Image } from "antd";
-import { Redirect, RouteComponentProps, withRouter } from "react-router-dom";
-import { Product } from "../ProductItemsList";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import { CartContext } from "../../contexts/CartContext";
 import ErrorPage from "../ErrorPage";
-import LoadingPage from "../LoadingPage";
-interface State {
-  product?: ProductInfo;
-}
+
 interface Props extends RouteComponentProps {
   id: number;
 }
@@ -34,7 +30,7 @@ function ProductDetails(props: Props) {
       setProduct(product);
     }
     findAndSetProduct()
-
+// eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function handleAddClick() {
