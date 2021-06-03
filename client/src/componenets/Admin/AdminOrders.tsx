@@ -1,9 +1,7 @@
-import { BugFilled, PlusOutlined } from "@ant-design/icons";
-import { Avatar, Button, Col, List, Row, Switch } from "antd";
-import { CSSProperties, useContext, useEffect, useState } from "react";
+import { Button, Col, List, Row, Switch } from "antd";
+import { CSSProperties, useEffect, useState } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
-import { ApiContext, Order } from "../../contexts/ApiContext";
-import { CartContext } from "../../contexts/CartContext";
+import { Order } from "../../contexts/ApiContext";
 import LoadingPage from "../LoadingPage";
 
 interface Props {}
@@ -24,7 +22,7 @@ function AdminOrders(props: Props) {
       setAllOrders(orders);
     };
     loadAllOrders();
-  }, []);
+  }, [allOrders]);
 
   const changeIsShippedSwitch = async (checked: any, id: any) => {
     let body = {
