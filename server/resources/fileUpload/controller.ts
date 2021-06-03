@@ -3,7 +3,11 @@ const fs = require("fs");
 
 
 exports.upload = async (req: any, res: express.Response) => {
-    res.status(200).json(req.file.filename);  
+    if(req.fileValidationError){
+        res.status(416).json("Invalid file type")
+    } else {
+        res.status(200).json(req.file.filename); 
+    }   
 }
 
 exports.delete = async(req: any, res: express.Response) => {

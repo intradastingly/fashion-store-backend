@@ -13,6 +13,7 @@ interface State {
 
 function AddNewProduct(props: Props, state: State) {
   const [imageField, setImageField] = useState<any>({});
+  const [error, setErrorMessage] = useState<string>();
   const {
     mapCategories,
     loadProducts,
@@ -26,6 +27,8 @@ function AddNewProduct(props: Props, state: State) {
     categoryField,
     buttonSaveLoading,
   } = useContext(ApiContext);
+
+  console.log(imageField)
 
   const options = [
     { value: "All" },
@@ -47,6 +50,10 @@ function AddNewProduct(props: Props, state: State) {
     mapCategories();
   }, []);
 
+  const invalidFile = () => {
+    message.error("Invalid file type", 3);
+  }
+
   const saveNewImage = async () => {
     const formData = new FormData();
     formData.append("img", imageField);
@@ -59,9 +66,14 @@ function AddNewProduct(props: Props, state: State) {
       },
     });
     const imgPath = await response.json();
-    saveNewProduct(imgPath);
+    if(imgPath === "Invalid file type"){
+      invalidFile();
+      return false;
+    } else {
+      loadProfile();
+      saveNewProduct(imgPath);
+    } 
   };
-
 
   const tagRender = (props: any) => {
     const { label, closable, onClose } = props;
@@ -77,7 +89,7 @@ function AddNewProduct(props: Props, state: State) {
         onClose={onClose}
         style={{ marginRight: 3, color: "black" }}
       >
-        {label}
+        {label} 
       </Tag>
     );
   };
@@ -127,12 +139,8 @@ function AddNewProduct(props: Props, state: State) {
           type="primary"
           onClick={() => {
             saveNewImage();
-            loadProfile();
           }}
-          /* htmlType="submit"
-           */
           loading={buttonSaveLoading}
-          /* href="/profile" */
           style={{ marginTop: "1rem" }}
         >
           Save
