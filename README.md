@@ -10,9 +10,10 @@ The front end is written in react (TypeScript) with Ant Design as design system.
 Our backend is built with Typescript in Express.
 
 ## For developers:
-Clone the project.
-Install all dependencies from root directory with npm i.
-Run the application from root with npm start.
+- Clone the project.
+- Install all dependencies from root directory with `npm i`.
+- Start the compiler with `npm run setup` from root (only done once during the initial setup).
+- Run the application from root with `npm start`.
 
 This project was made by [Asaf Läckgren](https://github.com/intradastingly), [Gustav Andersson](https://github.com/lilgujj), [Anton Mäenpää](https://github.com/antonmaenpaa), [Sebastian Zazzi](https://github.com/zazzzi) & [Alexander Liljedahl](https://github.com/supertramps)
 
