@@ -20,14 +20,22 @@ export interface AccountDocument extends MongooseDocument {
 }
 
 const AddressSchema = new Schema<Address>({
-  street: { type: String },
-  zipCode: { type: String },
-  city: { type: String },
-  country: { type: String },
+  street: { type: String, required: true },
+  zipCode: {
+    type: String, required: true,
+    validate: {
+      validator: (value: string) => {
+        return /^(s-|S-){0,1}[0-9]{3}\s?[0-9]{2}$/.test(value)
+      },
+      message: "This is not a valid zip code"
+    }
+  },
+  city: { type: String, required: true },
+  country: { type: String, required: true },
 });
 
 const AccountSchema = new Schema<AccountDocument>({
-  userName: { type: String, unique: true, required: true },
+  userName: { type: String, unique: true, required: true, trim: true },
   fullName: { type: String, required: true },
   phoneNumber: {
     type: String,
@@ -42,7 +50,6 @@ const AccountSchema = new Schema<AccountDocument>({
   role: { type: String, required: true },
   password: {
     type: String, select: false, required: true
-
   },
   email: { type: String, required: true },
   address: { type: AddressSchema, required: true },

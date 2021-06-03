@@ -1,4 +1,4 @@
-export {};
+export { };
 import { model, Schema } from "mongoose";
 import { AccountDocument } from "../account/model";
 import { ProductDocument } from "../product/model";
@@ -30,14 +30,14 @@ export interface OrderDocument {
 }
 
 const orderSchema = new Schema<OrderDocument>({
-  session: { type: Object },
-  date: { type: Date },
+  session: { type: Object, require: true },
+  date: { type: Date, require: true },
   isHandled: { type: Boolean },
   cart: [{ type: Object }],
-  userInfo: { type: Object },
-  deliveryMethod: { type: Object },
+  userInfo: { type: Object, require: true },
+  deliveryMethod: { type: Object, require: true },
   totalPrice: { type: Number },
-  paymentMethod: { type: Object },
+  paymentMethod: { type: Object, require: true },
 });
 
 module.exports = model("Order", orderSchema);
