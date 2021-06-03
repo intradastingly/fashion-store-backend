@@ -1,26 +1,13 @@
 import {
   Button,
-  Checkbox,
-  Row,
-  Col,
   Typography,
-  Space,
   Avatar,
-  Layout,
-  Modal,
-  Form,
-  Input,
-  Spin,
   Collapse,
 } from "antd";
-import { HighlightOutlined } from "@ant-design/icons";
 import React, {
   CSSProperties,
-  Component,
   useState,
-  Context,
   useEffect,
-  useRef,
   useContext,
 } from "react";
 import { useMediaQuery } from "react-responsive";
@@ -53,6 +40,7 @@ function UserProfile() {
   //useeffect for getting the correct account information
   useEffect(() => {
     getUser(session.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -61,6 +49,7 @@ function UserProfile() {
     } else {
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const showEditModal = () => {
@@ -245,20 +234,6 @@ function UserProfile() {
     </div>
   );
 }
-
-// form in modal offset styling
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 16 },
-};
-
-const modalStyle: CSSProperties = {
-  height: "50vh",
-  display: "flex",
-  flexDirection: "row",
-  width: "100%",
-  overflow: "auto",
-};
 
 const collapseStyle: CSSProperties = {
   width: "30rem",

@@ -100,11 +100,6 @@ export interface Category {
   items: ProductInfo[];
 }
 
-const userSession: Credentials = {
-  /* id: "", */
-  userName: "",
-  password: "",
-};
 interface State {
   session: any;
   allProducts: ProductInfo[];
@@ -199,12 +194,12 @@ function ApiProvider(props: Props) {
   const [users, setAllUsers] = useState<AccountInfo[]>([]);
   const [activeUser, setActiveUser] = useState<AccountInfo>();
   const [orders, setOrders] = useState();
-  const [currentUser, setCurrentUser] = useState<Object>();
+  const [currentUser,] = useState<Object>();
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
   const [titleField, setTitleField] = useState("");
   const [descriptionField, setDescriptionField] = useState("");
   const [priceField, setPriceField] = useState("");
-  const [imageField, setImageField] = useState("");
+  const [, setImageField] = useState("");
   const [quantityField, setQuantityField] = useState("");
   const [categoryField, setCategoryField] = useState<any[]>([]);
 
@@ -216,6 +211,7 @@ function ApiProvider(props: Props) {
     };
     loadProducts();
     loadShippingMethods();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // useeffect for checking if user is logged in
@@ -225,7 +221,7 @@ function ApiProvider(props: Props) {
     } else {
       setuserIsLoggedIn(false);
     }
-  });
+  },[session]);
 
   //useeffect for authorizing a session
   useEffect(() => {
@@ -239,6 +235,7 @@ function ApiProvider(props: Props) {
 
   useEffect(() => {
     loadAllUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadAllUsers = async () => {
@@ -355,7 +352,7 @@ function ApiProvider(props: Props) {
   };
 
   const updatePassword = async (id: string, body: object) => {
-    const result = await fetchRequest(`api/accounts/${id}`, "PATCH", body);
+    await fetchRequest(`api/accounts/${id}`, "PATCH", body);
   };
 
   // add new product logic

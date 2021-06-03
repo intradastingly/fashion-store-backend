@@ -1,7 +1,5 @@
 import { Form, Input, Button, Row, Col } from "antd";
 import {
-  Component,
-  ContextType,
   CSSProperties,
   useContext,
   useEffect,
@@ -48,6 +46,7 @@ function InformationForm(props: Props) {
   useEffect(() => {
     getUser(session.id);
     checkQuantityInLS();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

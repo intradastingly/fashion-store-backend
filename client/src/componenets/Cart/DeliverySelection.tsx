@@ -1,7 +1,5 @@
 import { Button, Radio, Row } from "antd";
 import {
-  Component,
-  ContextType,
   CSSProperties,
   useState,
   useContext,

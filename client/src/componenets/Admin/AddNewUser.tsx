@@ -1,15 +1,10 @@
+/* eslint-disable no-template-curly-in-string */
 import React, { CSSProperties, useContext, useEffect, useState } from "react";
-import { Button, Form, Input, Typography } from "antd";
+import { Button, Form, Input } from "antd";
 import { Link, Redirect, withRouter } from "react-router-dom";
 import { ApiContext } from "../../contexts/ApiContext";
 import { Select } from "antd";
 import { BarcodeOutlined, FlagOutlined, HomeOutlined, LockOutlined, MailOutlined, NumberOutlined, PushpinOutlined, SmileOutlined, TagOutlined } from "@ant-design/icons";
-
-
-
-
-
-
 
 function AddNewUser() {
   const { saveNewUser, loadAllUsers } = useContext(ApiContext);
@@ -30,11 +25,9 @@ function AddNewUser() {
     // loadProducts();
     // mapCategories();
     loadAllUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-
-
-    const { Title } = Typography;
     const validateMessages = {
       required: "${label} is required!",
       types: {

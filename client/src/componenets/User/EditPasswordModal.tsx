@@ -1,5 +1,5 @@
 import { Button, Form, Input, Modal } from "antd";
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties } from "react";
 
 interface Props {
   isVisible: boolean;

@@ -1,4 +1,4 @@
-import { Component, ContextType, CSSProperties, useContext } from "react";
+import { CSSProperties, useContext } from "react";
 import { CartContext } from "../../contexts/CartContext";
 import { Card, Col, Button } from "antd";
 import { CheckCircleOutlined } from "@ant-design/icons";

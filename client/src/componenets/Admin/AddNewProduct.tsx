@@ -13,7 +13,6 @@ interface State {
 
 function AddNewProduct(props: Props, state: State) {
   const [imageField, setImageField] = useState<any>({});
-  const [error, setErrorMessage] = useState<string>();
   const {
     mapCategories,
     loadProducts,
@@ -21,7 +20,6 @@ function AddNewProduct(props: Props, state: State) {
     titleFieldChange,
     quantityFieldChange,
     priceFieldChange,
-    imageFieldChange,
     descriptionFieldChange,
     handleChange,
     categoryField,
@@ -48,6 +46,7 @@ function AddNewProduct(props: Props, state: State) {
   useEffect(() => {
     loadProducts();
     mapCategories();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const invalidFile = () => {

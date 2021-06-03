@@ -1,9 +1,8 @@
 import { Avatar, Col, List, Row, InputNumber } from "antd";
-import { useContext, CSSProperties, useState, useReducer } from "react";
+import { useContext, CSSProperties, useReducer } from "react";
 import { Product } from "../ProductItemsList";
 import { Link } from "react-router-dom";
 import { CartContext } from "../../contexts/CartContext";
-import { ApiContext } from "../../contexts/ApiContext";
 
 export interface CartItem {
   product: Product;
@@ -12,20 +11,13 @@ export interface CartItem {
 
 function CartItemsList() {
   const { deleteProductFromCart, addProductToCart } = useContext(CartContext);
-  const { allProducts } = useContext(ApiContext);
-  const [maxQuantity, setMaxQuantity] = useState<boolean>(false);
-  const [ignored, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   function handleDelete(id: number) {
     deleteProductFromCart(id as number);
   }
 
   function onChangeQuantity(quantity: number, product: any) {
-    if (quantity > product.quantity) {
-      setMaxQuantity(true);
-    } else if (quantity <= product.quantity) {
-      setMaxQuantity(false);
-    }
     forceUpdate();
     addProductToCart(product, quantity);
   }

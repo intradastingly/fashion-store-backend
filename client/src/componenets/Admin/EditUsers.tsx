@@ -52,6 +52,7 @@ function EditUsers(props: Props) {
   
   useEffect(() => {
     loadUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
