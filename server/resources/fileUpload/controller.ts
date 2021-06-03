@@ -1,8 +1,7 @@
 import express from "express";
 const fs = require("fs");
 
-
-exports.upload = async (req: any, res: express.Response) => {
+exports.upload = async (req: { fileValidationError: string; file: { filename: string; }; }, res: express.Response) => {
     if(req.fileValidationError){
         res.status(416).json("Invalid file type")
     } else {
@@ -10,7 +9,7 @@ exports.upload = async (req: any, res: express.Response) => {
     }   
 }
 
-exports.delete = async(req: any, res: express.Response) => {
+exports.delete = async(req: express.Request, res: express.Response) => {
     const src = "..\\client\\public\\" + req.body.img;
     try{
         fs.unlinkSync(src)

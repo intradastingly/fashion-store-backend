@@ -1,9 +1,7 @@
 export { };
 import express from "express";
-import { ObjectId } from "mongodb";
 const Order = require("./model");
 const Product = require("../product/model")
-import { ProductDocument } from "../product/model"
 
 exports.newOrder = async (req: express.Request, res: express.Response) => {
 
@@ -20,7 +18,6 @@ exports.newOrder = async (req: express.Request, res: express.Response) => {
   });
 
   orderProductSubtractor(req.body.cart)
-
   await order.save();
   res.status(201).json(order);
 }
@@ -30,10 +27,8 @@ exports.getAllOrders = async (
   res: express.Response
 ) => {
   const order = await Order.find();
-
   res.status(200).json(order);
 };
-
 
 exports.editOrder = async (req: express.Request, res: express.Response) => {
 const order = await Order.findOneAndUpdate(
@@ -47,17 +42,14 @@ const order = await Order.findOneAndUpdate(
   );
 };
 
-
 // get specific orders that corresponds with the logged in user
 exports.getUserSpecificOrders = async (
   req: express.Request,
   res: express.Response
 ) => {
   const userSpecificOrders = await Order.find({ "session.id": req.params.id });
-
   res.status(200).json(userSpecificOrders);
 };
-
 
 async function orderProductSubtractor(orderedProducts: any) {
   const existingProducts = await Product.find()
