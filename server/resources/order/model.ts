@@ -4,7 +4,7 @@ import { AccountDocument } from "../account/model";
 import { ProductDocument } from "../product/model";
 import { ShippingDocument } from "../shipping/model";
 
-interface Cart extends OrderDocument {
+export interface Cart extends OrderDocument {
   product: ProductDocument;
   quantity: Number;
 }

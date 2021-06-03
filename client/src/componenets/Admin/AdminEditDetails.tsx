@@ -26,6 +26,10 @@ const successDelete = () => {
   message.success("The product has been deleted", 3);
 };
 
+const invalidFile = () => {
+  message.error("Invalid file type", 3);
+}
+
 function AdminEditDetails(props: Props, state: State) {
   const { allProducts, loadProducts, mapCategories } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
@@ -39,7 +43,7 @@ function AdminEditDetails(props: Props, state: State) {
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
-  const [upload, setUpload] = useState<any>()
+  const [error, setErrorMessage] = useState<string>();
 
   const options = [
     { value: "All" },
@@ -167,7 +171,13 @@ function AdminEditDetails(props: Props, state: State) {
       }
     })
     const imgPath = await response.json();
-    saveProduct(imgPath)
+    if(imgPath === "Invalid file type"){
+      invalidFile()
+      return false;
+    } else {
+      deleteOldImage(editProduct.img)
+      saveProduct(imgPath)
+    } 
   }
 
   const deleteOldImage = async (img: string) => {  
@@ -240,7 +250,6 @@ function AdminEditDetails(props: Props, state: State) {
           type="primary"
           onClick={() => {
               saveNewImage()
-              deleteOldImage(editProduct.img)
             }
           }
         >
