@@ -4,8 +4,9 @@
   "description": "",
   "main": "app.ts",
   "scripts": {
-    "start": "npm-run-all --parallel compile nodemon",
-    "compile": "tsc -watch",
+    "start": "npm-run-all --parallel compile-w nodemon",
+    "compile": "tsc",
+    "compile-w": "tsc -watch",
     "nodemon": "nodemon ./dist/app.js"
   },
   "keywords": [],

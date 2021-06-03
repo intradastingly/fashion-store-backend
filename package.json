@@ -9,7 +9,8 @@
     "start-client": "cd client && npm start",
     "postinstall": "npm-run-all --parallel install-client install-server",
     "install-server": "cd server && npm i",
-    "install-client": "cd client && npm i"
+    "install-client": "cd client && npm i",
+    "setup": "cd server && npm run compile"
   },
   "repository": {
     "type": "git",
