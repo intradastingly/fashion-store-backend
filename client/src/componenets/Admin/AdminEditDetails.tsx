@@ -26,6 +26,10 @@ const successDelete = () => {
   message.success("The product has been deleted", 3);
 };
 
+const invalidFile = () => {
+  message.error("Invalid file type", 3);
+}
+
 function AdminEditDetails(props: Props, state: State) {
   const { allProducts, loadProducts, mapCategories } = useContext(ApiContext);
   const [buttonSaveLoading, setButtonSaveLoading] = useState(false);
@@ -168,7 +172,7 @@ function AdminEditDetails(props: Props, state: State) {
     })
     const imgPath = await response.json();
     if(imgPath === "Invalid file type"){
-      setErrorMessage(imgPath)
+      invalidFile()
       return false;
     } else {
       deleteOldImage(editProduct.img)
