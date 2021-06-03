@@ -16,7 +16,16 @@ const productSchema = new Schema<ProductDocument>({
   description: { type: String },
   category: { type: Array, trim: true, require: true },
   quantity: { type: Number, require: true },
-  price: { type: Number, require: true },
+  price: {
+    type: Number,
+    require: true,
+    validate: {
+      validator: (value: Number) => {
+        return /^[+]?([0-9]+(?:[\.][0-9]*)?|\.[0-9]+)$/.test(value.toString())
+      },
+      message: "Prices can only be positive numbers"
+    }
+  },
   img: { type: String }
 });
 
