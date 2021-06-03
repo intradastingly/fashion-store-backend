@@ -1,4 +1,4 @@
-export {};
+export { };
 const express = require("express");
 const fileUploadRouter = express.Router();
 const controller = require("./controller");
@@ -8,4 +8,4 @@ fileUploadRouter
     .post("/upload", upload.uploadImg, controller.upload)
     .delete("/upload", controller.delete)
 
-module.exports = fileUploadRouter;
+export default fileUploadRouter;

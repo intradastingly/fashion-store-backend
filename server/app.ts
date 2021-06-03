@@ -1,17 +1,17 @@
 import express, { NextFunction, Request, Response } from "express";
 require('express-async-errors');
-const mongoose = require("mongoose");
-const bodyParser = require("body-parser");
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
 /* const fileUpload = require('express-fileupload'); */
 const port = process.env.PORT || 6969;
 const app = express();
 import cookieSession from "cookie-session";
 import productRouter from "./resources/product/router";
 import accountRouter from "./resources/account/router";
-const orderRouter = require("./resources/order/router");
-const loginRouter = require("./resources/login/router");
-const shippingRouter = require("./resources/shipping/router");
-const uploadRouter = require("./resources/fileUpload/router");
+import orderRouter from "./resources/order/router";
+import loginRouter from "./resources/login/router";
+import shippingRouter from "./resources/shipping/router";
+import uploadRouter from "./resources/fileUpload/router";
 
 
 const uri =
