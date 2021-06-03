@@ -1,15 +1,5 @@
-import {
-  Button,
-  Typography,
-  Avatar,
-  Collapse,
-} from "antd";
-import React, {
-  CSSProperties,
-  useState,
-  useEffect,
-  useContext,
-} from "react";
+import { Button, Typography, Avatar, Collapse } from "antd";
+import React, { CSSProperties, useState, useEffect, useContext } from "react";
 import { useMediaQuery } from "react-responsive";
 import AvatarPic from "../../assets/Avatar2.png";
 import { ApiContext } from "../../contexts/ApiContext";
@@ -71,6 +61,7 @@ function UserProfile() {
 
       updatePassword(session.id, body);
     }
+    setIsPasswordModalVisible(false);
   };
 
   const handleCancel = () => {
