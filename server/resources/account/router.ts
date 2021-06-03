@@ -11,4 +11,5 @@ accountRouter
   .get("/accounts/:id", controller.getSpecificAccount)
   .patch('/accounts/:id', controller.updatePassword);
 
-module.exports = accountRouter;
+
+export default accountRouter;

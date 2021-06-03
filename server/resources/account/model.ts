@@ -29,9 +29,21 @@ const AddressSchema = new Schema<Address>({
 const AccountSchema = new Schema<AccountDocument>({
   userName: { type: String, unique: true, required: true },
   fullName: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
+  phoneNumber: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (value: string) => {
+        return /^(0)\s*(7[0236])\s*(\d{4})\s*(\d{3})$/.test(value)
+      },
+      message: "This is not a valid phone number"
+    }
+  },
   role: { type: String, required: true },
-  password: { type: String, select: false, required: true },
+  password: {
+    type: String, select: false, required: true
+
+  },
   email: { type: String, required: true },
   address: { type: AddressSchema, required: true },
 });
