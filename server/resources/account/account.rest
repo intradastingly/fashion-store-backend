@@ -18,7 +18,7 @@ Content-Type: application/json
     "fullName": "Testr Testrsson",
     "password": "test",
     "email" : "elon_musk@pornhub.com",
-    "phoneNumber" : "0706969420",
+    "phoneNumber" : "0706969420a",
     "address" : {
         "street": "Gatan 123",
         "zipCode": 42069,

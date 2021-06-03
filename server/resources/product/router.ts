@@ -1,7 +1,8 @@
-export {};
+export { };
 const express = require("express");
 const productRouter = express.Router();
 const controller = require("./controller");
+
 
 productRouter
   .post("/products", controller.newProduct)
@@ -9,4 +10,5 @@ productRouter
   .delete("/products/:id", controller.deleteProduct)
   .put("/products/:id", controller.editProduct);
 
-module.exports = productRouter;
+
+export default productRouter;

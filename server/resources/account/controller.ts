@@ -1,4 +1,4 @@
-export {};
+export { };
 import { Request, Response } from "express";
 const Account = require("./model");
 
@@ -13,7 +13,6 @@ exports.newAccount = async (req: Request, res: Response) => {
     address: req.body.address,
     phoneNumber: req.body.phoneNumber,
   });
-
   await account.save();
   res.status(201).json(account);
 };
