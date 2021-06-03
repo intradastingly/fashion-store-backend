@@ -1,5 +1,5 @@
-export {};
-const express = require("express");
+export { };
+import express from "express";
 const shippingRouter = express.Router();
 const controller = require("./controller");
 
@@ -9,4 +9,5 @@ shippingRouter
   .delete("/shipping/:id", controller.deleteShipping)
   .put("/shipping/:id", controller.editShipping);
 
-module.exports = shippingRouter;
+
+export default shippingRouter;

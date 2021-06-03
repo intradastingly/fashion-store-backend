@@ -1,4 +1,4 @@
-export {};
+export { };
 const express = require("express");
 const orderRouter = express.Router();
 const controller = require("./controller");
@@ -10,4 +10,5 @@ orderRouter
   // .delete("/orders/:id", controller.deleteOrder)
   .put("/orders/:id", controller.editOrder);
 
-module.exports = orderRouter;
+
+export default orderRouter;

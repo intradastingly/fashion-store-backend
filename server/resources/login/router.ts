@@ -1,4 +1,4 @@
-export {};
+export { };
 const express = require("express");
 const loginRouter = express.Router();
 const controller = require("./controller");
@@ -8,4 +8,5 @@ loginRouter
   .delete("/logout", controller.logout)
   .get("/authenticated", controller.authenticate);
 
-module.exports = loginRouter;
+
+export default loginRouter;
