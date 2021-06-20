@@ -1,7 +1,6 @@
-import { Button, Radio, Row } from "antd";
+import { Button, Form, Radio, Row } from "antd";
 import {
   CSSProperties,
-  useState,
   useContext,
 } from "react";
 import { CartContext } from "../../contexts/CartContext";
@@ -15,44 +14,59 @@ function DeliverySection(props: Props) {
   const { shippingMethods } = useContext(ApiContext);
   const { setDeliveryMethod } = useContext(CartContext);
 
-  const [value, setValue] = useState(1);
 
   const onChange = (e: any) => {
-    setValue(e.target.value);
-
-    const method = shippingMethods.filter(
-      (item: ShippingInfo) => item._id === e.target.value
-    )[0];
+    const method = e.target.value;
     setDeliveryMethod(method);
-  };
+};
+
+  const onFinish = (values: ShippingInfo) => {
+    console.log('Success:', values);
+    props.next();
+};
 
   const mapMethodToRadio = () => {
-    return shippingMethods.map((item) => (
-      <Radio value={item._id} style={{ marginTop: "2rem" }}>
-        <span style={deliveryCompanyStyle}>{item.shipmentCompany}</span>
-        <br />
-        <span style={deliveryTextStyle}>
-          {"Delivery on " + calculateDeliveryDay(item.deliveryTime)}
-        </span>
-        <br />
-        <span style={deliveryTextStyle}>{item.shippingPrice + " kr "}</span>
-      </Radio>
-    ));
+          return shippingMethods.map((item) => (
+              <Radio
+                  value={item}
+                  style={{ marginTop: '2rem' }}>
+
+                  <span style={deliveryCompanyStyle}>
+                      {item.shipmentCompany}
+                  </span>
+                  <br />
+                  <span style={deliveryTextStyle}>
+                      {'Delivery on ' +
+                          calculateDeliveryDay(item.deliveryTime)}
+                  </span>
+                  <br />
+                  <span style={deliveryTextStyle}>
+                      {item.shippingPrice + ' kr '}
+                  </span>
+              </Radio>
+          ))
   };
 
   return (
-    <Row style={deliveryContainer}>
-      <h2>Delivery</h2>
-      <Radio.Group onChange={onChange} value={value}>
-        {mapMethodToRadio()}
-      </Radio.Group>
-      <br />
-      <Button type="primary" style={buttonStyle} onClick={props.next}>
-        Next
-      </Button>
-    </Row>
+      <Row style={deliveryContainer}>
+          <h2>Delivery</h2>
+          <Form onFinish={onFinish}>
+              <Form.Item name='Delivery Option' rules={[{ required: true }]}>
+                  <Radio.Group onChange={onChange}>
+                    {mapMethodToRadio()}
+                  
+
+                  </Radio.Group>
+              </Form.Item>
+              <Button type='primary' htmlType='submit' style={buttonStyle}>
+                  Next
+              </Button>
+          </Form>
+          <br />
+      </Row>
   );
 }
+
 
 export default DeliverySection;
 
