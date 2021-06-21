@@ -38,12 +38,15 @@ exports.deleteProduct = async (req: express.Request, res: express.Response) => {
 
 // Edit a product
 exports.editProduct = async (req: express.Request, res: express.Response) => {
-  req.body.category.push("All")
-
+  if(!req.body.category.includes("All")) {
+    req.body.category.push("All")
+  }
+  console.log(req.body)
   const incomingProduct = req.body
   const oldProduct = await Product.findOne({_id: req.params.id})
   
   if(oldProduct){
+    console.log(oldProduct)
     const product = await Product.findOneAndUpdate(
       { _id: req.params.id },
       {
