@@ -43,6 +43,7 @@ function AdminEditDetails(props: Props, state: State) {
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
+  const [category, setCategory] = useState<any>()
 
   const options = [
     { value: "All" },
@@ -89,7 +90,7 @@ function AdminEditDetails(props: Props, state: State) {
       description: descriptionField,
       quantity: quantityField,
       price: priceField,
-      img: img,
+      img: imageField,
       category: categoryField,
     };
 
@@ -117,20 +118,20 @@ function AdminEditDetails(props: Props, state: State) {
 
   useEffect(() => {
     const loadProducts = async () => {
-      if (!allProducts) {
-        return;
-      }
+      // if (!allProducts) {
+      //   return;
+      // }
       const product = await allProducts.find(
         (p: ProductInfo) => p._id === props.match.params.id
       );
 
       setEditProduct(product);
     };
-
+    findCategory()
     loadProducts();
     mapCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [editProduct]);
 
 
   const handleDelete = async (img: string) => {
@@ -180,6 +181,19 @@ function AdminEditDetails(props: Props, state: State) {
     } 
   }
 
+
+
+
+  function findCategory() {
+  if(editProduct.category) {
+    let hej = []
+    for (let index = 0; index < editProduct.category.length; index++) {
+      hej.push(editProduct.category[index])
+    }
+    setCategory(hej)
+  } 
+  }
+
   const deleteOldImage = async (img: string) => {  
     const body = {
       img: img
@@ -192,7 +206,6 @@ function AdminEditDetails(props: Props, state: State) {
       },
     })
   }
-
   return (
     <div style={rootStyle}>
       <form style={layoutStyle}>
@@ -222,12 +235,12 @@ function AdminEditDetails(props: Props, state: State) {
           onChange={(e: any) => setQuantityField(e.target.value)}
           defaultValue={editProduct.quantity}
         />
-        <label> Category: </label>
+        <label> Category: {editProduct.category} </label>
           <Select
           onChange={handleChange}
           mode="multiple"
           showArrow
-          defaultValue={["All"]}
+          defaultValue={[category]}
           tagRender={(props: any) => tagRender(props)}
           style={{ width: "100%" }}
           options={options}
