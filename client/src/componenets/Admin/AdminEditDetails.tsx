@@ -9,6 +9,7 @@ import {
 import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import ErrorPage from "../ErrorPage";
 import { Product } from "../ProductItemsList";
+import LoadingPage from "../LoadingPage";
 
 interface Props extends RouteComponentProps<{ id: string }> {}
 interface State {
@@ -28,7 +29,7 @@ const successDelete = () => {
 
 const invalidFile = () => {
   message.error("Invalid file type", 3);
-}
+};
 
 function AdminEditDetails(props: Props, state: State) {
   const { allProducts, loadProducts, mapCategories } = useContext(ApiContext);
@@ -39,11 +40,11 @@ function AdminEditDetails(props: Props, state: State) {
   const [descriptionField, setDescriptionField] = useState(
     editProduct.description
   );
-  const [categoryField, setCategoryField] = useState<any[]>([]);
+  const [categoryField, setCategoryField] = useState<any[]>();
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
-  const [category, setCategory] = useState<any>()
+  const [category, setCategory] = useState<any>();
 
   const options = [
     { value: "All" },
@@ -57,10 +58,14 @@ function AdminEditDetails(props: Props, state: State) {
     { value: "T-shirts" },
     { value: "Blazers" },
   ];
-  const filteredOptions = options.filter((o) => !categoryField.includes(o));
+  // const filteredOptions = options.filter((o) => !categoryField.includes(o));
 
   const handleChange = (categoryField: any) => {
-    setCategoryField(categoryField);
+    if (!categoryField) {
+      setCategoryField(category);
+    } else {
+      setCategoryField(categoryField);
+    }
   };
 
   const tagRender = (props: any) => {
@@ -84,7 +89,7 @@ function AdminEditDetails(props: Props, state: State) {
 
   const saveProduct = async (img: string) => {
     setButtonSaveLoading(true);
-   
+
     const body = {
       title: titleField,
       description: descriptionField,
@@ -127,12 +132,12 @@ function AdminEditDetails(props: Props, state: State) {
 
       setEditProduct(product);
     };
-    findCategory()
+    findCategory();
     loadProducts();
     mapCategories();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editProduct]);
-
 
   const handleDelete = async (img: string) => {
     setButtonDeleteLoading(true);
@@ -145,13 +150,12 @@ function AdminEditDetails(props: Props, state: State) {
     });
 
     const result = await response.json();
-    deleteOldImage(img)
+    deleteOldImage(img);
     loadProducts();
     setButtonDeleteLoading(false);
     successDelete();
     return result;
   };
-
   if (buttonDeleteLoading || buttonSaveLoading) {
     return <Redirect to="/profile" />;
   }
@@ -161,52 +165,54 @@ function AdminEditDetails(props: Props, state: State) {
   }
 
   const saveNewImage = async () => {
-    const formData = new FormData()
-    formData.append('img', imageField)
+    const formData = new FormData();
+    formData.append("img", imageField);
     const response = await fetch("/api/upload", {
       method: "POST",
       body: formData,
-      credentials: 'include',
-      headers:{
-        "Accept": "multipart/form-data; boundary=Row"
-      }
-    })
+      credentials: "include",
+      headers: {
+        Accept: "multipart/form-data; boundary=Row",
+      },
+    });
     const imgPath = await response.json();
-    if(imgPath === "Invalid file type"){
-      invalidFile()
+    if (imgPath === "Invalid file type") {
+      invalidFile();
       return false;
     } else {
-      deleteOldImage(editProduct.img)
-      saveProduct(imgPath)
-    } 
-  }
-
-
-
+      deleteOldImage(editProduct.img);
+      saveProduct(imgPath);
+    }
+  };
 
   function findCategory() {
-  if(editProduct.category) {
-    let hej = []
-    for (let index = 0; index < editProduct.category.length; index++) {
-      hej.push(editProduct.category[index])
+    if (editProduct.category) {
+      let incommingCategories = [];
+      for (let index = 0; index < editProduct.category.length; index++) {
+        incommingCategories.push(editProduct.category[index]);
+      }
+      setCategory(incommingCategories);
     }
-    setCategory(hej)
-  } 
   }
 
-  const deleteOldImage = async (img: string) => {  
+  const deleteOldImage = async (img: string) => {
     const body = {
-      img: img
-    }
+      img: img,
+    };
     await fetch("/api/upload", {
       method: "DELETE",
       body: JSON.stringify(body),
       headers: {
         "Content-Type": "application/json",
       },
-    })
-  }
-  return (
+    });
+  };
+
+  console.log(category);
+
+  return !category ? (
+    <LoadingPage />
+  ) : (
     <div style={rootStyle}>
       <form style={layoutStyle}>
         <h2>Edit Product</h2>
@@ -236,35 +242,34 @@ function AdminEditDetails(props: Props, state: State) {
           defaultValue={editProduct.quantity}
         />
         <label> Category: {editProduct.category} </label>
-          <Select
+        <Select
           onChange={handleChange}
           mode="multiple"
           showArrow
-          defaultValue={[category]}
+          defaultValue={category}
           tagRender={(props: any) => tagRender(props)}
           style={{ width: "100%" }}
           options={options}
-          >
-            {filteredOptions.map((item: any) => (
-              <Select.Option key={item} value={item}>
-                {item}
-              </Select.Option>
-            ))}
-          </Select>
+        >
+          {options.map((item: any) => (
+            <Select.Option key={item} value={item}>
+              {item}
+            </Select.Option>
+          ))}
+        </Select>
         <label>Image: </label>
         <label>{editProduct.img}</label>
-          <input
-            required
-            type="file"
-            name="img"
-            onChange={(e: any) => setImageField(e.target.files[0])}
-          />
+        <input
+          required
+          type="file"
+          name="img"
+          onChange={(e: any) => setImageField(e.target.files[0])}
+        />
         <Button
           type="primary"
           onClick={() => {
-              saveNewImage()
-            }
-          }
+            saveNewImage();
+          }}
         >
           Save
         </Button>
@@ -272,7 +277,7 @@ function AdminEditDetails(props: Props, state: State) {
           title="Are you sure？"
           okText="Yes"
           onConfirm={() => {
-            handleDelete(editProduct.img)
+            handleDelete(editProduct.img);
           }}
           cancelText="No"
         >
