@@ -2,18 +2,16 @@ export {};
 import express from "express";
 const Product = require("./model");
 
-
 // Create new product
 exports.newProduct = async (req: express.Request, res: express.Response) => {
-  
-  req.body.category.push("All")
+  req.body.category.push("All");
   const product = new Product({
     title: req.body.title,
     description: req.body.description,
     category: req.body.category,
     quantity: req.body.quantity,
     price: req.body.price,
-    img: req.body.img
+    img: req.body.img,
   });
 
   await product.save();
@@ -38,25 +36,24 @@ exports.deleteProduct = async (req: express.Request, res: express.Response) => {
 
 // Edit a product
 exports.editProduct = async (req: express.Request, res: express.Response) => {
-  if(!req.body.category.includes("All")) {
-    req.body.category.push("All")
+  if (!req.body.category.includes("All")) {
+    req.body.category.push("All");
   }
-  console.log(req.body)
-  const incomingProduct = req.body
-  const oldProduct = await Product.findOne({_id: req.params.id})
-  
-  if(oldProduct){
-    console.log(oldProduct)
+  console.log(req.body);
+  const incomingProduct = req.body;
+  const oldProduct = await Product.findOne({ _id: req.params.id });
+
+  if (oldProduct) {
+    console.log(oldProduct);
     const product = await Product.findOneAndUpdate(
       { _id: req.params.id },
       {
-        $set: incomingProduct
+        $set: incomingProduct,
       },
       { new: true }
     );
-      res.status(200).json(product);
-    } else {
-      res.status(404).json("No account with this ID exists.");
-    }
-  };
-
+    res.status(200).json(product);
+  } else {
+    res.status(404).json("No product with this ID exists.");
+  }
+};
