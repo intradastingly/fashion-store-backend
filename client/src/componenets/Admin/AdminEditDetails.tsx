@@ -40,7 +40,7 @@ function AdminEditDetails(props: Props, state: State) {
   const [descriptionField, setDescriptionField] = useState(
     editProduct.description
   );
-  const [categoryField, setCategoryField] = useState<any[]>();
+  const [categoryField, setCategoryField] = useState<any[]>(editProduct.category);
   const [priceField, setPriceField] = useState(editProduct.price);
   const [imageField, setImageField] = useState(editProduct.image);
   const [quantityField, setQuantityField] = useState(editProduct.quantity);
@@ -87,16 +87,18 @@ function AdminEditDetails(props: Props, state: State) {
     );
   };
 
-  const saveProduct = async (img: string) => {
+  const saveProduct = async (imgPath: string) => {
     setButtonSaveLoading(true);
 
-    const body = {
+    if(imgPath === "false") {
+      console.log(categoryField)
+      const body = {
       title: titleField,
       description: descriptionField,
       quantity: quantityField,
       price: priceField,
-      img: imageField,
-      category: categoryField,
+      img: editProduct.img,
+      category: editProduct.category,
     };
 
     const response = await fetch("/api/products/" + props.match.params.id, {
@@ -119,6 +121,37 @@ function AdminEditDetails(props: Props, state: State) {
     loadProducts();
 
     return result;
+    } else {
+      const body = {
+        title: titleField,
+        description: descriptionField,
+        quantity: quantityField,
+        price: priceField,
+        img: imageField,
+        category: categoryField,
+      };
+  
+      const response = await fetch("/api/products/" + props.match.params.id, {
+        method: "PUT",
+        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      const result = await response.json();
+  
+      setTitleField("");
+      setDescriptionField("");
+      setQuantityField("");
+      setPriceField("");
+      setImageField("");
+      setButtonSaveLoading(false);
+      successSave();
+      loadProducts();
+  
+      return result;
+    }
   };
 
   useEffect(() => {
@@ -165,6 +198,10 @@ function AdminEditDetails(props: Props, state: State) {
   }
 
   const saveNewImage = async () => {
+    if(!imageField) {
+      saveProduct("false")
+      return
+    }
     const formData = new FormData();
     formData.append("img", imageField);
     const response = await fetch("/api/upload", {
@@ -208,7 +245,7 @@ function AdminEditDetails(props: Props, state: State) {
     });
   };
 
-  console.log(category);
+  console.log(editProduct);
 
   return !category ? (
     <LoadingPage />
