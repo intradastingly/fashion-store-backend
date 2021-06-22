@@ -91,14 +91,14 @@ function AdminEditDetails(props: Props, state: State) {
     setButtonSaveLoading(true);
 
     if(imgPath === "false") {
-      console.log(editProduct.img)
+      console.log(categoryField)
       const body = {
       title: titleField,
       description: descriptionField,
       quantity: quantityField,
       price: priceField,
       img: editProduct.img,
-      category: categoryField,
+      category: editProduct.category,
     };
 
     const response = await fetch("/api/products/" + props.match.params.id, {
@@ -127,7 +127,7 @@ function AdminEditDetails(props: Props, state: State) {
         description: descriptionField,
         quantity: quantityField,
         price: priceField,
-        img: imgPath,
+        img: imageField,
         category: categoryField,
       };
   
@@ -200,6 +200,7 @@ function AdminEditDetails(props: Props, state: State) {
   const saveNewImage = async () => {
     if(!imageField) {
       saveProduct("false")
+      return
     }
     const formData = new FormData();
     formData.append("img", imageField);
