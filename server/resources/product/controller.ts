@@ -39,12 +39,11 @@ exports.editProduct = async (req: express.Request, res: express.Response) => {
   if (!req.body.category.includes("All")) {
     req.body.category.push("All");
   }
-  console.log(req.body);
+  console.log(req.body, "req body");
   const incomingProduct = req.body;
   const oldProduct = await Product.findOne({ _id: req.params.id });
-
   if (oldProduct) {
-    console.log(oldProduct);
+    console.log(oldProduct, "old Product");
     const product = await Product.findOneAndUpdate(
       { _id: req.params.id },
       {
@@ -52,6 +51,7 @@ exports.editProduct = async (req: express.Request, res: express.Response) => {
       },
       { new: true }
     );
+    console.log(product, "new updated product")
     res.status(200).json(product);
   } else {
     res.status(404).json("No product with this ID exists.");
