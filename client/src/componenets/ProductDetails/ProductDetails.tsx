@@ -4,7 +4,7 @@ import { Image } from "antd";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { ApiContext, ProductInfo } from "../../contexts/ApiContext";
 import { CartContext } from "../../contexts/CartContext";
-import ErrorPage from "../ErrorPage";
+import LoadingPage from "../LoadingPage";
 
 interface Props extends RouteComponentProps {
   id: number;
@@ -31,7 +31,7 @@ function ProductDetails(props: Props) {
     }
     findAndSetProduct()
 // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  });
 
   function handleAddClick() {
     success();
@@ -41,7 +41,7 @@ function ProductDetails(props: Props) {
   return (
     <>
     { !product || !allProducts? (
-      <ErrorPage/>
+      <LoadingPage/>
     ) : (
       <Row style={detailContainer}>
         <Col lg={{ span: 10 }} style={columnStyle}>
