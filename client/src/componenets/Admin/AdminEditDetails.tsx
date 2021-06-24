@@ -91,14 +91,13 @@ function AdminEditDetails(props: Props, state: State) {
     setButtonSaveLoading(true);
 
     if(imgPath === "false") {
-      console.log(categoryField)
       const body = {
       title: titleField,
       description: descriptionField,
       quantity: quantityField,
       price: priceField,
       img: editProduct.img,
-      category: editProduct.category,
+      category: categoryField,
     };
 
     const response = await fetch("/api/products/" + props.match.params.id, {
@@ -110,6 +109,8 @@ function AdminEditDetails(props: Props, state: State) {
     });
 
     const result = await response.json();
+    console.log(result);
+    
 
     setTitleField("");
     setDescriptionField("");
@@ -127,7 +128,7 @@ function AdminEditDetails(props: Props, state: State) {
         description: descriptionField,
         quantity: quantityField,
         price: priceField,
-        img: imageField,
+        img: imgPath,
         category: categoryField,
       };
   
@@ -202,6 +203,8 @@ function AdminEditDetails(props: Props, state: State) {
       saveProduct("false")
       return
     }
+    
+    
     const formData = new FormData();
     formData.append("img", imageField);
     const response = await fetch("/api/upload", {
@@ -245,7 +248,6 @@ function AdminEditDetails(props: Props, state: State) {
     });
   };
 
-  console.log(editProduct);
 
   return !category ? (
     <LoadingPage />
@@ -268,7 +270,7 @@ function AdminEditDetails(props: Props, state: State) {
         <label>Price: </label>
         <input
           name="price"
-          onChange={(e: any) => setPriceField(e.target.value)}
+          onChange={(e: any) => {setPriceField(e.target.value); console.log(priceField);}}
           defaultValue={editProduct.price}
         />
         <label>Quantity: </label>
