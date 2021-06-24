@@ -26,7 +26,6 @@ function AddNewProduct(props: Props, state: State) {
     buttonSaveLoading,
   } = useContext(ApiContext);
 
-  console.log(imageField)
 
   const options = [
     { value: "All" },

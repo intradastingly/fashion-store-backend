@@ -109,7 +109,6 @@ function AdminEditDetails(props: Props, state: State) {
     });
 
     const result = await response.json();
-    console.log(result);
     
 
     setTitleField("");
